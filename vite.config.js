@@ -12,6 +12,8 @@ export default defineConfig({
     mimeTypes: {
       // Ensure that .js files are served with the correct MIME type
       "application/javascript": ["js", "mjs"],
+      // Additionally, serve .jsx files with the correct MIME type
+      "text/jsx": ["jsx"],
     },
   },
 });
