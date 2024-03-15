@@ -1,3 +1,4 @@
+// vite.config.js
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
@@ -12,7 +13,7 @@ export default defineConfig({
     mimeTypes: {
       // Ensure that .js files are served with the correct MIME type
       "application/javascript": ["js", "mjs"],
-      // Additionally, serve .jsx files with the correct MIME type
+      // Serve .jsx files with the correct MIME type
       "text/jsx": ["jsx"],
     },
   },
