@@ -1,4 +1,4 @@
-import Container from "./Container";
+import Container from "./Components/Container";
 import "./index.css";
 
 function App() {
