@@ -4,11 +4,11 @@ import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
 function SocialIcons() {
   return (
     <div className="w-8 gap-4 flex flex-col justify-end items-center h-screen mr-12 fixed right-0 bottom-0">
-      <a href="https://github.com/HitaBeeDev">
+      <a target="_blank" href="https://github.com/HitaBeeDev">
         <FontAwesomeIcon className="text-color4 text-xl" icon={faGithub} />
       </a>
 
-      <a href="https://www.linkedin.com/in/anahita-amiri/">
+      <a target="_blank" href="https://www.linkedin.com/in/anahita-amiri/">
         <FontAwesomeIcon className="text-color4 text-xl" icon={faLinkedin} />
       </a>
 
