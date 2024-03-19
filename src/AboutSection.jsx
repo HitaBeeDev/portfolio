@@ -1,6 +1,6 @@
-function Section1() {
+function AboutSection() {
   return (
-    <div>
+    <div id="about">
       Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repudiandae quo
       dolore quaerat architecto maiores soluta eos rerum natus est possimus aut
       voluptates reiciendis, rem consequuntur corrupti? Nesciunt mollitia quasi
@@ -28,4 +28,4 @@ function Section1() {
   );
 }
 
-export default Section1;
+export default AboutSection;

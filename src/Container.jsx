@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Navbvar from "./Navbar/Navbvar";
-import Section1 from "./Section1";
+import AboutSection from "./AboutSection";
 
 function Container() {
   const [activeDot, setActiveDot] = useState(0);
@@ -60,35 +60,35 @@ function Container() {
           id="topic1"
           className="mr-52 ml-52 h-screen flex justify-center items-center bg-color5"
         >
-          <Section1 />
+          <AboutSection />
         </section>
 
         <section
           id="topic2"
           className="mr-52 ml-52 h-screen flex justify-center items-center bg-color4"
         >
-          <Section1 />
+          <AboutSection />
         </section>
 
         <section
           id="topic3"
           className="mr-52 ml-52 h-screen flex justify-center items-center bg-color3"
         >
-          <Section1 />
+          <AboutSection />
         </section>
 
         <section
           id="topic4"
           className="mr-52 ml-52 h-screen flex justify-center items-center bg-color2"
         >
-          <Section1 />
+          <AboutSection />
         </section>
 
         <section
           id="topic5"
           className="mr-52 ml-52 h-screen flex justify-center items-center bg-color5"
         >
-          <Section1 />
+          <AboutSection />
         </section>
       </div>
     </div>
