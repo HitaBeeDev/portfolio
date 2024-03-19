@@ -41,7 +41,7 @@ function Container() {
             <div
               key={index}
               className={`h-4 w-4 rounded-full my-2 ${
-                activeDot === index ? "bg-color2" : "bg-gray-300"
+                activeDot === index ? "bg-color4" : "bg-color2"
               }`}
               onClick={() => handleDotClick(index)}
             ></div>
@@ -49,7 +49,7 @@ function Container() {
         </div>
 
         <div className="flex flex-col justify-center items-center h-screen bg-red-200 mr-12 fixed right-0">
-          <p>T</p>
+          <p className="text-color4">T</p>
           <p>G</p>
         </div>
       </div>
