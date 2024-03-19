@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import Navbvar from "./Navbar/Navbvar";
+import Section1 from "./Section1";
 
 function Container() {
   const [activeDot, setActiveDot] = useState(0);
@@ -46,45 +48,47 @@ function Container() {
         </div>
 
         <div className="flex flex-col justify-center items-center h-screen bg-red-200 mr-24 fixed right-0">
-          <p>TWITTER</p>
-          <p>GITHUB</p>
+          <p>T</p>
+          <p>G</p>
         </div>
       </div>
 
-      <div>
+      <div className="mr-52 ml-52">
+        <Navbvar />
+
         <section
           id="topic1"
-          className="h-screen  flex items-center justify-center"
+          className="h-screen flex justify-center items-center bg-color5"
         >
-          <h1 className="text-4xl text-color5">Topic 1</h1>
+          <Section1 />
         </section>
 
         <section
           id="topic2"
-          className="h-screen bg-gray-200 flex items-center justify-center"
+          className="h-screen flex justify-center items-center bg-color4"
         >
-          <h1 className="text-4xl text-color2">Topic 2</h1>
+          <Section1 />
         </section>
 
         <section
           id="topic3"
-          className="h-screen bg-gray-300 flex items-center justify-center"
+          className="h-screen flex justify-center items-center bg-color3"
         >
-          <h1 className="text-4xl text-color3">Topic 3</h1>
+          <Section1 />
         </section>
 
         <section
           id="topic4"
-          className="h-screen bg-gray-400 flex items-center justify-center"
+          className="h-screen flex justify-center items-center bg-color2"
         >
-          <h1 className="text-4xl text-color4">Topic 4</h1>
+          <Section1 />
         </section>
 
         <section
           id="topic5"
-          className="h-screen bg-gray-500 flex items-center justify-center"
+          className="h-screen flex justify-center items-center bg-color5"
         >
-          <h1 className="text-4xl">Topic 5</h1>
+          <Section1 />
         </section>
       </div>
     </div>
