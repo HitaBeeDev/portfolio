@@ -1,30 +1,26 @@
-function Navbar() {
-  const navbarItems = [
-    "01. About",
-    "02. Experience",
-    "03. Projects",
-    "04. Contact",
-  ];
+import navbarItems from "./navbarItems";
 
+const Navbar = () => {
   return (
     <header>
-      <nav>
-        <ul>
-          {navbarItems.map((section, index) => {
-            const sectionName = section.slice(4).trim();
-            return (
-              <li key={index}>
-                <a href={`#${sectionName.toLowerCase()}`}>{section}</a>
-              </li>
-            );
-          })}
+      <nav className="flex justify-end items-center gap-8">
+        <ul className="flex justify-end items-center gap-8">
+          {navbarItems.map(({ id, label }) => (
+            <li key={id}>
+              <a className="text-sm" href={`#${id}`}>
+                {label}
+              </a>
+            </li>
+          ))}
         </ul>
         <p>
-          <a href="#resume">Resume</a>
+          <a className="text-sm" href="#resume">
+            Resume
+          </a>
         </p>
       </nav>
     </header>
   );
-}
+};
 
 export default Navbar;
