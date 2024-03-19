@@ -3,8 +3,7 @@ import Navbvar from "../Navbar/Navbvar";
 import AboutSection from "./AboutSection";
 import HomeSection from "./HomeSection";
 import SocialIcons from "./SocialIcons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquare } from "@fortawesome/free-solid-svg-icons";
+import NavigationShapes from "./NavigationShapes";
 
 function Container() {
   const [activeDot, setActiveDot] = useState(0);
@@ -39,24 +38,12 @@ function Container() {
   return (
     <div>
       <div className="flex flex-row justify-between relative">
-        <div className="flex flex-col justify-center items-center h-screen ml-12 fixed left-0">
-          {[...Array(5)].map((_, index) => (
-            <div
-              key={index}
-              className={`h-4 w-4 rounded-full my-3`}
-              onClick={() => handleDotClick(index)}
-            >
-              <FontAwesomeIcon
-                icon={faSquare}
-                className={activeDot === index ? "text-color4" : "text-color2"}
-              />
-            </div>
-          ))}
-        </div>
+        <NavigationShapes
+          activeDot={activeDot}
+          handleDotClick={handleDotClick}
+        />
 
-        <div className="flex flex-col justify-center items-center h-screen mr-12 fixed right-0">
-          <SocialIcons />
-        </div>
+        <SocialIcons />
       </div>
 
       <div>
