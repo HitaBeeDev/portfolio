@@ -3,7 +3,7 @@ import "./index.css";
 
 function App() {
   return (
-    <div>
+    <div className="bg-color1">
       <Container />
     </div>
   );

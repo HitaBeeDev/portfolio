@@ -38,7 +38,7 @@ function Container() {
             <div
               key={index}
               className={`h-4 w-4 rounded-full my-2 ${
-                activeDot === index ? "bg-blue-500" : "bg-gray-300"
+                activeDot === index ? "bg-color2" : "bg-gray-300"
               }`}
               onClick={() => handleDotClick(index)}
             ></div>
@@ -54,30 +54,30 @@ function Container() {
       <div>
         <section
           id="topic1"
-          className="h-screen bg-gray-100 flex items-center justify-center"
+          className="h-screen  flex items-center justify-center"
         >
-          <h1 className="text-4xl">Topic 1</h1>
+          <h1 className="text-4xl text-color5">Topic 1</h1>
         </section>
 
         <section
           id="topic2"
           className="h-screen bg-gray-200 flex items-center justify-center"
         >
-          <h1 className="text-4xl">Topic 2</h1>
+          <h1 className="text-4xl text-color2">Topic 2</h1>
         </section>
 
         <section
           id="topic3"
           className="h-screen bg-gray-300 flex items-center justify-center"
         >
-          <h1 className="text-4xl">Topic 3</h1>
+          <h1 className="text-4xl text-color3">Topic 3</h1>
         </section>
 
         <section
           id="topic4"
           className="h-screen bg-gray-400 flex items-center justify-center"
         >
-          <h1 className="text-4xl">Topic 4</h1>
+          <h1 className="text-4xl text-color4">Topic 4</h1>
         </section>
 
         <section
