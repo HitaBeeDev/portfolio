@@ -4,7 +4,7 @@ import AboutSection from "./AboutSection";
 import HomeSection from "./HomeSection";
 import SocialIcons from "./SocialIcons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCube } from "@fortawesome/free-brands-svg-icons";
+import { faSquare } from "@fortawesome/free-solid-svg-icons";
 
 function Container() {
   const [activeDot, setActiveDot] = useState(0);
@@ -43,11 +43,14 @@ function Container() {
           {[...Array(5)].map((_, index) => (
             <div
               key={index}
-              className={`h-4 w-4 rounded-full my-3 ${
-                activeDot === index ? "bg-color4" : "bg-color2"
-              }`}
+              className={`h-4 w-4 rounded-full my-3`}
               onClick={() => handleDotClick(index)}
-            ></div>
+            >
+              <FontAwesomeIcon
+                icon={faSquare}
+                className={activeDot === index ? "text-color4" : "text-color2"}
+              />
+            </div>
           ))}
         </div>
 
@@ -69,28 +72,28 @@ function Container() {
           id="topic2"
           className="mr-32 ml-32 h-screen flex justify-center items-center bg-color3"
         >
-          <AboutSection />
+          topic2
         </section>
 
         <section
           id="topic3"
           className="mr-32 ml-32 h-screen flex justify-center items-center bg-color2"
         >
-          <AboutSection />
+          topic3
         </section>
 
         <section
           id="topic4"
           className="mr-32 ml-32 h-screen flex justify-center items-center bg-color5"
         >
-          <AboutSection />
+          topic4
         </section>
 
         <section
           id="topic5"
           className="mr-32 ml-32 h-screen flex justify-center items-center bg-color4"
         >
-          <AboutSection />
+          topic5
         </section>
       </div>
     </div>
