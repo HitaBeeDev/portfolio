@@ -9,12 +9,12 @@ function HomeSection() {
         </p>
 
         <p className="text-4xl tracking-wider font-medium text-color3 mt-3 mr-[10rem]">
-          Skilled Frontend Developer with a strong foundation in design,
+          Skilled Frontend Developer with a strong background in design,
           ensuring seamless integration of aesthetics and functionality
         </p>
 
         <p className="text-lg tracking-wider text-color2 font-normal  mt-4 mr-[10rem]">
-          I translate ideas into user-friendly web experiences, building the
+          I translate ideas into user-friendly web applications, building the
           front-end with a focus on both creativity and technical excellence.
         </p>
       </div>
