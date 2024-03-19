@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Navbvar from "../Navbar/Navbvar";
 import AboutSection from "./AboutSection";
 import HomeSection from "./HomeSection";
+import SocialIcons from "./SocialIcons";
 
 function Container() {
   const [activeDot, setActiveDot] = useState(0);
@@ -49,8 +50,7 @@ function Container() {
         </div>
 
         <div className="flex flex-col justify-center items-center h-screen bg-red-200 mr-12 fixed right-0">
-          <p className="text-color4">T</p>
-          <p>G</p>
+          <SocialIcons />
         </div>
       </div>
 
