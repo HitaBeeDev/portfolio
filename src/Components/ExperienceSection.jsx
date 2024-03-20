@@ -13,7 +13,7 @@ function AboutSection() {
     >
       <div className="lg:col-span-2 bg-color1"></div>
 
-      <div className="lg:p-10 lg:pb-16 lg:pr-16 lg:col-span-10 p-5 border-r border-b h-[25rem] border-color3">
+      <div className="lg:p-10 lg:pb-16 lg:pr-16 lg:col-span-10 p-5 border-r border-b lg:h-[25rem] border-color3">
         <p className="lg:text-4xl text-xl text-color3 font-semibold tracking-widest">
           <span className="text-color4 font-medium lg:text-2xl text-lg">
             02.{" "}
@@ -21,26 +21,26 @@ function AboutSection() {
           My Career Highlights
         </p>
 
-        <div className="grid grid-cols-12 gap-10 mt-10">
-          <div className="border-l border-color3 h-fit col-span-3 flex flex-col gap-3">
+        <div className="lg:grid lg:grid-cols-12 gap-10 mt-5 lg:mt-10">
+          <div className="lg:border-l border-b border-color3 h-fit col-span-3 flex lg:flex-col flex-row gap-3">
             {jobTabContents.map((tab, index) => (
               <div
                 key={index}
-                className={` cursor-pointer ${
+                className={`cursor-pointer ${
                   index === activeTab
-                    ? "transition-all bg-color2 rounded-r-[0.3rem] duration-500 font-semibold border-l-2 border-color4"
+                    ? "transition-all bg-color2 lg:rounded-r-[0.3rem] rounded-t-[0.3rem] duration-500 font-semibold border-b-2 lg:border-l-2 border-color4"
                     : ""
                 }`}
                 onClick={() => setActiveTab(index)}
               >
-                <p className="h-12 text-color5 text-[0.82rem] flex justify-center items-center">
+                <p className="h-12 w-32 text-color5 text-[0.82rem] flex justify-center items-center">
                   {tab.jobFirm}
                 </p>
               </div>
             ))}
           </div>
 
-          <div className="col-span-9">
+          <div className="col-span-9 mt-5 lg:mt-0">
             <p className="text-[1.2rem] font-semibold text-color4">
               {jobTabContents[activeTab].jobPosition}
             </p>
