@@ -10,7 +10,7 @@ function NavigationShapes({ activeDot, handleDotClick }) {
           key={index}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 2, delay: index * 0.3 }}
+          transition={{ duration: 3.5, delay: index * 0.7 }}
           className={`cursor-pointer my-2`}
           onClick={() => handleDotClick(index)}
         >
@@ -26,7 +26,7 @@ function NavigationShapes({ activeDot, handleDotClick }) {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 2, delay: 1.4 }}
+        transition={{ duration: 3.5, delay: 1.8 }}
         className="border-[0.5px] border-color4 w-52 mt-32 rotate-90"
       ></motion.div>
     </div>

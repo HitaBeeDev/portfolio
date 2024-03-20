@@ -7,7 +7,7 @@ function AboutSection() {
       id="about"
       className="lg:mr-44 lg:ml-44 ml-14 mr-14 lg:grid lg:grid-cols-12 gap-10"
     >
-      <div className="lg:col-span-8 lg:p-10 p-5 border-l border-t border-color3">
+      <div className="lg:col-span-9 lg:p-10 p-5 border-l border-t border-color3">
         <p className="lg:text-4xl text-xl text-color3 font-semibold tracking-widest">
           <span className="text-color4 font-medium lg:text-2xl text-lg">
             01.{" "}
@@ -49,7 +49,7 @@ function AboutSection() {
         </ul>
       </div>
 
-      <div className="hidden lg:col-span-4 lg:flex justify-center items-center">
+      <div className="hidden lg:col-span-3 lg:flex justify-center items-center">
         <div className="h-72 flex justify-center items-center w-full">
           <img className="rounded-md shadow-lg" src={aboutMeImg} />
         </div>

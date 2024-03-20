@@ -10,7 +10,7 @@ function SocialIcons() {
           key={index}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 2, delay: index * 0.3 }}
+          transition={{ duration: 3.5, delay: index * 0.7 }}
           href={link.href}
           target="_blank"
           rel="noopener noreferrer"
@@ -24,7 +24,7 @@ function SocialIcons() {
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 2, delay: 1 }}
+        transition={{ duration: 3.5, delay: 1.8 }}
         className="mt-20 rotate-90 text-color4 text-sm"
       >
         anahita.amiri103@gmail.com
@@ -32,7 +32,7 @@ function SocialIcons() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 2, delay: 1.4 }}
+        transition={{ duration: 3.5, delay: 2 }}
         className="border-[1px] border-color4 w-48 mt-48 rotate-90"
       ></motion.div>
     </div>
