@@ -1,14 +1,20 @@
 import { useState, useEffect } from "react";
-import Navbvar from "../Navbar/Navbvar";
+import Navbvar from "./Navbvar";
 import AboutSection from "./AboutSection";
 import HomeSection from "./HomeSection";
 import SocialIcons from "./SocialIcons";
 import NavigationShapes from "./NavigationShapes";
+import ExperienceSection from "./ExperienceSection";
+import ProjectsSection from "./ProjectsSection";
+import ContactSection from "./ContactSection";
 
 function Container() {
   const [activeDot, setActiveDot] = useState(0);
 
   useEffect(() => {
+    // Scroll to the top of the page when the component mounts
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
     const handleScroll = () => {
       const sections = document.querySelectorAll("section");
       let activeIndex = 0;
@@ -31,57 +37,38 @@ function Container() {
     setActiveDot(index);
     const section = document.getElementById(`topic${index + 1}`);
     if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
+      const offset = 50;
+      const offsetTop =
+        section.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top: offsetTop, behavior: "smooth" });
     }
   };
 
+  const topics = [
+    <HomeSection key="home" />,
+    <AboutSection key="about" />,
+    <ExperienceSection key="experience" />,
+    <ProjectsSection key="projects" />,
+    <ContactSection key="contact" />,
+  ];
+
   return (
     <div>
-      <div className="flex flex-row justify-between relative">
+      <div className="lg:flex lg:flex-row lg:justify-between lg:relative">
         <NavigationShapes
           activeDot={activeDot}
           handleDotClick={handleDotClick}
         />
-
         <SocialIcons />
       </div>
 
       <div>
         <Navbvar />
-
-        <HomeSection />
-
-        <section id="topic1">
-          <AboutSection />
-        </section>
-
-        <section
-          id="topic2"
-          className="mr-32 ml-32 h-screen flex justify-center items-center bg-color3"
-        >
-          topic2
-        </section>
-
-        <section
-          id="topic3"
-          className="mr-32 ml-32 h-screen flex justify-center items-center bg-color2"
-        >
-          topic3
-        </section>
-
-        <section
-          id="topic4"
-          className="mr-32 ml-32 h-screen flex justify-center items-center bg-color5"
-        >
-          topic4
-        </section>
-
-        <section
-          id="topic5"
-          className="mr-32 ml-32 h-screen flex justify-center items-center bg-color4"
-        >
-          topic5
-        </section>
+        {topics.map((topic, index) => (
+          <section key={`topic${index + 1}`} id={`topic${index + 1}`}>
+            {topic}
+          </section>
+        ))}
       </div>
     </div>
   );
