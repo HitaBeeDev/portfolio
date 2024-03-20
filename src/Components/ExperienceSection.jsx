@@ -11,7 +11,7 @@ function AboutSection() {
     >
       <div className="lg:col-span-3 bg-color1"></div>
 
-      <div className="lg:p-10 lg:pb-16 lg:pr-16 lg:col-span-9 p-5 border-r border-b border-color3">
+      <div className="lg:p-10 lg:pb-16 lg:pr-16 lg:col-span-9 p-5 border-r border-b h-[28rem] border-color3">
         <p className="lg:text-4xl text-xl text-color3 font-semibold tracking-widest">
           <span className="text-color4 font-medium lg:text-2xl text-lg">
             02.{" "}
@@ -20,7 +20,7 @@ function AboutSection() {
         </p>
 
         <div className="grid grid-cols-12 gap-8 mt-8">
-          <div className="border-l border-color2 col-span-3 flex flex-col gap-5">
+          <div className="border-l border-color2 h-fit col-span-3 flex flex-col gap-5">
             {jobTabContents.map((tab, index) => (
               <div
                 key={index}
