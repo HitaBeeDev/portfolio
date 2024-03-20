@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import jobTabContents from "./jobTabContents";
 
 function AboutSection() {
@@ -22,17 +23,22 @@ function AboutSection() {
         <div className="grid grid-cols-12 gap-8 mt-8">
           <div className="border-l border-color2 h-fit col-span-3 flex flex-col gap-5">
             {jobTabContents.map((tab, index) => (
-              <div
+              <motion.div
                 key={index}
-                className={` cursor-pointer ${
-                  index === activeTab ? "font-bold border-l border-color5" : ""
+                className={`cursor-pointer ${
+                  index === activeTab ? "font-semibold" : ""
                 }`}
                 onClick={() => setActiveTab(index)}
+                initial={{ borderLeftWidth: 0 }}
+                animate={{
+                  borderLeftWidth: index === activeTab ? 3 : 0,
+                  transition: { duration: 0.6 },
+                }}
               >
                 <p className="h-12 flex justify-center items-center">
                   {tab.jobPosition}
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
 
