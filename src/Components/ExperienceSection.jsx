@@ -8,12 +8,12 @@ function AboutSection() {
 
   return (
     <section
-      id="about"
+      id="experience"
       className="lg:mr-44 lg:ml-44 lg:grid lg:grid-cols-12 ml-14 mr-14 gap-10 mt-36"
     >
-      <div className="lg:col-span-3 bg-color1"></div>
+      <div className="lg:col-span-2 bg-color1"></div>
 
-      <div className="lg:p-10 lg:pb-16 lg:pr-16 lg:col-span-9 p-5 border-r border-b h-[25rem] border-color3">
+      <div className="lg:p-10 lg:pb-16 lg:pr-16 lg:col-span-10 p-5 border-r border-b h-[25rem] border-color3">
         <p className="lg:text-4xl text-xl text-color3 font-semibold tracking-widest">
           <span className="text-color4 font-medium lg:text-2xl text-lg">
             02.{" "}
