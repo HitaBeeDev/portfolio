@@ -1,6 +1,7 @@
 const jobTabContents = [
   {
-    jobPosition: "Software Engineer",
+    jobFirm: "Anibal Bilişim",
+    jobPosition: "Frontend Developer Intern",
     jobDate: "January 2020 - Present",
     jobBulletPoints: [
       "Developed new features for a web application using React.js",
@@ -9,7 +10,8 @@ const jobTabContents = [
     ],
   },
   {
-    jobPosition: "Product Manager",
+    jobFirm: "Jarf Kavan Akam",
+    jobPosition: "Frontend Developer",
     jobDate: "July 2018 - December 2019",
     jobBulletPoints: [
       "Led product development lifecycle from conception to launch",
