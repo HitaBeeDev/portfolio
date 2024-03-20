@@ -64,6 +64,7 @@ function Container() {
 
       <div>
         <Navbvar />
+
         {topics.map((topic, index) => (
           <section key={`topic${index + 1}`} id={`topic${index + 1}`}>
             {topic}
