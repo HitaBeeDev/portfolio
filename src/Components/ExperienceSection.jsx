@@ -39,12 +39,20 @@ function AboutSection() {
           </div>
 
           <div className="col-span-9">
-            <p>{jobTabContents.jobPosition}</p>
-            <p>{jobTabContents[activeTab].jobDate}</p>
-            <ul>
+            <p className="text-[1.2rem] font-semibold text-color4">
+              {jobTabContents[activeTab].jobPosition}
+            </p>
+
+            <p className="text-sm text-color2 mt-2">
+              {jobTabContents[activeTab].jobDate}
+            </p>
+
+            <ul className="mt-3">
               {jobTabContents[activeTab].jobBulletPoints.map(
                 (bullet, bulletIndex) => (
-                  <li key={bulletIndex}>{bullet}</li>
+                  <li className="text-sm mt-2 text-color3" key={bulletIndex}>
+                    {bullet}
+                  </li>
                 )
               )}
             </ul>

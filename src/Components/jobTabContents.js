@@ -2,7 +2,7 @@ const jobTabContents = [
   {
     jobFirm: "Anibal Bilişim",
     jobPosition: "Frontend Developer Intern",
-    jobDate: "January 2020 - Present",
+    jobDate: "November 2023 - January 2024",
     jobBulletPoints: [
       "Developed new features for a web application using React.js",
       "Collaborated with cross-functional teams to deliver projects on time",
