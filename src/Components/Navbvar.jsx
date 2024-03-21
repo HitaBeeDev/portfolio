@@ -54,7 +54,7 @@ function Navbvar() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 4 }}
-          className="cursor-pointer lg:w-10 w-7"
+          className="ml-12 mt-7 cursor-pointer lg:w-10 w-7"
           src={logo}
           alt="Logo"
         />

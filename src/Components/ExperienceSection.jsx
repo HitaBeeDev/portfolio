@@ -9,7 +9,7 @@ function AboutSection() {
   return (
     <section
       id="experience"
-      className="lg:mr-44 lg:ml-44 lg:grid lg:grid-cols-12 ml-14 mr-14 gap-10 mt-36"
+      className="lg:grid lg:grid-cols-12 gap-10 mt-32 lg:mt-40"
     >
       <div className="lg:col-span-2 bg-color1"></div>
 
