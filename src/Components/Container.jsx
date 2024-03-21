@@ -52,7 +52,7 @@ function Container() {
   ];
 
   return (
-    <div className="lg:mr-52 lg:ml-52 ml-8 mr-8">
+    <div>
       <div className="lg:flex lg:flex-row lg:justify-between lg:relative">
         <NavigationShapes
           activeDot={activeDot}
@@ -61,9 +61,9 @@ function Container() {
         <SocialIcons />
       </div>
 
-      <div>
-        <Navbvar />
+      <Navbvar />
 
+      <div className="lg:mr-52 lg:ml-52 ml-8 mr-8">
         {topics.map((topic, index) => (
           <section key={`topic${index + 1}`} id={`topic${index + 1}`}>
             {topic}
