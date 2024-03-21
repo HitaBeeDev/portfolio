@@ -52,7 +52,7 @@ function Container() {
   ];
 
   return (
-    <div>
+    <div className="lg:mr-52 lg:ml-52 ml-8 mr-8">
       <div className="lg:flex lg:flex-row lg:justify-between lg:relative">
         <NavigationShapes
           activeDot={activeDot}

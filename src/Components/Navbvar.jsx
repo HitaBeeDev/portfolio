@@ -43,7 +43,7 @@ function Navbvar() {
 
   return (
     <nav
-      className={`lg:ml-16 lg:mr-16 lg:mt-6 flex flex-row justify-between ${
+      className={`lg:mt-6 flex flex-row justify-between ${
         isSticky
           ? "lg:sticky lg:top-0 lg:bg-color1 lg:z-10 lg:pt-4 lg:pb-4"
           : ""
@@ -54,7 +54,7 @@ function Navbvar() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 4 }}
-          className="ml-12 lg:ml-0 cursor-pointer lg:w-10 w-7 mt-5 lg:mt-0"
+          className="cursor-pointer lg:w-10 w-7"
           src={logo}
           alt="Logo"
         />
