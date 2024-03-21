@@ -6,7 +6,7 @@ function ProjectsSection() {
     >
       <div className="lg:col-span-2 bg-color1"></div>
 
-      <div className="lg:p-10 lg:pb-16 lg:pr-16 lg:col-span-10 p-3 border-r border-b lg:h-[25rem] h-[33rem] border-color3"></div>
+      <div className="lg:p-10 lg:pb-16 lg:pr-16 lg:col-span-10 p-3 border-l border-b border-color3"></div>
     </section>
   );
 }
