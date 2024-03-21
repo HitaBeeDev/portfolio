@@ -36,7 +36,7 @@ function Container() {
     setActiveDot(index);
     const section = document.getElementById(`topic${index + 1}`);
     if (section) {
-      const offset = 50;
+      const offset = 70;
       const offsetTop =
         section.getBoundingClientRect().top + window.scrollY - offset;
       window.scrollTo({ top: offsetTop, behavior: "smooth" });

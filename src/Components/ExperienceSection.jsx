@@ -28,7 +28,7 @@ function AboutSection() {
                 key={index}
                 className={`cursor-pointer ${
                   index === activeTab
-                    ? "transition-all bg-color2 lg:rounded-r-[0.3rem] rounded-t-[0.3rem] duration-500 font-semibold border-b-2 lg:border-l-2 border-color4"
+                    ? "transition-all bg-color2 rounded-tr-[0.3rem] lg:rounded-tl-[0rem] rounded-tl-[0.3rem] lg:rounded-br-[0.3rem] lg:rounded-tr-[0.3rem] duration-500 font-semibold border-b-2 lg:border-l-2 border-color4"
                     : ""
                 }`}
                 onClick={() => setActiveTab(index)}

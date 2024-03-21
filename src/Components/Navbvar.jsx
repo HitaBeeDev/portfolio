@@ -43,7 +43,7 @@ function Navbvar() {
 
   return (
     <nav
-      className={`lg:mt-6 lg:ml-16 lg:mr-16 flex flex-row justify-between ${
+      className={`lg:mt-6 lg:ml-16 lg:mr-16 flex flex-row items-center justify-between ${
         isSticky
           ? "lg:sticky lg:top-0 lg:bg-color1 lg:z-10 lg:pt-4 lg:pb-4"
           : ""
