@@ -2,6 +2,10 @@ function ProjectsSection() {
   return (
     <div>
       ProjectsSection ProjectsSection ProjectsSection ProjectsSection
+      ProjectsSection ProjectsSection ProjectsSection ProjectsSection
+      ProjectsSection ProjectsSection ProjectsSection ProjectsSection
+      ProjectsSection ProjectsSection ProjectsSection ProjectsSection
+      ProjectsSection ProjectsSection ProjectsSection ProjectsSection
       ProjectsSection ProjectsSection ProjectsSection
     </div>
   );
