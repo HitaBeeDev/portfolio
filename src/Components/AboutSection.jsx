@@ -5,7 +5,7 @@ function AboutSection() {
   return (
     <section
       id="about"
-      className="lg:mr-44 lg:ml-44 ml-14 mr-14 lg:grid lg:grid-cols-12 gap-10"
+      className="lg:mr-44 lg:ml-44 ml-8 mr-8 mt-20 lg:mt-0 lg:grid lg:grid-cols-12 gap-10"
     >
       <div className="lg:col-span-9 lg:p-10 p-5 border-l border-t border-color3">
         <p className="lg:text-4xl text-xl text-color3 font-semibold tracking-widest">

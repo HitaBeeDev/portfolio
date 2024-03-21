@@ -12,7 +12,6 @@ function Container() {
   const [activeDot, setActiveDot] = useState(0);
 
   useEffect(() => {
-    // Scroll to the top of the page when the component mounts
     window.scrollTo({ top: 0, behavior: "smooth" });
 
     const handleScroll = () => {
