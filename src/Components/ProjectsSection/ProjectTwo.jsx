@@ -12,7 +12,7 @@ import {
 import projectTools from "./projectTools";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
-function ProjectOne() {
+function ProjectTwo() {
   const images = [project1_Img1, project1_Img2, project1_Img3, project1_Img4];
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -117,4 +117,4 @@ function ProjectOne() {
   );
 }
 
-export default ProjectOne;
+export default ProjectTwo;
