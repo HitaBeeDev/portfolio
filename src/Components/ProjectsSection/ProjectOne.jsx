@@ -5,7 +5,12 @@ import project1_Img2 from "../../assets/A-2.png";
 import project1_Img3 from "../../assets/A-3.png";
 import project1_Img4 from "../../assets/A-4.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquare } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowUpRightFromSquare,
+  faSquare,
+} from "@fortawesome/free-solid-svg-icons";
+import projectTools from "./projectTools";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 function ProjectOne() {
   const images = [project1_Img1, project1_Img2, project1_Img3, project1_Img4];
@@ -72,36 +77,37 @@ function ProjectOne() {
             focus.
           </p>
 
-          <ul className="flex flex-row text-color4 text-sm justify-center items-start gap-5 w-full flex-wrap">
-            <li className="border-color2 border rounded-[0.3rem] text-color3 text-xs p-2 h-6 flex items-center">
-              react
-            </li>
-
-            <li className="border-color2 border rounded-[0.3rem] text-color3 text-xs p-2 h-6 flex items-center">
-              react
-            </li>
-
-            <li className="border-color2 border rounded-[0.3rem] text-color3 text-xs p-2 h-6 flex items-center">
-              react
-            </li>
-
-            <li className="border-color2 border rounded-[0.3rem] text-color3 text-xs p-2 h-6 flex items-center">
-              react
-            </li>
+          <ul className="flex flex-row text-color4 text-sm justify-start items-start gap-x-3 gap-y-2 w-full flex-wrap">
+            {projectTools.map((tool, index) => (
+              <li
+                key={index}
+                className="border-color2 border rounded-[0.3rem] text-color3 text-xs p-2 h-6 flex items-center"
+              >
+                {tool}
+              </li>
+            ))}
           </ul>
 
           <div className="flex flex-row gap-3">
-            <a>
+            <a
+              href="https://github.com/HitaBeeDev/NexStep-Productivity-Dashboard"
+              target="_blank"
+              className="cursor-pointer"
+            >
               <FontAwesomeIcon
-                className="text-color4 w-3 h-3 hover:text-color4 transition-all duration-300"
-                icon={faSquare}
+                className="text-color4 text-xl transition-all duration-500 hover:text-color5"
+                icon={faGithub}
               />
             </a>
 
-            <a>
+            <a
+              href="https://nexstep.vercel.app/"
+              target="_blank"
+              className="cursor-pointer"
+            >
               <FontAwesomeIcon
-                className="text-color4 w-3 h-3 hover:text-color4 transition-all duration-300"
-                icon={faSquare}
+                className="text-color4 text-lg transition-all duration-500 hover:text-color5"
+                icon={faArrowUpRightFromSquare}
               />
             </a>
           </div>

@@ -29,6 +29,7 @@ function SocialIcons() {
       >
         anahita.amiri103@gmail.com
       </motion.p>
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
