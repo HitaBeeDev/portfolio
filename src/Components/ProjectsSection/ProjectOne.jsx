@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import project1_Img1 from "../assets/A-1.png";
-import project1_Img2 from "../assets/A-2.png";
-import project1_Img3 from "../assets/A-3.png";
-import project1_Img4 from "../assets/A-4.png";
+import project1_Img1 from "../../assets/A-1.png";
+import project1_Img2 from "../../assets/A-2.png";
+import project1_Img3 from "../../assets/A-3.png";
+import project1_Img4 from "../../assets/A-4.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSquare } from "@fortawesome/free-solid-svg-icons";
 
-function Projects() {
+function ProjectOne() {
   const images = [project1_Img1, project1_Img2, project1_Img3, project1_Img4];
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -111,4 +111,4 @@ function Projects() {
   );
 }
 
-export default Projects;
+export default ProjectOne;

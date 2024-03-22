@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import Navbvar from "./Navbvar";
-import AboutSection from "./AboutSection";
-import HomeSection from "./HomeSection";
-import SocialIcons from "./SocialIcons";
-import NavigationShapes from "./NavigationShapes";
-import ExperienceSection from "./ExperienceSection";
-import ProjectsSection from "./ProjectsSection";
+import Navbvar from "./Navbar/Navbvar";
+import AboutSection from "./AboutSection/AboutSection";
+import HomeSection from "./Home/HomeSection";
+import SocialIcons from "./Home/SocialIcons";
+import NavigationShapes from "./Home/NavigationShapes";
+import ExperienceSection from "./ExperienceSection/ExperienceSection";
+import ProjectsSection from "./ProjectsSection/ProjectsSection";
 import ContactSection from "./ContactSection";
 
 function Container() {

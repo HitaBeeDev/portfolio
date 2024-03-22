@@ -1,5 +1,4 @@
-import TitleOfSection from "./TitleOfSection";
-
+import TitleOfSection from "../UI/TitleOfSection";
 import Projects from "./Projects";
 
 function ProjectsSection() {

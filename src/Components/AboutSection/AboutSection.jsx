@@ -1,6 +1,6 @@
 import technologies from "./aboutTechnologies";
-import aboutMeImg from "../assets/aboutMeImg.png";
-import TitleOfSection from "./TitleOfSection";
+import aboutMeImg from "../../assets/aboutMeImg.png";
+import TitleOfSection from "../UI/TitleOfSection";
 
 function AboutSection() {
   return (

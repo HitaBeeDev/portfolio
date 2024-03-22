@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import navbarItems from "./navbarItems";
 import { motion } from "framer-motion";
-import logo from "../assets/logo.png";
+import logo from "../../assets/logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBarsStaggered } from "@fortawesome/free-solid-svg-icons";
 

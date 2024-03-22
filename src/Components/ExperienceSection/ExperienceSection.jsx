@@ -2,7 +2,7 @@ import { useState } from "react";
 import jobTabContents from "./jobTabContents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDiamond } from "@fortawesome/free-solid-svg-icons";
-import TitleOfSection from "./TitleOfSection";
+import TitleOfSection from "../UI/TitleOfSection";
 
 function AboutSection() {
   const [activeTab, setActiveTab] = useState(0);
