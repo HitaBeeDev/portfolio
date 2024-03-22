@@ -77,7 +77,7 @@ function ProjectOne() {
             focus.
           </p>
 
-          <ul className="flex flex-row text-color4 text-sm justify-start items-start gap-x-3 gap-y-2 w-full flex-wrap">
+          <ul className="flex flex-row text-color4 text-sm justify-end items-start gap-x-3 gap-y-2 w-full flex-wrap">
             {projectTools.map((tool, index) => (
               <li
                 key={index}
