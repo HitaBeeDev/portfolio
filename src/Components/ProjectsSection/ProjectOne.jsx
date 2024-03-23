@@ -46,7 +46,7 @@ function ProjectOne() {
             )}
           </AnimatePresence>
 
-          <div className="flex flex-row gap-3 absolute bottom-2 left-1/2 transform -translate-x-1/2">
+          <div className="flex flex-row gap-[0.6rem] absolute bottom-2 left-1/2 transform -translate-x-1/2">
             {images.map((_, index) => (
               <div
                 key={index}
@@ -56,7 +56,7 @@ function ProjectOne() {
                 onClick={() => handleSquareClick(index)}
               >
                 <FontAwesomeIcon
-                  className="text-color3 w-3 h-3 hover:text-color4 transition-all duration-300"
+                  className="text-color3 w-2 h-2 hover:text-color4 transition-all duration-300"
                   icon={faSquare}
                 />
               </div>
