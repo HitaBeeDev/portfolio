@@ -1,5 +1,6 @@
 import TitleOfSection from "../UI/TitleOfSection";
-import Projects from "./Projects";
+import ProjectOne from "./ProjectOne";
+import ProjectTwo from "./ProjectTwo";
 
 function ProjectsSection() {
   return (
@@ -9,7 +10,9 @@ function ProjectsSection() {
     >
       <TitleOfSection span={0.3} title="Some projects I've built:" />
 
-      <Projects />
+      <ProjectOne />
+
+      <ProjectTwo />
     </section>
   );
 }

@@ -2,26 +2,42 @@ import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSquare } from "@fortawesome/free-solid-svg-icons";
 
-function NavigationShapes({ activeDot, handleDotClick }) {
+function NavigationShapes({
+  topics,
+  activeTopicIndex,
+  setActiveTopicIndex,
+  topicRefs,
+}) {
+  const scrollToTopic = (index) => {
+    const topicElement = topicRefs.current[index].current;
+    const yOffset = -80;
+    const y =
+      topicElement.getBoundingClientRect().top + window.pageYOffset + yOffset;
+    window.scrollTo({ top: y, behavior: "smooth" });
+    setActiveTopicIndex(index);
+  };
+
   return (
-    <div className="hidden lg:flex flex-col justify-end items-center w-8 h-screen ml-16 fixed left-0 bottom-0">
-      {[...Array(4)].map((_, index) => (
-        <motion.div
-          key={index}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 3.5, delay: index * 0.7 }}
-          className={`cursor-pointer my-2`}
-          onClick={() => handleDotClick(index)}
-        >
+    <div className="hidden gap-5 lg:flex flex-col justify-end items-center w-8 h-screen ml-16 fixed left-0 bottom-0">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 3.5, delay: 0.8 }}
+        className="cursor-pointer flex flex-col gap-5"
+      >
+        {topics.map((topic, index) => (
           <FontAwesomeIcon
+            key={`square${index}`}
             icon={faSquare}
             className={`w-3 h-3 ${
-              activeDot === index + 2 ? "text-color4 rotate-45" : "text-color3"
+              activeTopicIndex === index
+                ? "text-color5 rotate-45"
+                : "text-color4 rotate-90"
             }`}
+            onClick={() => scrollToTopic(index)}
           />
-        </motion.div>
-      ))}
+        ))}
+      </motion.div>
 
       <motion.div
         initial={{ opacity: 0 }}

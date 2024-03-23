@@ -4,7 +4,7 @@ import TitleOfSection from "../UI/TitleOfSection";
 
 function AboutSection() {
   return (
-    <section id="about" className="gap-10 lg:p-10 p-5 border-r border-color2">
+    <section id="about" className="lg:p-10 p-5 border-r border-color2">
       <TitleOfSection span={0.1} title="About Me" />
 
       <div className="lg:grid lg:grid-cols-12">
