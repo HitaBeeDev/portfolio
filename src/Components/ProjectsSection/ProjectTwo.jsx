@@ -1,19 +1,32 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import project1_Img1 from "../../assets/A-1.png";
-import project1_Img2 from "../../assets/A-2.png";
-import project1_Img3 from "../../assets/A-3.png";
-import project1_Img4 from "../../assets/A-4.png";
+import project2_Img1 from "../../assets/B-1.png";
+import project2_Img2 from "../../assets/B-2.png";
+import project2_Img3 from "../../assets/B-3.png";
+import project2_Img4 from "../../assets/B-4.png";
+import project2_Img5 from "../../assets/B-5.png";
+import project2_Img6 from "../../assets/B-6.png";
+import project2_Img7 from "../../assets/B-7.png";
+import project2_Img8 from "../../assets/B-8.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowUpRightFromSquare,
   faSquare,
 } from "@fortawesome/free-solid-svg-icons";
-import projectTools from "./projectTools";
+import projectTwoTools from "./projectTwoTools";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 function ProjectTwo() {
-  const images = [project1_Img1, project1_Img2, project1_Img3, project1_Img4];
+  const images = [
+    project2_Img1,
+    project2_Img2,
+    project2_Img3,
+    project2_Img4,
+    project2_Img5,
+    project2_Img6,
+    project2_Img7,
+    project2_Img8,
+  ];
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
@@ -22,7 +35,55 @@ function ProjectTwo() {
   };
 
   return (
-    <div className="lg:grid lg:grid-cols-12 mt-10 gap-10">
+    <div className="lg:grid lg:grid-cols-12 mt-32 gap-10">
+      <div className="lg:col-span-5 flex justify-start items-center">
+        <div className="h-full p-3 flex flex-col justify-between items-start">
+          <p className="text-3xl font-semibold text-color4">wellNest</p>
+
+          <p className="text-sm text-left text-color5 bg-color2/30 p-5 rounded-[0.3rem]">
+            WellNest is a wellness platform built with React, Tailwind CSS,
+            Framer Motion, and Swiper. It offers personalized plans, self-care
+            tips, and mindfulness exercises through a responsive and engaging
+            design.
+          </p>
+
+          <ul className="flex flex-row text-color4 text-sm justify-start items-start gap-x-3 gap-y-2 w-full flex-wrap">
+            {projectTwoTools.map((tool, index) => (
+              <li
+                key={index}
+                className="border-color2 border rounded-[0.3rem] text-color3 text-xs p-2 h-6 flex items-center"
+              >
+                {tool}
+              </li>
+            ))}
+          </ul>
+
+          <div className="flex flex-row gap-3">
+            <a
+              href="https://github.com/HitaBeeDev/wellNest"
+              target="_blank"
+              className="cursor-pointer"
+            >
+              <FontAwesomeIcon
+                className="text-color4 text-xl transition-all duration-500 hover:text-color5"
+                icon={faGithub}
+              />
+            </a>
+
+            <a
+              href="https://well-nest.vercel.app/"
+              target="_blank"
+              className="cursor-pointer"
+            >
+              <FontAwesomeIcon
+                className="text-color4 text-lg transition-all duration-500 hover:text-color5"
+                icon={faArrowUpRightFromSquare}
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+
       <div className="lg:col-span-7 flex justify-center items-center">
         <div className="rounded-[0.3rem] w-full h-[20rem] relative overflow-hidden">
           <AnimatePresence initial={false} custom={selectedImageIndex}>
@@ -61,55 +122,6 @@ function ProjectTwo() {
                 />
               </div>
             ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="lg:col-span-5 flex justify-end items-center">
-        <div className="h-full p-3 flex flex-col justify-between items-end">
-          <p className="text-3xl font-semibold text-color4">NexStep</p>
-
-          <p className="text-sm text-right text-color5 bg-color2/30 p-5 rounded-[0.3rem]">
-            Enhanced React Productivity Dashboard combines a Habit Tracker,
-            To-Do List, and Pomodoro Timer into a single, streamlined
-            application. Designed for efficiency and ease of use, it's the
-            perfect tool for anyone looking to improve their productivity and
-            focus.
-          </p>
-
-          <ul className="flex flex-row text-color4 text-sm justify-end items-start gap-x-3 gap-y-2 w-full flex-wrap">
-            {projectTools.map((tool, index) => (
-              <li
-                key={index}
-                className="border-color2 border rounded-[0.3rem] text-color3 text-xs p-2 h-6 flex items-center"
-              >
-                {tool}
-              </li>
-            ))}
-          </ul>
-
-          <div className="flex flex-row gap-3">
-            <a
-              href="https://github.com/HitaBeeDev/NexStep-Productivity-Dashboard"
-              target="_blank"
-              className="cursor-pointer"
-            >
-              <FontAwesomeIcon
-                className="text-color4 text-xl transition-all duration-500 hover:text-color5"
-                icon={faGithub}
-              />
-            </a>
-
-            <a
-              href="https://nexstep.vercel.app/"
-              target="_blank"
-              className="cursor-pointer"
-            >
-              <FontAwesomeIcon
-                className="text-color4 text-lg transition-all duration-500 hover:text-color5"
-                icon={faArrowUpRightFromSquare}
-              />
-            </a>
           </div>
         </div>
       </div>

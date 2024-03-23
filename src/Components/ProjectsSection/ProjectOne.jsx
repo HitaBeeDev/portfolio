@@ -9,7 +9,7 @@ import {
   faArrowUpRightFromSquare,
   faSquare,
 } from "@fortawesome/free-solid-svg-icons";
-import projectTools from "./projectTools";
+import projectOneTools from "./projectOneTools";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 function ProjectOne() {
@@ -78,7 +78,7 @@ function ProjectOne() {
           </p>
 
           <ul className="flex flex-row text-color4 text-sm justify-end items-start gap-x-3 gap-y-2 w-full flex-wrap">
-            {projectTools.map((tool, index) => (
+            {projectOneTools.map((tool, index) => (
               <li
                 key={index}
                 className="border-color2 border rounded-[0.3rem] text-color3 text-xs p-2 h-6 flex items-center"

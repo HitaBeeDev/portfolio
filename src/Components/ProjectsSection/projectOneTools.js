@@ -1,4 +1,4 @@
-const projectTools = [
+const projectOneTools = [
   "React",
   "Tailwind CSS",
   "React Router",
@@ -7,4 +7,4 @@ const projectTools = [
   "Material-UI",
 ];
 
-export default projectTools;
+export default projectOneTools;
