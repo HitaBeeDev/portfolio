@@ -20,7 +20,10 @@ function ArchiveProjectsSection() {
       </div>
 
       <div className="grid grid-cols-3 gap-5 mt-10">
-        <ArchiveProject />
+        <ArchiveProject
+          hrefGithub="https://github.com/HitaBeeDev/skyQuest"
+          hrefLink="https://sky-quest-adventures.vercel.app/"
+        />
 
         <div className="bg-color2">Item 1</div>
 

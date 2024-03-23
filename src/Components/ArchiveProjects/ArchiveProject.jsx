@@ -3,7 +3,7 @@ import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-function ArchiveProject() {
+function ArchiveProject({ hrefGithub, hrefLink }) {
   const archiveProjectsTools = [
     {
       projectOne: ["React", "Tailwind CSS", "Material-UI", "Framer Motion"],
@@ -17,11 +17,7 @@ function ArchiveProject() {
     <div className="bg-color2 flex flex-col gap-5 p-5 justify-center items-center bg-opacity-10 rounded-[0.3rem] shadow-xl h-[23rem] backdrop-blur-sm backdrop-filter">
       <div className="flex flex-row gap-3 justify-end w-full">
         <div>
-          <a
-            href="https://github.com/HitaBeeDev/skyQuest"
-            target="_blank"
-            className="cursor-pointer"
-          >
+          <a href={hrefGithub} target="_blank" className="cursor-pointer">
             <FontAwesomeIcon
               className="text-color4 text-sm transition-all duration-500 hover:text-color5"
               icon={faGithub}
@@ -30,11 +26,7 @@ function ArchiveProject() {
         </div>
 
         <div>
-          <a
-            href="https://sky-quest-adventures.vercel.app/"
-            target="_blank"
-            className="cursor-pointer"
-          >
+          <a href={hrefLink} target="_blank" className="cursor-pointer">
             <FontAwesomeIcon
               className="text-color4 text-sm transition-all duration-500 hover:text-color5"
               icon={faArrowUpRightFromSquare}
@@ -45,7 +37,7 @@ function ArchiveProject() {
 
       <img className="w-2/3" src={archiveProjectOneImg} />
 
-      <div className="">
+      <div>
         <p className="text-sm text-color4 font-semibold">SkyQuest</p>
 
         <p className="text-[0.75rem] text-color5 font-normal mt-2">
