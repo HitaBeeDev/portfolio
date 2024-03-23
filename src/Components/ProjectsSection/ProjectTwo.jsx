@@ -15,6 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import projectTwoTools from "./projectTwoTools";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import GithubLinkIcons from "../UI/GithubLinkIcons";
 
 function ProjectTwo() {
   const images = [
@@ -58,29 +59,10 @@ function ProjectTwo() {
             ))}
           </ul>
 
-          <div className="flex flex-row gap-3">
-            <a
-              href="https://github.com/HitaBeeDev/wellNest"
-              target="_blank"
-              className="cursor-pointer"
-            >
-              <FontAwesomeIcon
-                className="text-color4 text-xl transition-all duration-500 hover:text-color5"
-                icon={faGithub}
-              />
-            </a>
-
-            <a
-              href="https://well-nest.vercel.app/"
-              target="_blank"
-              className="cursor-pointer"
-            >
-              <FontAwesomeIcon
-                className="text-color4 text-lg transition-all duration-500 hover:text-color5"
-                icon={faArrowUpRightFromSquare}
-              />
-            </a>
-          </div>
+          <GithubLinkIcons
+            hrefGithub="https://github.com/HitaBeeDev/wellNest"
+            hrefLink="https://well-nest.vercel.app/"
+          />
         </div>
       </div>
 
