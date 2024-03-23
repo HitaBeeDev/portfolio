@@ -6,7 +6,7 @@ import SocialIcons from "./Home/SocialIcons";
 import ExperienceSection from "./ExperienceSection/ExperienceSection";
 import ProjectsSection from "./ProjectsSection/ProjectsSection";
 import ContactSection from "./ContactSection";
-import ArchiveProjects from "./ArchiveProjects/ArchiveProjects";
+import ArchiveProjectsSection from "./ArchiveProjects/ArchiveProjectsSection";
 import NavigationShapes from "./Home/NavigationShapes";
 
 function Container() {
@@ -15,7 +15,7 @@ function Container() {
     <AboutSection key="about" />,
     <ExperienceSection key="experience" />,
     <ProjectsSection key="projects" />,
-    <ArchiveProjects key="archive-projects" />,
+    <ArchiveProjectsSection key="archive-projects" />,
     <ContactSection key="contact" />,
   ];
 
