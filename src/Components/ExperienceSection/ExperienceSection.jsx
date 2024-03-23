@@ -8,7 +8,7 @@ function AboutSection() {
   const [activeTab, setActiveTab] = useState(0);
 
   return (
-    <section id="experience" className=" gap-10 mt-32 lg:mt-40">
+    <section id="experience" className="gap-10 mt-32 lg:mt-40">
       <div className="lg:grid lg:grid-cols-12">
         <div className="lg:col-span-2 bg-color1"></div>
 
