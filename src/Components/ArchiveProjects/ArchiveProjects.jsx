@@ -1,5 +1,8 @@
 import TitleOfSection from "../UI/TitleOfSection";
 import archiveProjectOneImg from "../../assets/C-1.png";
+import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function ArchiveProjects() {
   const archiveProjectOne = [
@@ -27,7 +30,35 @@ function ArchiveProjects() {
       </div>
 
       <div className="grid grid-cols-3 gap-5 mt-10">
-        <div className="bg-color2 flex flex-col gap-5 p-5 justify-center items-center bg-opacity-10 rounded-[0.3rem] shadow-xl h-[20rem] backdrop-blur-sm backdrop-filter">
+        <div className="bg-color2 flex flex-col gap-5 p-5 justify-center items-center bg-opacity-10 rounded-[0.3rem] shadow-xl h-[23rem] backdrop-blur-sm backdrop-filter">
+          <div className="flex flex-row gap-3 justify-end w-full">
+            <div>
+              <a
+                href="https://github.com/HitaBeeDev/skyQuest"
+                target="_blank"
+                className="cursor-pointer"
+              >
+                <FontAwesomeIcon
+                  className="text-color4 text-sm transition-all duration-500 hover:text-color5"
+                  icon={faGithub}
+                />
+              </a>
+            </div>
+
+            <div>
+              <a
+                href="https://sky-quest-adventures.vercel.app/"
+                target="_blank"
+                className="cursor-pointer"
+              >
+                <FontAwesomeIcon
+                  className="text-color4 text-sm transition-all duration-500 hover:text-color5"
+                  icon={faArrowUpRightFromSquare}
+                />
+              </a>
+            </div>
+          </div>
+
           <img className="w-2/3" src={archiveProjectOneImg} />
 
           <div className="">
