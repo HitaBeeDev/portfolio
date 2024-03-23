@@ -6,7 +6,7 @@ import project1_Img3 from "../../assets/A-3.png";
 import project1_Img4 from "../../assets/A-4.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSquare } from "@fortawesome/free-solid-svg-icons";
-import projectOneTools from "./projectOneTools";
+import projectsTools from "./projectsTools";
 import GithubLinkIcons from "../UI/GithubLinkIcons";
 
 function ProjectOne() {
@@ -75,7 +75,7 @@ function ProjectOne() {
           </p>
 
           <ul className="flex flex-row text-color4 text-sm justify-end items-start gap-x-3 gap-y-2 w-full flex-wrap">
-            {projectOneTools.map((tool, index) => (
+            {projectsTools[0].projectOne.map((tool, index) => (
               <li
                 key={index}
                 className="border-color2 border rounded-[0.3rem] text-color3 text-xs p-2 h-6 flex items-center"

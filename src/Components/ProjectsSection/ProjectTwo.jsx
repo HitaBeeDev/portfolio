@@ -9,12 +9,9 @@ import project2_Img6 from "../../assets/B-6.png";
 import project2_Img7 from "../../assets/B-7.png";
 import project2_Img8 from "../../assets/B-8.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowUpRightFromSquare,
-  faSquare,
-} from "@fortawesome/free-solid-svg-icons";
-import projectTwoTools from "./projectTwoTools";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faSquare } from "@fortawesome/free-solid-svg-icons";
+import projectsTools from "./projectsTools";
+
 import GithubLinkIcons from "../UI/GithubLinkIcons";
 
 function ProjectTwo() {
@@ -48,8 +45,8 @@ function ProjectTwo() {
             design.
           </p>
 
-          <ul className="flex flex-row text-color4 text-sm justify-start items-start gap-x-3 gap-y-2 w-full flex-wrap">
-            {projectTwoTools.map((tool, index) => (
+          <ul className="flex flex-row text-color4 text-sm justify-end items-start gap-x-3 gap-y-2 w-full flex-wrap">
+            {projectsTools[1].projectTwo.map((tool, index) => (
               <li
                 key={index}
                 className="border-color2 border rounded-[0.3rem] text-color3 text-xs p-2 h-6 flex items-center"
