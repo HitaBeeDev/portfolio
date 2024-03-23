@@ -4,11 +4,13 @@ import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function ArchiveProject() {
-  const archiveProjectOne = [
-    "React",
-    "Tailwind CSS",
-    "Material-UI",
-    "Framer Motion",
+  const archiveProjectsTools = [
+    {
+      projectOne: ["React", "Tailwind CSS", "Material-UI", "Framer Motion"],
+    },
+    {
+      projectTwo: ["React", "Tailwind CSS"],
+    },
   ];
 
   return (
@@ -53,7 +55,7 @@ function ArchiveProject() {
         </p>
 
         <ul className="flex flex-row text-[0.68rem] gap-x-3 gap-y-2 flex-wrap mt-3">
-          {archiveProjectOne.map((tech, index) => (
+          {archiveProjectsTools[0].projectOne.map((tech, index) => (
             <li
               key={index}
               className="border-color2 border text-color3 rounded-[0.3rem] p-1 h-5 flex items-center"

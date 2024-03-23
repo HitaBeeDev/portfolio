@@ -1,10 +1,17 @@
-const projectOneTools = [
-  "React",
-  "Tailwind CSS",
-  "React Router",
-  "Context API",
-  "React Spring",
-  "Material-UI",
+const projectsTools = [
+  {
+    projectOne: [
+      "React",
+      "Tailwind CSS",
+      "React Router",
+      "Context API",
+      "React Spring",
+      "Material-UI",
+    ],
+  },
+  {
+    projectTwo: ["React", "Tailwind CSS", "Framer Motion", "Material-UI"],
+  },
 ];
 
-export default projectOneTools;
+export default projectsTools;
