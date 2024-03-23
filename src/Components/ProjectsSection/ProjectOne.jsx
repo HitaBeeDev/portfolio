@@ -5,12 +5,9 @@ import project1_Img2 from "../../assets/A-2.png";
 import project1_Img3 from "../../assets/A-3.png";
 import project1_Img4 from "../../assets/A-4.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowUpRightFromSquare,
-  faSquare,
-} from "@fortawesome/free-solid-svg-icons";
+import { faSquare } from "@fortawesome/free-solid-svg-icons";
 import projectOneTools from "./projectOneTools";
-import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import GithubLinkIcons from "../UI/GithubLinkIcons";
 
 function ProjectOne() {
   const images = [project1_Img1, project1_Img2, project1_Img3, project1_Img4];
@@ -88,29 +85,10 @@ function ProjectOne() {
             ))}
           </ul>
 
-          <div className="flex flex-row gap-3">
-            <a
-              href="https://github.com/HitaBeeDev/NexStep-Productivity-Dashboard"
-              target="_blank"
-              className="cursor-pointer"
-            >
-              <FontAwesomeIcon
-                className="text-color4 text-xl transition-all duration-500 hover:text-color5"
-                icon={faGithub}
-              />
-            </a>
-
-            <a
-              href="https://nexstep.vercel.app/"
-              target="_blank"
-              className="cursor-pointer"
-            >
-              <FontAwesomeIcon
-                className="text-color4 text-lg transition-all duration-500 hover:text-color5"
-                icon={faArrowUpRightFromSquare}
-              />
-            </a>
-          </div>
+          <GithubLinkIcons
+            hrefGithub="https://github.com/HitaBeeDev/NexStep-Productivity-Dashboard"
+            hrefLink="https://nexstep.vercel.app/"
+          />
         </div>
       </div>
     </div>
