@@ -6,8 +6,9 @@ import project1_Img3 from "../../assets/A-3.png";
 import project1_Img4 from "../../assets/A-4.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSquare } from "@fortawesome/free-solid-svg-icons";
-import projectsTools from "./projectsTools";
+import toolsList from "./toolsList";
 import GithubLinkIcons from "../UI/GithubLinkIcons";
+import ProjectsTools from "./ProjectsTools";
 
 function ProjectOne() {
   const images = [project1_Img1, project1_Img2, project1_Img3, project1_Img4];
@@ -19,9 +20,9 @@ function ProjectOne() {
   };
 
   return (
-    <div className="lg:grid lg:grid-cols-12 mt-10 gap-10">
-      <div className="lg:col-span-7 flex justify-center items-center">
-        <div className="rounded-[0.3rem] w-full h-[20rem] relative overflow-hidden">
+    <div className="lg:grid lg:grid-cols-12 flex flex-col mt-10 lg:gap-10 gap-5">
+      <div className="lg:col-span-7 flex flex-col justify-center items-center">
+        <div className="rounded-[0.3rem] w-full lg:h-[20rem] h-[14rem] relative overflow-auto lg:overflow-hidden">
           <AnimatePresence initial={false} custom={selectedImageIndex}>
             {images.map(
               (image, index) =>
@@ -53,7 +54,7 @@ function ProjectOne() {
                 onClick={() => handleSquareClick(index)}
               >
                 <FontAwesomeIcon
-                  className="text-color3 w-2 h-2 hover:text-color4 transition-all duration-300"
+                  className="text-color3 lg:w-2 lg:h-2 w-3 h-3 hover:text-color4 transition-all duration-300"
                   icon={faSquare}
                 />
               </div>
@@ -63,7 +64,7 @@ function ProjectOne() {
       </div>
 
       <div className="lg:col-span-5 flex justify-end items-center">
-        <div className="h-full p-3 flex flex-col justify-between items-end">
+        <div className="h-full p-3 flex flex-col justify-center lg:jus gap-3 items-end">
           <p className="text-3xl font-semibold text-color4">NexStep</p>
 
           <p className="text-sm text-right text-color5 bg-color2/30 p-5 rounded-[0.3rem]">
@@ -74,16 +75,7 @@ function ProjectOne() {
             focus.
           </p>
 
-          <ul className="flex flex-row text-color4 text-sm justify-end items-start gap-x-3 gap-y-2 w-full flex-wrap">
-            {projectsTools[0].projectOne.map((tool, index) => (
-              <li
-                key={index}
-                className="border-color2 border rounded-[0.3rem] text-color3 text-xs p-2 h-6 flex items-center"
-              >
-                {tool}
-              </li>
-            ))}
-          </ul>
+          <ProjectsTools tools={toolsList[0].projectOne} />
 
           <GithubLinkIcons
             hrefGithub="https://github.com/HitaBeeDev/NexStep-Productivity-Dashboard"

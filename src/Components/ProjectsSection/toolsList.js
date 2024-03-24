@@ -1,4 +1,4 @@
-const projectsTools = [
+const toolsList = [
   {
     projectOne: [
       "React",
@@ -14,4 +14,4 @@ const projectsTools = [
   },
 ];
 
-export default projectsTools;
+export default toolsList;

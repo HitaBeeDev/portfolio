@@ -4,7 +4,7 @@ function HomeSection() {
   return (
     <section
       id="home"
-      className="flex-col justify-center mt-14 lg:mt-0 lg:flex items-start h-screen"
+      className="flex-col justify-center mt-14 lg:mt-0 lg:flex items-start lg:h-screen"
     >
       <motion.p
         initial={{ y: -20, opacity: 0 }}

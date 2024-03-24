@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import logo from "../../assets/logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBarsStaggered } from "@fortawesome/free-solid-svg-icons";
+import Resume from "../Resume";
 
 function Navbvar() {
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -43,7 +44,7 @@ function Navbvar() {
 
   return (
     <nav
-      className={`lg:mt-6 lg:ml-16 lg:mr-16 flex flex-row items-center justify-between ${
+      className={`lg:mt-6 lg:ml-16 lg:mr-16 ml-5 mr-5 flex flex-row justify-between ${
         isSticky
           ? "lg:sticky lg:top-0 lg:bg-color1 lg:z-10 lg:pt-4 lg:pb-4"
           : ""
@@ -54,7 +55,7 @@ function Navbvar() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 4 }}
-          className="ml-12 mt-7 cursor-pointer lg:w-10 w-7"
+          className="mt-7 cursor-pointer lg:w-10 w-7"
           src={logo}
           alt="Logo"
         />
@@ -84,19 +85,14 @@ function Navbvar() {
               ))}
             </ul>
 
-            <p className="p-3 w-24 h-10 flex justify-center items-center border-2 rounded-[0.3rem] border-color3 transition-all duration-500 hover:border-color4 hover:bg-color4 shadow-xl">
-              <a
-                className="text-sm font-semibold text-color4 transition-all duration-500 hover:text-color1 2"
-                href="#resume"
-              >
-                Resume
-              </a>
-            </p>
+            <div>
+              <Resume />
+            </div>
           </motion.div>
         )}
 
         <FontAwesomeIcon
-          className={`cursor-pointer mr-12 mt-7 text-color3 w-5 h-5 absolute ${
+          className={`cursor-pointer mt-7 text-color3 w-5 h-5 absolute ${
             isNavOpen ? "rotate-90" : ""
           }`}
           icon={faBarsStaggered}
@@ -104,7 +100,7 @@ function Navbvar() {
         />
       </div>
 
-      <div className="hidden lg:flex flex-row justify-center gap-8">
+      <div className="hidden lg:flex flex-row justify-center items-center gap-8">
         <ul className="flex justify-end items-center gap-8">
           {navbarItems.map(({ id, label, span }, index) => (
             <motion.li
@@ -128,19 +124,13 @@ function Navbvar() {
           ))}
         </ul>
 
-        <motion.p
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 4 }}
-          className="p-3 w-24 h-10 flex justify-center items-center border-2 rounded-[0.3rem] border-color3 transition-all duration-500 hover:border-color4 hover:bg-color4 shadow-xl"
         >
-          <a
-            className="text-sm font-semibold text-color4 transition-all duration-500 hover:text-color1 2"
-            href="#resume"
-          >
-            Resume
-          </a>
-        </motion.p>
+          <Resume />
+        </motion.div>
       </div>
     </nav>
   );

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSquare } from "@fortawesome/free-solid-svg-icons";
@@ -8,6 +9,28 @@ function NavigationShapes({
   setActiveTopicIndex,
   topicRefs,
 }) {
+  // Function to handle scroll event
+  const handleScroll = () => {
+    // Find the active topic based on scroll position
+    let activeIndex = 0;
+    topicRefs.current.forEach((ref, index) => {
+      const { top } = ref.current.getBoundingClientRect();
+      if (top < window.innerHeight / 2) {
+        activeIndex = index;
+      }
+    });
+    setActiveTopicIndex(activeIndex);
+  };
+
+  // Effect to add scroll event listener on component mount
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []); // Empty dependency array to run effect only once on mount
+
+  // Function to scroll to a topic
   const scrollToTopic = (index) => {
     const topicElement = topicRefs.current[index].current;
     const yOffset = -80;

@@ -8,6 +8,7 @@ import ProjectsSection from "./ProjectsSection/ProjectsSection";
 import ContactSection from "./ContactSection";
 import ArchiveProjectsSection from "./ArchiveProjects/ArchiveProjectsSection";
 import NavigationShapes from "./Home/NavigationShapes";
+import Footer from "./Footer";
 
 function Container() {
   const topics = [
@@ -48,6 +49,8 @@ function Container() {
           </section>
         ))}
       </div>
+
+      <Footer />
     </div>
   );
 }
