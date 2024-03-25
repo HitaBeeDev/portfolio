@@ -44,7 +44,7 @@ function Navbvar() {
 
   return (
     <nav
-      className={`lg:mt-6 lg:ml-16 lg:mr-16 ml-5 mr-5 flex flex-row justify-between ${
+      className={`lg:mt-6 lg:ml-16 lg:mr-16 flex flex-row justify-between ${
         isSticky
           ? "lg:sticky lg:top-0 lg:bg-color1 lg:z-10 lg:pt-4 lg:pb-4"
           : ""
@@ -55,7 +55,7 @@ function Navbvar() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 4 }}
-          className="mt-7 cursor-pointer lg:w-10 w-7"
+          className="mt-7 ml-5 cursor-pointer lg:w-10 w-7"
           src={logo}
           alt="Logo"
         />
@@ -92,7 +92,7 @@ function Navbvar() {
         )}
 
         <FontAwesomeIcon
-          className={`cursor-pointer mt-7 text-color3 w-5 h-5 absolute ${
+          className={`cursor-pointer mr-5 mt-7 text-color3 w-5 h-5 absolute ${
             isNavOpen ? "rotate-90" : ""
           }`}
           icon={faBarsStaggered}
