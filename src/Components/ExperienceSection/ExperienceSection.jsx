@@ -27,7 +27,7 @@ function AboutSection() {
                   }`}
                   onClick={() => setActiveTab(index)}
                 >
-                  <p className="h-12 w-44 text-color5 lg:text-[0.82rem] text-[0.75rem] flex justify-center items-center">
+                  <p className="h-12 lg:w-44 w-40 text-color5 lg:text-[0.82rem] text-[0.75rem] flex justify-center items-center">
                     {tab.jobFirm}
                   </p>
                 </div>
