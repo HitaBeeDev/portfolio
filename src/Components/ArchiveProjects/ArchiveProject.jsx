@@ -11,7 +11,7 @@ function ArchiveProject({
   projectsTools,
 }) {
   return (
-    <div className="bg-color2 flex flex-col gap-5 lg:p-5 p-7 justify-between items-center bg-opacity-10 rounded-[0.3rem] shadow-xl h-[23rem] backdrop-blur-sm backdrop-filter">
+    <div className="bg-color2 flex flex-col gap-5 lg:p-5 p-7 justify-between items-center bg-opacity-10 rounded-[0.3rem] shadow-xl lg:h-[23rem] backdrop-blur-sm backdrop-filter">
       <div className="flex flex-row gap-3 -mt-2 justify-end w-full">
         <ArchiveIcons href={hrefGithub} icon={faGithub} />
         <ArchiveIcons href={hrefLink} icon={faArrowUpRightFromSquare} />
