@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# portfolio reference docs
+AGENTS.md
+PORTFOLIO_CHECKLIST.md
+PORTFOLIO_OVERVIEW.md
+PORTFOLIO_WEBSITE_BUILD_CHECKLIST.md
