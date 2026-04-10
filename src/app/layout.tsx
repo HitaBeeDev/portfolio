@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { SkipToContent } from "@/components/ui/SkipToContent";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -26,8 +31,26 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <SkipToContent />
+        {/*
+          Inline script runs synchronously before paint.
+          Sets .dark or .light on <html> from localStorage so there is no flash.
+          Minified intentionally — every byte here is render-blocking.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark');else if(t==='light')document.documentElement.classList.add('light')}catch(e){}})()`,
+          }}
+        />
+        <Header />
+        {children}
+        <Footer />
+        <Analytics />
+        <SpeedInsights />
+      </body>
     </html>
   );
 }
