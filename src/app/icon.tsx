@@ -17,17 +17,16 @@ export default function Icon() {
           borderRadius: "6px",
         }}
       >
-        {/* Replace "Y" with your own initial or swap this file for a static favicon.ico */}
         <span
           style={{
             color: "#ffffff",
-            fontSize: 20,
+            fontSize: 15,
             fontWeight: 700,
-            letterSpacing: "-0.5px",
+            letterSpacing: "-1px",
             lineHeight: 1,
           }}
         >
-          Y
+          AA
         </span>
       </div>
     ),

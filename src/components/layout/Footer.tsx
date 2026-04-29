@@ -50,7 +50,7 @@ export function Footer() {
     <footer className="mt-auto border-t border-black/5 dark:border-white/5">
       <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-4 py-8 sm:flex-row sm:px-6">
         <div className="text-center sm:text-left">
-          <p className="text-sm font-medium">Your Name</p>
+          <p className="text-sm font-medium">Anahita Amiri</p>
           <p className="text-sm text-foreground/60">
             Frontend engineer obsessed with performance, a11y, and great UX.
           </p>

@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Your Name — Frontend Engineer";
+export const alt = "Anahita Amiri — Frontend Engineer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -42,7 +42,7 @@ export default function Image() {
               lineHeight: 1.05,
             }}
           >
-            Your Name
+            Anahita Amiri
           </span>
           <span
             style={{

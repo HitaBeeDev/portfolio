@@ -29,7 +29,7 @@ export function Header() {
           href="/"
           className="text-sm font-semibold tracking-tight transition-opacity hover:opacity-70"
         >
-          Your Name
+          Anahita Amiri
         </Link>
 
         {/* Desktop nav */}

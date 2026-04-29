@@ -17,17 +17,16 @@ export default function AppleIcon() {
           borderRadius: "40px",
         }}
       >
-        {/* Replace "Y" with your own initial */}
         <span
           style={{
             color: "#ffffff",
-            fontSize: 96,
+            fontSize: 76,
             fontWeight: 700,
-            letterSpacing: "-2px",
+            letterSpacing: "-4px",
             lineHeight: 1,
           }}
         >
-          Y
+          AA
         </span>
       </div>
     ),

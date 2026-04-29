@@ -10,26 +10,19 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://yourname.com";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Your Name — Frontend Engineer",
-    template: "%s — Your Name",
+    default: "Anahita Amiri — Frontend Engineer",
+    template: "%s — Anahita Amiri",
   },
   description:
     "Frontend engineer who obsesses over performance, accessibility, and the gap between design and code.",
   openGraph: {
     type: "website",
     url: siteUrl,
-    siteName: "Your Name",
+    siteName: "Anahita Amiri",
   },
   twitter: {
     card: "summary_large_image",
     creator: "@your-username",
-  },
-  icons: {
-    // Static 192/512 PNGs — replace with real branded icons before launch
-    other: [
-      { rel: "icon", url: "/icon-192.png", sizes: "192x192", type: "image/png" },
-      { rel: "icon", url: "/icon-512.png", sizes: "512x512", type: "image/png" },
-    ],
   },
 };
 

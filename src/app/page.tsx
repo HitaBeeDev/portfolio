@@ -20,7 +20,7 @@ export default function Home() {
           id="hero-heading"
           className="text-[clamp(2.25rem,6vw,4rem)] font-bold leading-tight tracking-tight"
         >
-          Your Name
+          Anahita Amiri
         </h1>
 
         {/* Positioning statement — specific, not generic */}
