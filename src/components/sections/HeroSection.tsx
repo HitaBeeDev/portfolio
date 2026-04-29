@@ -1,8 +1,11 @@
-const PREVIEW_PROJECTS = [
-  { name: "Helios UI", year: "2024", slug: "helios-ui" },
-  { name: "Meridian", year: "2024", slug: "meridian" },
-  { name: "SaaS Starter", year: "2024", slug: "saas-starter" },
-] as const;
+import Link from "next/link";
+import { projects } from "@/lib/projects";
+
+const PREVIEW_PROJECT_SLUGS = ["helios-ui", "meridian", "saas-starter"] as const;
+
+const PREVIEW_PROJECTS = PREVIEW_PROJECT_SLUGS.map((slug) =>
+  projects.find((project) => project.slug === slug),
+).filter((project) => project !== undefined);
 
 export function HeroSection() {
   return (
@@ -35,8 +38,8 @@ export function HeroSection() {
       {/* Content — constrained to page grid */}
       <div className="mx-auto flex min-h-[calc(100dvh-3.5rem)] max-w-5xl flex-col justify-between px-4 py-20 sm:px-6 sm:py-28">
 
-        {/* ── Main row: left copy + right card ── */}
-        <div className="flex flex-col items-start gap-10 lg:flex-row lg:items-center lg:gap-8">
+        {/* Main row: left copy + right evidence column */}
+        <div className="flex flex-col items-start gap-10 lg:flex-row lg:items-center lg:gap-12">
 
           {/* Left: kicker, name, rule, positioning, CTAs */}
           <div className="flex flex-col lg:flex-1">
@@ -95,13 +98,15 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* Right: monospace profile card */}
+          {/* Right: profile card + selected work */}
           <div
-            className="animate-fade-in-up w-full shrink-0 lg:w-[38%]"
+            className="animate-fade-in-up flex w-full shrink-0 flex-col gap-5 lg:w-[40%]"
             style={{ animationDelay: "400ms" }}
-            aria-hidden="true"
           >
-            <div className="select-none rounded-lg border border-foreground/[0.08] bg-foreground/[0.025] p-5 font-mono text-[11.5px] leading-[1.9]">
+            <div
+              className="select-none rounded-lg border border-foreground/[0.08] bg-foreground/[0.025] p-5 font-mono text-[11.5px] leading-[1.9]"
+              aria-hidden="true"
+            >
               <p className="text-foreground/25">// engineer.profile.ts</p>
               <p className="mt-2 text-foreground/35">
                 <span className="text-foreground/50">export</span>
@@ -146,42 +151,57 @@ export function HeroSection() {
               </div>
               <p className="text-foreground/35">{"}"}</p>
             </div>
+
+            <div
+              className="animate-fade-in-up rounded-lg border border-foreground/[0.08] bg-background/70 p-4 backdrop-blur-sm"
+              style={{ animationDelay: "480ms" }}
+              aria-labelledby="hero-work-heading"
+            >
+              <div className="mb-3 flex items-center justify-between gap-4">
+                <h2
+                  id="hero-work-heading"
+                  className="text-[10px] font-semibold uppercase tracking-[0.22em] text-muted"
+                >
+                  Selected Work
+                </h2>
+                <a
+                  href="#projects"
+                  className="text-xs font-medium text-foreground/55 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
+                >
+                  View all
+                </a>
+              </div>
+
+              <div className="divide-y divide-foreground/[0.07]">
+                {PREVIEW_PROJECTS.map((project) => (
+                  <Link
+                    key={project.slug}
+                    href={`/projects/${project.slug}`}
+                    className="group grid gap-1 py-3 first:pt-0 last:pb-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
+                  >
+                    <div className="flex items-center justify-between gap-4">
+                      <h3 className="text-sm font-semibold leading-snug text-foreground">
+                        {project.name}
+                      </h3>
+                      <span
+                        className="text-sm text-foreground/30 transition-transform group-hover:translate-x-0.5 group-hover:text-foreground/55"
+                        aria-hidden="true"
+                      >
+                        -&gt;
+                      </span>
+                    </div>
+                    <p className="line-clamp-2 text-xs leading-relaxed text-muted">
+                      {project.description}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* ── Bottom: selected work previews + scroll nudge ── */}
+        {/* Bottom scroll nudge */}
         <div>
-          {/* Section label */}
-          <p
-            className="animate-fade-in-up mb-4 text-[10px] font-semibold uppercase tracking-[0.22em] text-foreground/30"
-            style={{ animationDelay: "480ms" }}
-          >
-            Selected Work
-          </p>
-
-          {/* 3-up project preview cards */}
-          <div
-            className="animate-fade-in-up mb-7 grid grid-cols-3 gap-3 sm:gap-4"
-            style={{ animationDelay: "500ms" }}
-          >
-            {PREVIEW_PROJECTS.map((p) => (
-              <a
-                key={p.slug}
-                href="#projects"
-                aria-label={`Jump to ${p.name} in the projects section`}
-                className="group block rounded-md border border-foreground/[0.06] bg-foreground/[0.02] p-2.5 transition-all duration-200 hover:border-foreground/[0.14] hover:bg-foreground/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/50 focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--background)] sm:p-3"
-              >
-                {/* Thumbnail placeholder */}
-                <div className="mb-2.5 aspect-video w-full rounded-sm bg-foreground/[0.05] transition-opacity duration-200 group-hover:opacity-70" />
-                <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-foreground/45 transition-colors duration-200 group-hover:text-foreground/70">
-                  {p.name}
-                </p>
-                <p className="tabular-nums text-[10px] text-foreground/25">{p.year}</p>
-              </a>
-            ))}
-          </div>
-
-          {/* Scroll nudge */}
           <div
             className="animate-fade-in-up flex items-center gap-3"
             aria-hidden="true"
