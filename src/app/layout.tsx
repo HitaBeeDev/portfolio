@@ -1,18 +1,24 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { DM_Sans, Fraunces } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Observability } from "@/components/observability/Observability";
 import { SkipToContent } from "@/components/ui/SkipToContent";
 import "./globals.css";
 
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-dm-sans",
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://yourname.com";
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-fraunces",
+  display: "swap",
+});
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://anahitaamiri.dev";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -21,15 +27,20 @@ export const metadata: Metadata = {
     template: "%s — Anahita Amiri",
   },
   description:
-    "Frontend engineer who obsesses over performance, accessibility, and the gap between design and code.",
+    "Frontend engineer based in Aachen, Germany. 2+ years building privacy-first compliance tools and refactoring React codebases at Jurcom GRC Services.",
   openGraph: {
     type: "website",
     url: siteUrl,
     siteName: "Anahita Amiri",
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    creator: "@your-username",
+    creator: "@HitaBeeDev",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
@@ -41,14 +52,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} h-full antialiased`}
+      className={`${dmSans.variable} ${fraunces.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">
+      <body className="flex min-h-full flex-col">
         <SkipToContent />
         {/*
-          Inline script runs synchronously before paint.
-          Sets .dark or .light on <html> from localStorage so there is no flash.
+          Runs synchronously before first paint.
+          Reads localStorage and sets .dark / .light on <html> to prevent flash.
           Minified intentionally — every byte here is render-blocking.
         */}
         <script

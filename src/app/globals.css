@@ -6,75 +6,85 @@
   }
 }
 
-/* Override built-in dark variant to use class strategy: add `.dark` to <html> */
+/* Class-based dark mode — set by inline script before paint */
 @variant dark (&:is(.dark *));
 
+/* ── Colour tokens ─────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background:    #F7F6F3;
+  --foreground:    #1A1917;
+  --muted:         #6E6961;
+  --accent:        #3D5A73;
+  --accent-hover:  #2E4559;
+  --accent-fg:     #ffffff;
 }
 
-/* System preference fallback — applies when no .dark/.light class is set */
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background:    #0E0E10;
+    --foreground:    #ECECEA;
+    --muted:         #8B8680;
+    --accent:        #7C8FA0;
+    --accent-hover:  #92A5B8;
+    --accent-fg:     #0E0E10;
   }
 }
 
-/* Explicit dark mode via .dark class on <html> */
 .dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background:    #0E0E10;
+  --foreground:    #ECECEA;
+  --muted:         #8B8680;
+  --accent:        #7C8FA0;
+  --accent-hover:  #92A5B8;
+  --accent-fg:     #0E0E10;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter), system-ui, sans-serif;
-  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --color-muted:      var(--muted);
+  --color-accent:     var(--accent);
+  --font-sans:        var(--font-dm-sans), system-ui, sans-serif;
+  --font-display:     var(--font-fraunces), Georgia, serif;
+  --font-mono:        "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter, system-ui, sans-serif);
+  font-family: var(--font-dm-sans, system-ui, sans-serif);
 }
 
-/* ── Hero dot-grid background ─────────────────────────── */
+/* Custom text-selection colour */
+::selection {
+  background-color: var(--accent);
+  color: var(--accent-fg);
+}
+
+/* ── Hero dot-grid background ──────────────────────────── */
 .hero-dot-grid {
-  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.07) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.045) 1px, transparent 1px);
   background-size: 28px 28px;
 }
 .dark .hero-dot-grid {
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
 }
 
-/* ── Staggered hero fade-in ───────────────────────────── */
+/* ── Hero CSS entrance animations (zero JS, above the fold) */
 @keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fade-in-up {
-  animation: fade-in-up 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-fade-in-up {
-    animation: none;
-  }
+  .animate-fade-in-up { animation: none; }
 }
 
-/* Scoped prose reset for case study pages.
-   MDX components handle individual element styles; this wrapper
-   ensures pre > code doesn't double-apply the inline-code styles. */
+/* ── Prose reset for MDX case studies ─────────────────── */
 .prose-case-study pre code {
   background: transparent;
   padding: 0;

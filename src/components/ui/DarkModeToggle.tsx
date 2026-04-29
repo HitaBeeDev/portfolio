@@ -4,13 +4,9 @@ import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
 function getInitialTheme() {
-  if (typeof window === "undefined") {
-    return false;
-  }
-
+  if (typeof window === "undefined") return false;
   const stored = localStorage.getItem("theme");
   const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-
   return stored === "dark" || (!stored && systemDark);
 }
 
@@ -18,12 +14,9 @@ export function DarkModeToggle() {
   const [isDark, setIsDark] = useState(getInitialTheme);
 
   useEffect(() => {
-    // Track system preference changes when no stored preference exists
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
     const handler = (e: MediaQueryListEvent) => {
-      if (!localStorage.getItem("theme")) {
-        setIsDark(e.matches);
-      }
+      if (!localStorage.getItem("theme")) setIsDark(e.matches);
     };
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
@@ -48,12 +41,12 @@ export function DarkModeToggle() {
     <button
       onClick={toggle}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      className="size-9 flex items-center justify-center rounded-md transition-colors hover:bg-[#4F46E5]/10 hover:text-[#4338CA] dark:hover:bg-indigo-300/10 dark:hover:text-indigo-300"
+      className="flex size-9 items-center justify-center rounded-md text-muted transition-colors hover:bg-foreground/[0.06] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2"
     >
       {isDark ? (
-        <Sun className="size-5" aria-hidden="true" />
+        <Sun className="size-[18px]" aria-hidden="true" />
       ) : (
-        <Moon className="size-5" aria-hidden="true" />
+        <Moon className="size-[18px]" aria-hidden="true" />
       )}
     </button>
   );

@@ -1,52 +1,42 @@
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Fragment } from "react";
+import { FadeIn } from "@/components/ui/FadeIn";
 
-interface Tier {
-  level: string;
-  description: string;
-  skills: string[];
+interface SkillCategory {
+  label: string;
+  items: string[];
 }
 
-const TIERS: Tier[] = [
+const CATEGORIES: SkillCategory[] = [
   {
-    level: "Expert",
-    description: "Production-ready · can teach and review",
-    skills: [
-      "TypeScript strict mode · generics · conditional types",
-      "React RSC · Suspense · concurrent features",
-      "Next.js App Router · streaming · ISR",
-      "Tailwind CSS · design token architecture",
-      "Accessibility · WCAG 2.1 AA · axe-core · ARIA",
-      "Core Web Vitals · LCP · CLS · INP",
-      "Chrome DevTools Performance panel",
-      "CSS custom properties · cascade layers",
+    label: "Languages",
+    items: ["JavaScript", "TypeScript"],
+  },
+  {
+    label: "Frameworks",
+    items: [
+      "React",
+      "Next.js",
+      "Angular",
+      "Redux",
+      "TanStack Query",
+      "React Router",
+      "React Hook Form",
+      "Context API",
+      "Framer Motion",
+      "Chart.js",
     ],
   },
   {
-    level: "Proficient",
-    description: "Shipped extensively in production",
-    skills: [
-      "React DevTools Profiler · flamegraph analysis",
-      "Vite / Webpack · bundle splitting · tree-shaking",
-      "Radix UI · headless component composition",
-      "TanStack Query · optimistic updates · cache strategy",
-      "Zustand · state slices · middleware",
-      "Storybook 8 · CSF3 · Chromatic visual regression",
-      "Vitest · Playwright · axe-playwright",
-      "Figma → code · design tokens · component specs",
-    ],
+    label: "Styling",
+    items: ["CSS / SCSS", "Tailwind CSS", "Styled Components", "Material UI", "Bootstrap"],
   },
   {
-    level: "Familiar",
-    description: "Shipped in projects · can ramp quickly",
-    skills: [
-      "tRPC · end-to-end type safety",
-      "Prisma · PostgreSQL · query optimization",
-      "Supabase · RLS policies · Realtime",
-      "WebSockets · exponential backoff · reconnect",
-      "Recharts · Visx · Canvas vs SVG tradeoffs",
-      "Sentry · error boundaries · perf monitoring",
-      "Stripe · Clerk · auth patterns",
-    ],
+    label: "Backend",
+    items: ["Node.js", "Express.js", "REST APIs", "Supabase", "MongoDB"],
+  },
+  {
+    label: "Tooling",
+    items: ["Git / GitLab", "Vite / Webpack", "Vercel / Netlify", "VS Code"],
   },
 ];
 
@@ -54,34 +44,52 @@ export function SkillsSection() {
   return (
     <section
       id="skills"
-      className="border-t border-black/5 py-24 dark:border-white/5"
+      className="border-t border-black/[0.07] dark:border-white/[0.07]"
       aria-labelledby="skills-heading"
     >
-      <SectionHeading id="skills-heading" title="Skills" />
-
-      <div className="grid gap-10 sm:grid-cols-3">
-        {TIERS.map((tier) => (
-          <div key={tier.level} className="flex flex-col gap-4">
-            {/* Tier header */}
-            <div className="flex flex-col gap-0.5 border-t-2 border-foreground/15 pt-3">
-              <span className="text-xs font-semibold uppercase tracking-widest text-foreground/70">
-                {tier.level}
-              </span>
-              <span className="text-xs text-foreground/70">{tier.description}</span>
-            </div>
-
-            {/* Skill pills */}
-            <ul className="flex flex-wrap gap-2" role="list">
-              {tier.skills.map((skill) => (
-                <li key={skill}>
-                  <span className="inline-flex items-center rounded-full border border-black/10 bg-black/[0.04] px-2.5 py-1 text-xs font-medium leading-none text-foreground/75 dark:border-white/10 dark:bg-white/[0.04]">
-                    {skill}
-                  </span>
-                </li>
-              ))}
-            </ul>
+      <div className="mx-auto max-w-5xl px-4 py-24 sm:px-6">
+        <div className="grid gap-12 lg:grid-cols-[160px_1fr] lg:gap-20">
+          {/* Label column */}
+          <div>
+            <h2
+              id="skills-heading"
+              className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted lg:sticky lg:top-24"
+            >
+              Skills
+            </h2>
           </div>
-        ))}
+
+          {/* Content column */}
+          <div className="flex flex-col divide-y divide-black/[0.06] dark:divide-white/[0.06]">
+            {CATEGORIES.map((cat, i) => (
+              <FadeIn key={cat.label} delay={i * 0.05}>
+                <div className="grid gap-3 py-6 first:pt-0 last:pb-0 sm:grid-cols-[140px_1fr] sm:gap-8 sm:py-5">
+                  {/* Category label */}
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-muted sm:pt-0.5">
+                    {cat.label}
+                  </span>
+
+                  {/* Skill items — interpunct-separated */}
+                  <p className="text-sm leading-relaxed text-foreground/75">
+                    {cat.items.map((item, j) => (
+                      <Fragment key={item}>
+                        {j > 0 && (
+                          <span
+                            className="mx-1.5 select-none text-muted/40"
+                            aria-hidden="true"
+                          >
+                            ·
+                          </span>
+                        )}
+                        <span>{item}</span>
+                      </Fragment>
+                    ))}
+                  </p>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

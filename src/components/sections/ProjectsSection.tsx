@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { FadeIn } from "@/components/ui/FadeIn";
 import { ProjectCard } from "@/components/ui/ProjectCard";
 import { projects } from "@/lib/projects";
 import type { ProjectCategory } from "@/types/project";
@@ -49,62 +49,77 @@ export function ProjectsSection() {
   return (
     <section
       id="projects"
-      className="border-t border-black/5 py-24 dark:border-white/5"
+      className="border-t border-black/[0.07] dark:border-white/[0.07]"
       aria-labelledby="projects-heading"
     >
-      <SectionHeading
-        id="projects-heading"
-        title="Projects"
-        subtitle="A handful of things I've built — depth over breadth."
-      />
-
-      {/* Filter bar */}
-      <div
-        role="group"
-        aria-label="Filter projects by category"
-        className="mb-10 flex flex-wrap gap-2"
-      >
-        {FILTERS.map(({ value, label }) => {
-          const isActive = value === activeFilter;
-          return (
-            <button
-              key={value}
-              onClick={() => setFilter(value)}
-              aria-pressed={isActive}
-              className={[
-                "inline-flex h-8 items-center rounded-full px-4 text-sm font-medium transition-colors",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2",
-                isActive
-                  ? "bg-foreground text-background"
-                  : "border border-black/10 hover:bg-black/5 dark:border-white/10 dark:hover:bg-white/5",
-              ].join(" ")}
+      <div className="mx-auto max-w-5xl px-4 py-24 sm:px-6">
+        <div className="grid gap-12 lg:grid-cols-[160px_1fr] lg:gap-20">
+          {/* Label column */}
+          <div>
+            <h2
+              id="projects-heading"
+              className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted lg:sticky lg:top-24"
             >
-              {label}
-            </button>
-          );
-        })}
-      </div>
+              Selected Work
+            </h2>
+          </div>
 
-      {/* Grid or empty state */}
-      {filtered.length > 0 ? (
-        <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((project) => (
-            <li key={project.slug}>
-              <ProjectCard project={project} />
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <div className="flex flex-col items-center gap-3 py-20 text-center">
-          <p className="text-base font-medium">No projects in this category yet.</p>
-          <button
-            onClick={() => setFilter("all")}
-            className="text-sm text-foreground/60 underline underline-offset-4 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2"
-          >
-            View all projects
-          </button>
+          {/* Content column */}
+          <div className="flex flex-col gap-10">
+            {/* Filter bar */}
+            <FadeIn>
+              <div
+                role="group"
+                aria-label="Filter projects by category"
+                className="flex flex-wrap gap-2"
+              >
+                {FILTERS.map(({ value, label }) => {
+                  const isActive = value === activeFilter;
+                  return (
+                    <button
+                      key={value}
+                      onClick={() => setFilter(value)}
+                      aria-pressed={isActive}
+                      className={[
+                        "inline-flex h-7 items-center rounded-full px-3.5 text-xs font-medium transition-colors",
+                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2",
+                        isActive
+                          ? "bg-foreground text-background"
+                          : "border border-black/[0.1] text-muted hover:border-black/[0.2] hover:text-foreground dark:border-white/[0.1] dark:hover:border-white/[0.2]",
+                      ].join(" ")}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+            </FadeIn>
+
+            {/* Grid or empty state */}
+            {filtered.length > 0 ? (
+              <ul className="grid gap-5 sm:grid-cols-2">
+                {filtered.map((project, i) => (
+                  <FadeIn key={project.slug} delay={i * 0.06}>
+                    <li className="h-full">
+                      <ProjectCard project={project} />
+                    </li>
+                  </FadeIn>
+                ))}
+              </ul>
+            ) : (
+              <div className="flex flex-col items-start gap-3 py-16">
+                <p className="text-sm text-muted">No projects in this category yet.</p>
+                <button
+                  onClick={() => setFilter("all")}
+                  className="text-sm text-foreground underline underline-offset-4 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2"
+                >
+                  View all projects
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-      )}
+      </div>
     </section>
   );
 }
