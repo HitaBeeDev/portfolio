@@ -24,12 +24,13 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-black/5 bg-background/80 backdrop-blur-md dark:border-white/5">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
-        {/* Logo / Name */}
+        {/* Logo / initials */}
         <Link
           href="/"
           className="text-sm font-semibold tracking-tight transition-opacity hover:opacity-70"
+          aria-label="Anahita Amiri home"
         >
-          Anahita Amiri
+          AA
         </Link>
 
         {/* Desktop nav */}

@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import { PageWrapper } from "@/components/layout/PageWrapper";
-import { LighthouseBadge } from "@/components/ui/LighthouseBadge";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ProjectsSection } from "@/components/sections/ProjectsSection";
 import { ProjectsSkeletonGrid } from "@/components/ui/ProjectCardSkeleton";
@@ -28,9 +27,6 @@ export default function Home() {
           Frontend engineer who obsesses over performance, a11y, and the gap
           between design and code.
         </p>
-
-        {/* Lighthouse 100/100 badge — update URL once deployed */}
-        <LighthouseBadge url="https://pagespeed.web.dev/report?url=https%3A%2F%2Fyoursite.com" />
 
         {/* CTAs */}
         <div className="flex flex-col gap-3 sm:flex-row">
