@@ -1,5 +1,3 @@
-"use client";
-
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
 // Split so the address never appears as a plain string in static HTML.

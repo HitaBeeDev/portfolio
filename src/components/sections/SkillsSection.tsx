@@ -64,10 +64,10 @@ export function SkillsSection() {
           <div key={tier.level} className="flex flex-col gap-4">
             {/* Tier header */}
             <div className="flex flex-col gap-0.5 border-t-2 border-foreground/15 pt-3">
-              <span className="text-xs font-semibold uppercase tracking-widest text-foreground/40">
+              <span className="text-xs font-semibold uppercase tracking-widest text-foreground/70">
                 {tier.level}
               </span>
-              <span className="text-xs text-foreground/40">{tier.description}</span>
+              <span className="text-xs text-foreground/70">{tier.description}</span>
             </div>
 
             {/* Skill pills */}

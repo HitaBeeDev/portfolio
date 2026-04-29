@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import Image from "next/image";
 import { PageWrapper } from "@/components/layout/PageWrapper";
 import { LighthouseBadge } from "@/components/ui/LighthouseBadge";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -59,21 +58,6 @@ export default function Home() {
         aria-labelledby="about-heading"
       >
         <div className="flex flex-col gap-10 sm:flex-row sm:items-start sm:gap-14">
-          {/*
-            Avatar — replace /avatar.webp with your photo (public/avatar.webp).
-            Remove this block entirely if you prefer text-only.
-          */}
-          <div className="shrink-0">
-            <Image
-              src="/avatar.webp"
-              alt="Your Name"
-              width={88}
-              height={88}
-              className="rounded-full ring-2 ring-black/5 dark:ring-white/10"
-              loading="lazy"
-            />
-          </div>
-
           <div className="flex flex-col gap-5">
             <SectionHeading id="about-heading" title="About" />
 

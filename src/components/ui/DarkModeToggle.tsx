@@ -3,18 +3,21 @@
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
+function getInitialTheme() {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  const stored = localStorage.getItem("theme");
+  const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  return stored === "dark" || (!stored && systemDark);
+}
+
 export function DarkModeToggle() {
-  const [isDark, setIsDark] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [isDark, setIsDark] = useState(getInitialTheme);
 
   useEffect(() => {
-    const stored = localStorage.getItem("theme");
-    const systemDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    setIsDark(stored === "dark" || (!stored && systemDark));
-    setMounted(true);
-
     // Track system preference changes when no stored preference exists
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
     const handler = (e: MediaQueryListEvent) => {
@@ -39,11 +42,6 @@ export function DarkModeToggle() {
       root.classList.add("light");
       localStorage.setItem("theme", "light");
     }
-  }
-
-  // Same-size placeholder until mounted — prevents layout shift during hydration
-  if (!mounted) {
-    return <div className="size-9" aria-hidden="true" />;
   }
 
   return (

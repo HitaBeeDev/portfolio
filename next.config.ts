@@ -1,6 +1,5 @@
 import type { NextConfig } from "next";
 import createMDX from "@next/mdx";
-import { withSentryConfig } from "@sentry/nextjs";
 
 const securityHeaders = [
   // Allow browser DNS prefetching for faster external link resolution
@@ -50,11 +49,4 @@ const withMDX = createMDX({
   },
 });
 
-export default withSentryConfig(withMDX(nextConfig), {
-  // Suppresses build-time Sentry telemetry and the "Sentry is not configured" warning
-  silent: true,
-  // Upload source maps only in CI to avoid leaking them in local builds
-  sourcemaps: {
-    disable: !process.env.CI,
-  },
-});
+export default withMDX(nextConfig);

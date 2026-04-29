@@ -16,17 +16,17 @@ function Badge() {
       {CATEGORIES.map(({ label, short }) => (
         <div key={label} className="flex flex-col items-center gap-0.5">
           <span
-            className="flex size-7 items-center justify-center rounded-full bg-emerald-500 text-[11px] font-bold text-white"
+            className="flex size-7 items-center justify-center rounded-full bg-emerald-700 text-[11px] font-bold text-white"
             aria-label={`${label}: 100`}
           >
             100
           </span>
-          <span className="text-[9px] font-medium uppercase tracking-wide text-foreground/50">
+          <span className="text-[9px] font-semibold uppercase tracking-wide text-foreground/70">
             {short}
           </span>
         </div>
       ))}
-      <span className="ml-1 border-l border-black/10 pl-2.5 text-xs font-semibold text-foreground/50 dark:border-white/10">
+      <span className="ml-1 border-l border-black/10 pl-2.5 text-xs font-semibold text-foreground/70 dark:border-white/10">
         Lighthouse
       </span>
     </div>

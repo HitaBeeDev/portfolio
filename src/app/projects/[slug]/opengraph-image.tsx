@@ -1,18 +1,12 @@
 import { ImageResponse } from "next/og";
 import { projects } from "@/lib/projects";
 
-export const runtime = "edge";
+export const alt = "Case Study";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 interface Props {
   params: Promise<{ slug: string }>;
-}
-
-export async function generateImageMetadata({ params }: Props) {
-  const { slug } = await params;
-  const project = projects.find((p) => p.slug === slug);
-  return [{ id: slug, alt: project ? `${project.name} — Case Study` : "Case Study" }];
 }
 
 export default async function Image({ params }: Props) {

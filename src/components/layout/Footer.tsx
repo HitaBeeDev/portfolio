@@ -72,7 +72,7 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-black/5 py-4 text-center text-xs text-foreground/40 dark:border-white/5">
+      <div className="border-t border-black/5 py-4 text-center text-xs text-foreground/70 dark:border-white/5">
         Built with Next.js · Deployed on Vercel
       </div>
     </footer>
