@@ -1,11 +1,19 @@
 import Link from "next/link";
 import { projects } from "@/lib/projects";
+import type { ProjectCategory } from "@/types/project";
 
 const PREVIEW_PROJECT_SLUGS = ["helios-ui", "meridian", "saas-starter"] as const;
 
 const PREVIEW_PROJECTS = PREVIEW_PROJECT_SLUGS.map((slug) =>
   projects.find((project) => project.slug === slug),
 ).filter((project) => project !== undefined);
+
+const CATEGORY_LABEL: Record<ProjectCategory, string> = {
+  "design-systems": "Design System",
+  "full-stack": "Full-Stack",
+  "open-source": "Open Source",
+  frontend: "Frontend",
+};
 
 export function HeroSection() {
   return (
@@ -33,6 +41,19 @@ export function HeroSection() {
         <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-muted">
           Available for work
         </span>
+      </div>
+
+      <div
+        className="animate-fade-in-up absolute bottom-8 left-1/2 hidden w-full max-w-5xl -translate-x-1/2 px-4 sm:px-6 lg:block"
+        aria-hidden="true"
+        style={{ animationDelay: "560ms" }}
+      >
+        <div className="flex items-center gap-3">
+          <div className="h-px w-8 bg-foreground/20" />
+          <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-foreground/30">
+            Scroll
+          </span>
+        </div>
       </div>
 
       {/* Content — constrained to page grid */}
@@ -107,7 +128,7 @@ export function HeroSection() {
               className="select-none rounded-lg border border-foreground/[0.08] bg-foreground/[0.025] p-5 font-mono text-[11.5px] leading-[1.9]"
               aria-hidden="true"
             >
-              <p className="text-foreground/25">// engineer.profile.ts</p>
+              <p className="text-foreground/25">{"// engineer.profile.ts"}</p>
               <p className="mt-2 text-foreground/35">
                 <span className="text-foreground/50">export</span>
                 {" "}
@@ -153,11 +174,11 @@ export function HeroSection() {
             </div>
 
             <div
-              className="animate-fade-in-up rounded-lg border border-foreground/[0.08] bg-background/70 p-4 backdrop-blur-sm"
+              className="animate-fade-in-up rounded-lg border border-foreground/[0.08] bg-background/70 p-3.5 backdrop-blur-sm"
               style={{ animationDelay: "480ms" }}
               aria-labelledby="hero-work-heading"
             >
-              <div className="mb-3 flex items-center justify-between gap-4">
+              <div className="mb-1.5 flex items-center justify-between gap-4">
                 <h2
                   id="hero-work-heading"
                   className="text-[10px] font-semibold uppercase tracking-[0.22em] text-muted"
@@ -177,7 +198,7 @@ export function HeroSection() {
                   <Link
                     key={project.slug}
                     href={`/projects/${project.slug}`}
-                    className="group grid gap-1 py-3 first:pt-0 last:pb-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
+                    className="group grid gap-1 py-2.5 first:pt-1 last:pb-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
                   >
                     <div className="flex items-center justify-between gap-4">
                       <h3 className="text-sm font-semibold leading-snug text-foreground">
@@ -190,8 +211,12 @@ export function HeroSection() {
                         -&gt;
                       </span>
                     </div>
-                    <p className="line-clamp-2 text-xs leading-relaxed text-muted">
-                      {project.description}
+                    <p className="truncate text-[11px] font-medium uppercase tracking-[0.14em] text-muted/80">
+                      {CATEGORY_LABEL[project.category]}
+                      <span className="px-1.5 text-foreground/25" aria-hidden="true">
+                        /
+                      </span>
+                      {project.stack.slice(0, 2).join(" + ")}
                     </p>
                   </Link>
                 ))}
@@ -200,19 +225,7 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* Bottom scroll nudge */}
-        <div>
-          <div
-            className="animate-fade-in-up flex items-center gap-3"
-            aria-hidden="true"
-            style={{ animationDelay: "560ms" }}
-          >
-            <div className="h-px w-8 bg-foreground/20" />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-foreground/30">
-              Scroll
-            </span>
-          </div>
-        </div>
+        <div aria-hidden="true" />
       </div>
     </section>
   );
