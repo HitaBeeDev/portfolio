@@ -1,0 +1,162 @@
+export const meta = {
+  title: "SaaS Starter — Full-Stack Template",
+  description:
+    "Production SaaS boilerplate with tRPC, Clerk auth, Supabase RLS, Stripe billing, and preview environments on every PR. Live with 14 real users.",
+  stack: [
+    "Next.js 14.2",
+    "tRPC 11.0",
+    "Clerk 5.1",
+    "Supabase 2.43",
+    "Stripe 16.0",
+    "Zod 3.23",
+    "Prisma 5.14",
+    "Vercel",
+  ],
+  liveUrl: "https://saas-starter.example.com",
+  githubUrl: "https://github.com/HitaBeeDev/saas-starter",
+  date: "2024-10-01",
+  tags: ["full-stack", "saas", "typescript", "auth"],
+}
+
+## Problem
+
+Every new SaaS project I started required the same ~3 weeks of infrastructure work: auth, billing, team management, row-level security, preview deployments. The decisions are not trivial (which RLS policy prevents tenant data leaks?), but they're the same decisions every time.
+
+I wanted a template that was production-quality — not a tutorial hello-world, but something with real users that I could point to and say "this is how I'd start a product."
+
+Secondary goal: validate that an end-to-end TypeScript stack (Zod schema → tRPC → React component) was maintainable for a team of one without code generation.
+
+## Approach
+
+### Auth: Clerk
+
+I evaluated NextAuth v5, Lucia, and Clerk. Clerk won on time-to-working-auth (< 30 minutes) and on the organization/team management primitives I needed without custom code. The tradeoff: Clerk is a paid vendor dependency. Documented in the README with migration notes for replacing it.
+
+### Type-Safe API: tRPC
+
+The Zod schema is defined once in the tRPC router and inferred on the client:
+
+```ts
+// server: src/server/routers/workspace.ts
+export const workspaceRouter = router({
+  create: protectedProcedure
+    .input(z.object({ name: z.string().min(1).max(50) }))
+    .mutation(({ input, ctx }) => db.workspace.create({ data: { ...input, ownerId: ctx.userId } })),
+})
+
+// client: types are fully inferred — no generated code
+const { mutate } = trpc.workspace.create.useMutation()
+mutate({ name: "Acme" }) // TypeScript error if name is missing or wrong type
+```
+
+Zero `any` in the API layer. The inferred types flow from the Zod schema to the client component prop types automatically.
+
+### Row-Level Security: Supabase RLS
+
+Every table has RLS policies. Example for `workspaces`:
+
+```sql
+-- Users can only read workspaces they're a member of
+CREATE POLICY "members can read workspace"
+  ON workspaces FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1 FROM workspace_members
+      WHERE workspace_members.workspace_id = workspaces.id
+        AND workspace_members.user_id = auth.uid()
+    )
+  );
+```
+
+I tested RLS by deliberately bypassing the application layer and querying Supabase directly with a user's JWT — verified that cross-tenant data was inaccessible.
+
+### Permission Hook
+
+Rather than ad-hoc role checks scattered across components:
+
+```ts
+function usePermission(action: Action): boolean {
+  const { membership } = useWorkspaceMembership()
+  return ROLE_PERMISSIONS[membership.role]?.includes(action) ?? false
+}
+
+// Usage — collocated with the UI that needs it
+const canDelete = usePermission('workspace:delete')
+```
+
+`ROLE_PERMISSIONS` is a const object (not a database table) so it's type-safe and auditable in one place.
+
+### Billing: Stripe
+
+Webhook handler verifies the Stripe signature before processing. I used Stripe's `constructEvent` with the raw body (not parsed JSON) — a common source of webhook signature failures:
+
+```ts
+const event = stripe.webhooks.constructEvent(
+  req.rawBody,      // ← must be raw Buffer, not parsed JSON
+  sig,
+  process.env.STRIPE_WEBHOOK_SECRET
+)
+```
+
+Subscription state is stored in the database and synced on every `customer.subscription.*` webhook event.
+
+## Measurable Outcome
+
+| Metric | Result |
+|---|---|
+| Real users | 14 (acquired organically over 3 months) |
+| Time-to-first-PR for a new contributor | < 30 minutes (tested with one other developer) |
+| TypeScript `any` count | 0 (enforced by `strict: true`) |
+| RLS bypass attempts blocked | 100% (manual + automated testing) |
+| Stripe webhook signature failures | 0 (since raw body fix) |
+| Vercel preview environment per PR | Yes — auto-deployed, own database branch |
+
+## Tradeoffs
+
+**Clerk lock-in.** Clerk's SDK is deeply integrated — replacing it would touch auth middleware, session handling, and the permission hook. I mitigated this with a `useCurrentUser()` abstraction that wraps Clerk, so the replacement surface is one file. But the cost is real.
+
+**tRPC adds a layer for simple reads.** A `GET /api/health` endpoint is two files in tRPC (router + caller) vs. one in a plain Route Handler. For simple endpoints, tRPC is overhead. I kept plain Route Handlers for webhooks and health checks.
+
+**Supabase Realtime and Prisma don't compose cleanly.** I used Prisma for mutations (type-safe, migration-tracked) and Supabase's Realtime client for subscriptions. They share the same PostgreSQL instance but the client libraries don't know about each other. This means cache invalidation on Realtime events has to be done manually.
+
+## Architecture
+
+```
+Browser
+  └─ Next.js App Router (Vercel)
+      ├─ Clerk Middleware → JWT validation on every request
+      ├─ tRPC Client → tRPC Router (protected/public procedures)
+      │     └─ Zod schema validation → Prisma → Supabase PostgreSQL
+      │           └─ RLS enforced at database level
+      ├─ Supabase Realtime → useSubscription hook → Zustand
+      └─ Stripe Webhook → /api/webhooks/stripe → subscription sync
+
+Supabase PostgreSQL
+  ├─ RLS policies (per-table, per-operation)
+  ├─ workspaces, workspace_members, subscriptions
+  └─ Realtime publication on changed tables
+```
+
+## Tech Stack with Versions
+
+| Package | Version | Why |
+|---|---|---|
+| Next.js | 14.2.5 | App Router, Server Actions, Middleware |
+| tRPC | 11.0.0 | End-to-end type safety, no code generation |
+| Clerk | 5.1.4 | Auth + org management |
+| Supabase JS | 2.43.5 | Realtime + RLS-aware client |
+| Stripe | 16.0.0 | Billing, webhook verification |
+| Zod | 3.23.8 | Schema validation, shared between client and server |
+| Prisma | 5.14.0 | Migrations, type-safe queries |
+
+## What I'd Do Differently
+
+**Start with a database branch strategy.** Supabase added branching (preview databases per PR) after I'd already set up the project. I retrofitted it; wiring it up from day one would have saved two days.
+
+**Use `useReducer` instead of multiple `useState` calls in the billing page.** The checkout flow has 5 states (idle / loading / success / error / redirecting) I modelled as 5 separate booleans. A reducer with explicit state transitions would have been clearer and easier to test.
+
+## Known Limitations
+
+- **No mobile app.** The RLS policies and tRPC procedures are designed to be callable from a mobile client but the template only ships a web UI.
+- **The permission system is flat.** `ROLE_PERMISSIONS` maps roles to allowed actions, but it doesn't support resource-scoped permissions (e.g., "can edit this specific workspace but not others"). Resource-scoped permissions would require moving to a full RBAC system like Casbin.
+- **Stripe test mode only.** The live Stripe keys are wired up but I haven't accepted real payments — the 14 users are on a free trial.

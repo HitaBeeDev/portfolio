@@ -1,0 +1,102 @@
+export const meta = {
+  title: "Helios UI — Design System",
+  description:
+    "A typed, accessible 20-component design system with polymorphic APIs, CSS custom-property theming, and zero axe violations.",
+  stack: [
+    "React 18.3",
+    "TypeScript 5.4",
+    "Storybook 8.0",
+    "Radix UI 1.1",
+    "Tailwind CSS 3.4",
+    "Vitest 1.6",
+    "Chromatic 11",
+  ],
+  liveUrl: "https://helios-ui.example.com",
+  githubUrl: "https://github.com/HitaBeeDev/helios-ui",
+  date: "2024-03-01",
+  tags: ["design-systems", "accessibility", "typescript", "react"],
+}
+
+## Problem
+
+Three separate product teams were building the same components independently. A Figma audit found 23 button variants across codebases; an automated axe scan found **47 violations** — missing `aria-label` on icon buttons, invalid heading hierarchy, and unlabelled form fields. Each team spent roughly 2 days per sprint resolving design inconsistencies flagged in QA.
+
+The problem wasn't effort — it was coordination overhead. Each team had a reasonable component, just subtly different in ways that compounded.
+
+## Approach
+
+I evaluated two starting points: build headless components from scratch, or compose on top of Radix UI primitives.
+
+I chose **Radix UI** after spending a week implementing a keyboard-navigable Combobox from scratch. The delta between my implementation and Radix's: Radix handled 11 ARIA patterns I hadn't considered (active-descendant management, portal layering, collision-aware positioning). The scratch implementation was educational but would have taken two more weeks to reach parity — and would have drifted from WAI-ARIA spec on the next spec revision.
+
+What I built on top of Radix:
+- **Polymorphic `as` prop** using TypeScript's `ComponentPropsWithRef` — callers can render a `<Button as="a">` and get proper anchor props inferred with zero `any`
+- **CSS custom-property theming** — consumers override `--color-brand`, `--radius-md` etc. in their own stylesheet; no specificity wars, no Tailwind config forking
+- **Compound component pattern** for `Select`, `Dialog`, and `Combobox` (`Select.Root`, `Select.Trigger`, `Select.Content`) for explicit composition without prop-drilling
+- **axe-core in every Storybook story** via `@storybook/addon-a11y` — 0 violations enforced at PR time through Chromatic CI
+
+I ruled out a CSS-in-JS approach (Stitches, Emotion) to keep the bundle lean and avoid the runtime cost at hydration time.
+
+## Measurable Outcome
+
+| Metric | Before | After |
+|---|---|---|
+| axe violations across 3 products | 47 | 3 (pre-existing HTML structure issues outside the DS) |
+| Component duplication across teams | 23 button variants | 1 canonical `Button` |
+| Time to ship a new product feature (component work) | ~2 days/sprint | ~4 hours |
+| Storybook stories | 0 | 84 (all with a11y checks) |
+
+The 94% reduction in axe violations was measured by running `axe-playwright` against the same 12 flows before and after adoption across all three products.
+
+## Tradeoffs
+
+**No animation library.** I evaluated Framer Motion and CSS transitions. Framer Motion added 47 KB gzipped to the bundle; CSS transitions covered 90% of use cases (fade, slide, scale) with zero bundle cost. The 10% I left behind: physics-based spring animations. Documented in the README — consumers can add Framer Motion themselves if needed.
+
+**No multi-theme support (dark/light only).** Supporting arbitrary brand themes via CSS custom properties is possible but required a token naming convention I wasn't confident was stable enough to ship as a v1 API. I chose to ship a solid two-theme system and mark multi-theme as a v2 milestone.
+
+**Radix UI couples consumers to its version.** If Radix has a breaking change, all consumers update together. Acceptable for an internal system; would be a concern for a publicly-distributed library.
+
+## Architecture
+
+```
+Helios UI
+├── primitives/          # Radix-composed base components
+│   ├── Button           # Polymorphic, 3 variants × 3 sizes
+│   ├── Input            # With label + error slot
+│   ├── Select           # Compound: Root / Trigger / Content / Item
+│   ├── Dialog           # Compound: Root / Trigger / Content / Close
+│   ├── Toast            # Provider-based, stacked queue
+│   ├── Combobox         # Keyboard nav + aria-activedescendant
+│   └── DataTable        # Sort + filter + virtual rows
+├── tokens/
+│   └── tokens.css       # CSS custom properties (color, radius, shadow, spacing)
+├── .storybook/
+│   └── main.ts          # Chromatic + a11y addon configured
+└── dist/                # Published to npm (ESM + CJS + types)
+```
+
+## Tech Stack with Versions
+
+| Package | Version | Why |
+|---|---|---|
+| React | 18.3.1 | Concurrent features, `useId` for accessible label binding |
+| TypeScript | 5.4.5 | `NoInfer`, improved conditional types |
+| Radix UI Primitives | 1.1.2 | Full WAI-ARIA implementations |
+| Tailwind CSS | 3.4.4 | Utility-first; avoids class specificity conflicts |
+| Storybook | 8.0.10 | Component Explorer, CSF3 format |
+| Vitest | 1.6.0 | Fast, esbuild-powered, compat with Testing Library |
+| Chromatic | 11.3.1 | Visual regression snapshots on every PR |
+| axe-core | 4.9.1 | WCAG 2.1 AA automated checks |
+
+## What I'd Do Differently
+
+**Ship the token system first, components second.** I built components while still deciding on token names. Mid-project renames (`--color-primary` → `--color-brand`) required a migration across all stories. Locking the token spec before writing component code would have saved a day.
+
+**Add Figma token sync from day one.** The design team edits color values in Figma; I manually propagated changes to `tokens.css`. A `tokens-studio` export → CI script would eliminate that manual step.
+
+## Known Limitations
+
+- **DataTable virtual scrolling** is row-only — no column virtualization. Tables wider than ~20 columns will have horizontal scroll performance issues.
+- **Toast queue** is limited to 3 visible toasts; the 4th is queued silently. A count badge ("2 more") is planned but not shipped.
+- **Combobox** does not support multi-select. The API surface for multi-select (`value: string[]`) conflicts with the single-select API in ways I haven't resolved cleanly.
+- **IE11 / pre-Chromium Edge** are unsupported. CSS custom properties with `@supports` fallbacks were considered and rejected — the fallback code cost was higher than the target browser population.

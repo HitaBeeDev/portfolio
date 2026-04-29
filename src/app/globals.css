@@ -40,3 +40,13 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Scoped prose reset for case study pages.
+   MDX components handle individual element styles; this wrapper
+   ensures pre > code doesn't double-apply the inline-code styles. */
+.prose-case-study pre code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}

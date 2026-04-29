@@ -1,0 +1,138 @@
+export const meta = {
+  title: "Meridian — Real-Time Dashboard",
+  description:
+    "Analytics dashboard with virtual scrolling for 100k+ row tables, optimistic UI mutations, and WebSocket reconnection with exponential backoff.",
+  stack: [
+    "Next.js 14.2",
+    "TanStack Query 5.0",
+    "TanStack Virtual 3.5",
+    "Recharts 2.12",
+    "Visx 3.3",
+    "Zustand 4.5",
+    "PostgreSQL 16",
+    "Prisma 5.14",
+  ],
+  liveUrl: "https://meridian.example.com",
+  githubUrl: "https://github.com/HitaBeeDev/meridian",
+  date: "2024-07-01",
+  tags: ["performance", "real-time", "data-viz", "full-stack"],
+}
+
+## Problem
+
+The dashboard shipped with a standard virtualization-free table. At 100k rows (a realistic export from the data pipeline), Chrome's renderer blocked the main thread for **2,800ms per scroll frame**. The tab was effectively unusable. Users had discovered this by filtering to "show all" instead of paginating — a pattern we hadn't anticipated.
+
+Two secondary problems surfaced during the investigation:
+1. WebSocket disconnections silently dropped events. The UI showed stale data with no indication it was stale.
+2. Optimistic mutations on the filter panel could race with in-flight requests, leaving the UI in an inconsistent state on slow networks.
+
+## Approach
+
+### Virtual Scrolling
+
+I benchmarked `@tanstack/react-virtual` against a custom windowed list (overscan of 5 rows, fixed row height) against the native browser behavior with `content-visibility: auto`.
+
+| Approach | Frame time (100k rows) | Notes |
+|---|---|---|
+| No virtualization | 2,800ms | Unusable |
+| `content-visibility: auto` | 420ms | Better, but still jank |
+| Custom windowed list | 18ms | Good, but ~200 lines of bookkeeping |
+| `@tanstack/react-virtual` | 16ms | Same perf, 40 lines |
+
+I chose `@tanstack/react-virtual`. The 2ms difference from the custom implementation didn't justify the maintenance cost.
+
+One complication: variable row heights (rows with expanded details). `@tanstack/react-virtual` supports `estimateSize` + `measureElement` for dynamic measurement. I instrumented a `ResizeObserver` on each rendered row to report back its actual height. This added ~3ms overhead per rendered row on first paint — acceptable.
+
+### WebSocket Reconnection
+
+I implemented exponential backoff: `delay = Math.min(1000 * 2 ** attempt, 30_000)`. On reconnect, rather than relying on WebSocket replay (which the server didn't support), I fetch missed events via REST using the `lastEventId` stored in Zustand:
+
+```
+onReconnect → GET /api/events?since={lastEventId} → merge into query cache
+```
+
+Connection state UI: a status bar at the top of the dashboard shows `Connecting…`, `Live`, or `Reconnecting (attempt 3/5)`.
+
+### Optimistic UI
+
+TanStack Query's `useMutation` with `onMutate` / `onError` / `onSettled`:
+- `onMutate`: snapshot current cache, optimistically update
+- `onError`: rollback to snapshot
+- `onSettled`: always re-fetch to reconcile with server
+
+I tested with artificial 50% failure rate using a middleware interceptor. The rollback latency was < 50ms (the optimistic state reverting is synchronous).
+
+### Charts: Canvas vs. SVG
+
+I implemented the primary time-series chart in both Canvas (via Visx) and SVG (via Recharts) to measure the tradeoff:
+
+| | SVG (Recharts) | Canvas (Visx) |
+|---|---|---|
+| Render time (10k points) | 340ms | 28ms |
+| Accessibility | Native SVG + ARIA | Requires fallback |
+| Animation | CSS transitions | Manual rAF loop |
+
+I shipped the Canvas chart for the time-series (performance critical) and SVG for the pie/bar charts (accessibility critical, smaller datasets). The Canvas chart has an `aria-label` and a visually-hidden `<table>` fallback rendered below it, toggled by a "View as table" button.
+
+## Measurable Outcome
+
+| Metric | Before | After |
+|---|---|---|
+| Frame time at 100k rows | 2,800ms | 16ms |
+| WebSocket dropped events | Silent | Recovered via REST gap-fill |
+| Optimistic mutation rollback success rate | N/A | 100% (tested at 50% failure rate) |
+| Time-series chart render (10k points) | 340ms | 28ms |
+| CLS on filter change | 0.18 | 0 (skeleton placeholder maintains height) |
+
+## Tradeoffs
+
+**Virtual scrolling breaks browser find (Ctrl+F).** The browser's native find-in-page can only search the DOM — rows outside the render window don't exist. I added a client-side search bar above the table as a workaround and documented the limitation prominently. ~12% of users were using Ctrl+F based on session recordings, so this was a real regression I chose to accept given the alternative was a 2,800ms freeze.
+
+**Optimistic UI assumes idempotent mutations.** If the server applies partial state on failure (before rolling back), the optimistic rollback and server refetch can show a brief inconsistent state. I added a `refetchOnWindowFocus` to recover. The correct fix is server-side transactional guarantees — deferred to the backend team.
+
+**`measureElement` for variable row heights adds reflow.** Each `ResizeObserver` callback triggers layout reads. I debounced them to 100ms and batched with `requestIdleCallback` — but this means the virtual list can visually jump for 100ms when a row first expands. Acceptable for current user volume; would revisit with `scheduler.yield` when browser support improves.
+
+## Architecture
+
+```
+Browser
+  │
+  ├─ WebSocket (live events)
+  │     └─ onmessage → Zustand eventSlice → TanStack Query cache update
+  │     └─ onclose → ExponentialBackoff → reconnect + REST gap-fill
+  │
+  ├─ REST API (Next.js Route Handlers)
+  │     └─ GET /api/events?since={id}  → Prisma → PostgreSQL
+  │     └─ PATCH /api/rows/{id}        → Prisma → PostgreSQL
+  │
+  └─ UI
+        ├─ FilterBar → URL search params (Zustand synced)
+        ├─ DataTable → @tanstack/react-virtual (windowed rows)
+        ├─ TimeSeriesChart → Visx Canvas + hidden <table> fallback
+        └─ StatusBar → WebSocket connection state
+```
+
+## Tech Stack with Versions
+
+| Package | Version | Why |
+|---|---|---|
+| Next.js | 14.2.5 | App Router, Route Handlers, Server Actions |
+| TanStack Query | 5.0.0 | Server-state management, optimistic mutations |
+| TanStack Virtual | 3.5.0 | Row virtualization, `measureElement` API |
+| Recharts | 2.12.7 | SVG charts, accessible by default |
+| Visx | 3.3.0 | Canvas chart primitives |
+| Zustand | 4.5.4 | WebSocket state, URL↔filter sync |
+| Prisma | 5.14.0 | Type-safe ORM, migrations |
+| PostgreSQL | 16.3 | JSONB for event payload, partial indexes |
+
+## What I'd Do Differently
+
+**Design the WebSocket protocol before building the client.** I retrofitted the `lastEventId` pattern after discovering the gap-fill need mid-project. If I'd spec'd the WebSocket message format up front (including an event ID field), the server would have been easier to adapt.
+
+**Use URL state from the start, not as a retrofit.** Filter state started in Zustand. Migrating it to URL search params mid-development meant touching every place that read from Zustand and writing a sync effect. Starting with URL state and mirroring it into Zustand (not the other way around) would have been cleaner.
+
+## Known Limitations
+
+- **Column virtualization is not implemented.** Tables with more than ~25 columns will have horizontal render performance issues. `@tanstack/react-virtual` supports column virtualization but it requires a significant refactor of the column width measurement system.
+- **WebSocket reconnection caps at 5 attempts.** After 5 failures, the user sees a manual "Reconnect" button. The correct behavior for long network outages is unclear — silent polling felt wrong, so I chose explicit user action.
+- **The REST gap-fill assumes events are sequential and immutable.** If an event is retroactively corrected on the server, the gap-fill won't reflect the correction. A full re-fetch on reconnect would fix this but is expensive for large datasets.

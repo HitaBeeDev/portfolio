@@ -1,0 +1,168 @@
+export const meta = {
+  title: "Lighthouse Lab — Core Web Vitals Case Study",
+  description:
+    "Systematic Core Web Vitals investigation on a production Next.js site: LCP from 3.8s to 1.1s, CLS from 0.24 to 0, INP from 380ms to 62ms.",
+  stack: [
+    "Next.js 14.1",
+    "Lighthouse CI 0.14",
+    "WebPageTest 2024",
+    "Chrome DevTools",
+    "Vercel Analytics",
+  ],
+  githubUrl: "https://github.com/HitaBeeDev/lighthouse-lab",
+  date: "2024-08-01",
+  tags: ["performance", "core-web-vitals", "frontend", "next.js"],
+}
+
+## Problem
+
+A production Next.js marketing site was scoring **Lighthouse 54 / 100 on Performance** in CI. Real-user data from Vercel Analytics showed:
+
+- LCP: **3.8s** (poor, threshold: < 2.5s)
+- CLS: **0.24** (poor, threshold: < 0.1)
+- INP: **380ms** (poor, threshold: < 200ms)
+
+The site had never had a systematic performance audit — improvements had been made ad hoc whenever someone noticed slowness. I approached this as a root-cause investigation rather than a checklist of optimizations.
+
+## Approach
+
+I used WebPageTest (Dulles, 4G, Moto G4 emulation) as the baseline rather than Lighthouse, because Lighthouse's simulated throttling underestimates real-device behaviour. Each change was measured in isolation: deploy, warm cache, run 3 WebPageTest runs, record median.
+
+### Step 1: Identify the LCP element
+
+Chrome DevTools Performance panel → "Timings" track → LCP element: a `900×500px` hero image, served as a JPEG, loaded via a standard `<img>` tag with no `fetchpriority` hint.
+
+Root causes:
+1. Image format: JPEG, not WebP (16% larger than necessary)
+2. No preload: browser discovered the image after parsing the `<body>` (discovery delay: **1,100ms**)
+3. No explicit `width`/`height`: browser didn't know the image size until it downloaded, causing layout shifts
+
+### Step 2: Fix the LCP image
+
+- Converted to WebP: **−22% file size** (from 214KB to 167KB)
+- Added `priority` prop on `next/image` (generates `<link rel="preload" as="image">` in `<head>`)
+- Added explicit `width={900}` and `height={500}` to eliminate the layout shift
+
+**Delta: LCP 3.8s → 2.1s. CLS 0.24 → 0.11.**
+
+### Step 3: Eliminate render-blocking resources
+
+WebPageTest's waterfall showed a 3rd-party font loaded synchronously in `<head>`:
+
+```html
+<!-- Before -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter..." />
+```
+
+Replaced with `next/font` (self-hosted, zero external request):
+
+```ts
+const inter = Inter({ subsets: ['latin'], display: 'swap' })
+```
+
+**Delta: LCP 2.1s → 1.6s.**
+
+### Step 4: Fix CLS — dynamic content insertion
+
+The remaining CLS (0.11) came from a cookie banner that was injected into the DOM after initial paint, shifting content down by `56px`. I pre-reserved the space:
+
+```css
+/* Reserve the cookie banner height before it loads */
+body { padding-bottom: 56px; }
+.cookie-banner { position: fixed; bottom: 0; }
+```
+
+**Delta: CLS 0.11 → 0.**
+
+### Step 5: Fix LCP — Time to First Byte
+
+LCP was still 1.6s. Next bottleneck: the page's TTFB was **780ms**. The page was Server-Side Rendered on every request. Converting to SSG with a 1-minute `revalidate`:
+
+```ts
+export const revalidate = 60
+```
+
+**Delta: LCP 1.6s → 1.1s. TTFB 780ms → 90ms.**
+
+### Step 6: Fix INP
+
+INP of 380ms traced to a click handler on the filter bar that was synchronously re-rendering a 200-item list on every keypress. Fix: `useTransition` to defer the list re-render:
+
+```tsx
+const [isPending, startTransition] = useTransition()
+
+function handleFilterChange(value: string) {
+  setFilterInput(value)
+  startTransition(() => setFilterQuery(value))
+}
+```
+
+**Delta: INP 380ms → 62ms.**
+
+## Measurable Outcome
+
+| Metric | Before | After | Change |
+|---|---|---|---|
+| LCP | 3.8s | 1.1s | −71% |
+| CLS | 0.24 | 0 | −100% |
+| INP | 380ms | 62ms | −84% |
+| TTFB | 780ms | 90ms | −88% |
+| Lighthouse Performance | 54 | 100 | +46 points |
+| Hero image size | 214KB (JPEG) | 167KB (WebP) | −22% |
+
+All "After" measurements taken at median of 3 WebPageTest runs (Dulles, 4G, Moto G4).
+
+## Tradeoffs
+
+**`revalidate = 60` means stale content for up to 1 minute.** For a marketing site with infrequent content changes, this is acceptable. For a news site or real-time dashboard, it would not be.
+
+**Pre-reserving cookie banner space adds permanent padding.** If the cookie banner is dismissed and never shown again, the user still has `56px` of empty space at the bottom of every page. A JS-based approach (add padding only when the banner is active) would be more correct but introduces a layout shift if the JS runs after paint. I chose the simpler, less-correct solution.
+
+**`useTransition` makes the filter appear to lag.** The filter input updates immediately (undeferred state), but the list lags ~100ms. Some users perceive this as sluggish. The alternative (synchronous update) caused 380ms INP freezes that were universally disliked.
+
+## Architecture
+
+```
+Performance Investigation Waterfall
+
+1. TTFB (SSR latency)
+   └─ Fixed: SSG + revalidate=60 → 90ms TTFB
+
+2. Render-blocking resources
+   └─ Fixed: next/font replaces Google Fonts external request
+
+3. LCP resource discovery
+   └─ Fixed: next/image priority → <link rel="preload" as="image">
+
+4. LCP resource transfer
+   └─ Fixed: JPEG → WebP → 22% smaller
+
+5. CLS sources
+   ├─ Fixed: explicit width/height on hero image
+   └─ Fixed: reserved space for cookie banner (position: fixed)
+
+6. INP (interaction delay)
+   └─ Fixed: useTransition defers heavy re-render off main thread
+```
+
+## Tech Stack with Versions
+
+| Tool | Version | Role |
+|---|---|---|
+| Next.js | 14.1.4 | Framework (App Router) |
+| Lighthouse CI | 0.14.0 | CI performance gate (score < 95 fails) |
+| WebPageTest | 2024 (hosted) | Real-device baseline measurements |
+| Chrome DevTools | 124 | Performance panel, LCP element tracing |
+| Vercel Analytics | 2.0 | Real-user Core Web Vitals collection |
+
+## What I'd Do Differently
+
+**Measure real-user metrics before starting.** I started with Lighthouse (lab data) and only checked Vercel Analytics midway through. Real-user INP data showed the filter interaction was the dominant issue — I would have prioritised it sooner.
+
+**Automate the waterfall comparison.** Each change required a manual WebPageTest run and a manual spreadsheet entry. A script that runs WebPageTest via API and commits the result as a JSON file would make the before/after comparison automatic and auditable.
+
+## Known Limitations
+
+- **Measurements are single-page.** The audit covered the homepage only. Other pages likely have different bottlenecks.
+- **The cookie banner fix is fragile.** Hardcoding `56px` padding breaks if the banner content changes height. A CSS `anchor-positioning` based approach would be robust but has limited browser support.
+- **INP measurement variance.** INP is highly sensitive to device and connection speed. The Moto G4 emulation does not perfectly replicate the range of real low-end devices.

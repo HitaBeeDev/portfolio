@@ -1,7 +1,12 @@
+import { Suspense } from "react";
 import Image from "next/image";
 import { PageWrapper } from "@/components/layout/PageWrapper";
 import { LighthouseBadge } from "@/components/ui/LighthouseBadge";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { ProjectsSection } from "@/components/sections/ProjectsSection";
+import { ProjectsSkeletonGrid } from "@/components/ui/ProjectCardSkeleton";
+import { SkillsSection } from "@/components/sections/SkillsSection";
+import { ContactSection } from "@/components/sections/ContactSection";
 
 export default function Home() {
   return (
@@ -103,6 +108,27 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ── Projects ──────────────────────────────────────── */}
+      <Suspense
+        fallback={
+          <section
+            id="projects"
+            className="border-t border-black/5 py-24 dark:border-white/5"
+          >
+            <div className="mb-10 h-8 w-28 animate-pulse rounded-md bg-black/8 dark:bg-white/8" />
+            <ProjectsSkeletonGrid />
+          </section>
+        }
+      >
+        <ProjectsSection />
+      </Suspense>
+
+      {/* ── Skills ────────────────────────────────────────── */}
+      <SkillsSection />
+
+      {/* ── Contact ───────────────────────────────────────── */}
+      <ContactSection />
     </PageWrapper>
   );
 }

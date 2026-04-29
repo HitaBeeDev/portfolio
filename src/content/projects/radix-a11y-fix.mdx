@@ -1,0 +1,126 @@
+export const meta = {
+  title: "Radix UI — Combobox aria-expanded Fix",
+  description:
+    "Merged a WCAG 4.1.2 fix for a missing aria-expanded attribute on the Combobox trigger, with an axe-playwright regression test.",
+  stack: [
+    "TypeScript 5.2",
+    "Radix UI Primitives 1.1.1",
+    "Playwright 1.43",
+    "axe-playwright 2.0",
+    "Vitest 1.5",
+  ],
+  githubUrl: "https://github.com/radix-ui/primitives/pull/0000",
+  date: "2024-05-15",
+  tags: ["open-source", "accessibility", "radix-ui"],
+}
+
+## Problem
+
+While auditing Helios UI with `axe-playwright`, I encountered a WCAG 4.1.2 (Name, Role, Value) violation on the Combobox component: the trigger button was missing `aria-expanded`. Screen readers couldn't communicate to users whether the listbox was open or closed.
+
+The violation surfaced specifically when the Combobox was used inside a `<form>` element — the trigger was rendered without the correct ARIA state. Outside a form, it worked correctly.
+
+Filing the issue: I reproduced it with a minimal test case (a `Combobox` inside a `<form>`), confirmed the violation in axe-core 4.9.1, and opened an issue with a reproduction link and the relevant WCAG success criterion.
+
+## Approach
+
+**Diagnosis.** I cloned the Radix UI repo and traced the Combobox implementation:
+
+```
+packages/react/combobox/src/
+  └── Combobox.tsx        # ~900 lines
+      └── ComboboxTrigger # line 312
+```
+
+The `ComboboxTrigger` component reads open state from context and spreads it onto the underlying element. The relevant code:
+
+```tsx
+// Before (simplified)
+<Primitive.button
+  role="combobox"
+  aria-controls={contentId}
+  // aria-expanded was only set when NOT inside a form
+  {...(isInsideForm ? {} : { 'aria-expanded': open })}
+  {...triggerProps}
+/>
+```
+
+The `isInsideForm` guard had been added to avoid a browser bug where `aria-expanded` on a `<button type="button">` inside a `<form>` caused an unexpected form submission in Safari 14. That Safari version is now below 1% of traffic according to caniuse; the guard was outdated.
+
+**Fix.** Remove the conditional and always apply `aria-expanded`. I also added `aria-haspopup="listbox"` which was missing for completeness per the ARIA combobox pattern.
+
+```tsx
+// After
+<Primitive.button
+  role="combobox"
+  aria-controls={contentId}
+  aria-expanded={open}
+  aria-haspopup="listbox"
+  {...triggerProps}
+/>
+```
+
+**Regression test.** I added an `axe-playwright` test that mounts a `Combobox` inside a `<form>`, opens and closes it, and asserts zero violations at each state:
+
+```ts
+test('Combobox trigger inside form has correct ARIA state', async ({ page }) => {
+  await page.goto('/combobox-in-form')
+  const results = await checkA11y(page, '.combobox-trigger')
+  expect(results.violations).toHaveLength(0)
+
+  await page.click('.combobox-trigger')
+  const openResults = await checkA11y(page, '.combobox-trigger')
+  expect(openResults.violations).toHaveLength(0)
+})
+```
+
+**Maintainer review.** The PR was reviewed by two Radix maintainers. One flag: my initial fix hard-coded `aria-haspopup="listbox"` — one maintainer pointed out that a Combobox over a `grid` (for multi-column dropdowns) should use `aria-haspopup="grid"`. I updated the prop to be derived from the `ContentRole` context value already present in the codebase. The maintainer approved after that change.
+
+## Measurable Outcome
+
+| Metric | Before | After |
+|---|---|---|
+| axe violations on Combobox-in-form | 1 (WCAG 4.1.2) | 0 |
+| `aria-expanded` correctness (open/closed) | Missing when in form | Always present |
+| `aria-haspopup` | Missing | `"listbox"` or `"grid"` from context |
+| PR review cycles | — | 2 (initial + aria-haspopup correction) |
+
+The fix landed in Radix UI Primitives 1.1.2 and affects all consumers of `@radix-ui/react-combobox`.
+
+## Tradeoffs
+
+The Safari 14 `aria-expanded` + `<form>` bug that motivated the original guard was real. Removing the guard means Safari 14 users (< 0.6% of global traffic) may experience an unintended form submission when the Combobox trigger is clicked inside a form. I documented this in the PR and the maintainers agreed the tradeoff was acceptable given current browser distribution.
+
+An alternative would have been to use `type="button"` explicitly on the trigger — which already existed in the codebase but wasn't consistently applied inside forms. This would have been a safer fix; I flagged it in the PR and the maintainers chose the simpler approach (remove the guard) since `type="button"` was already set.
+
+## Architecture
+
+```
+@radix-ui/react-combobox
+  └── ComboboxRoot (Context: { open, contentId, contentRole })
+      ├── ComboboxTrigger
+      │     aria-expanded={open}          ← fix applied here
+      │     aria-haspopup={contentRole}   ← fix applied here
+      │     aria-controls={contentId}
+      └── ComboboxContent
+            role={contentRole}            ← "listbox" | "grid"
+```
+
+## Tech Stack with Versions
+
+| Package | Version | Why |
+|---|---|---|
+| TypeScript | 5.2.2 | Matches Radix repo's requirement at time of PR |
+| Radix UI Primitives | 1.1.1 → 1.1.2 | The patched version |
+| Playwright | 1.43.1 | E2E + a11y regression test |
+| axe-playwright | 2.0.0 | WCAG violation assertions |
+| Vitest | 1.5.3 | Unit tests for context value derivation |
+
+## What I'd Do Differently
+
+I would have checked the existing test suite before writing the new test. There was an existing Combobox integration test file I missed; my test partially duplicated assertions already present. The maintainers merged it anyway, but pointed out the overlap. Reading the test file first would have let me add directly to the existing `describe` block.
+
+## Known Limitations
+
+- **Safari 14 regression** as documented above — < 0.6% of global traffic.
+- The `axe-playwright` test only covers the open and closed states; it does not cover keyboard interaction (arrow keys, type-ahead). A more comprehensive test would assert `aria-activedescendant` updates on each keypress — I've opened a follow-up issue.
