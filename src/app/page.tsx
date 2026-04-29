@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { CheckCircle2 } from "lucide-react";
 import { PageWrapper } from "@/components/layout/PageWrapper";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ProjectsSection } from "@/components/sections/ProjectsSection";
@@ -7,56 +6,56 @@ import { ProjectsSkeletonGrid } from "@/components/ui/ProjectCardSkeleton";
 import { SkillsSection } from "@/components/sections/SkillsSection";
 import { ContactSection } from "@/components/sections/ContactSection";
 
-const skillBadges = ["React", "TypeScript", "Accessibility"] as const;
-
 export default function Home() {
   return (
     <PageWrapper className="bg-[linear-gradient(180deg,#ffffff_0%,#f8f8ff_42%,#ffffff_100%)] dark:bg-[linear-gradient(180deg,#090909_0%,#0d0d17_45%,#090909_100%)]">
       <section
         id="hero"
-        className="relative flex min-h-[calc(100dvh-3.5rem)] w-full min-w-0 flex-col items-center justify-center overflow-hidden py-16 text-center sm:py-20"
+        className="relative flex min-h-[calc(100dvh-3.5rem)] w-full min-w-0 flex-col items-center justify-center overflow-hidden py-16 text-center sm:py-24"
         aria-labelledby="hero-heading"
       >
+        {/* Dot grid texture */}
+        <div aria-hidden="true" className="hero-dot-grid absolute inset-0 -z-10" />
+
+        {/* Radial glow from top */}
         <div
           aria-hidden="true"
-          className="absolute inset-x-0 top-0 -z-10 h-72 bg-[linear-gradient(90deg,transparent,rgba(79,70,229,0.13),transparent)] blur-3xl dark:bg-[linear-gradient(90deg,transparent,rgba(129,140,248,0.11),transparent)]"
+          className="absolute inset-x-0 -top-24 -z-10 h-[36rem] bg-[radial-gradient(ellipse_70%_55%_at_50%_0%,rgba(79,70,229,0.14),transparent)] dark:bg-[radial-gradient(ellipse_70%_55%_at_50%_0%,rgba(129,140,248,0.11),transparent)]"
         />
 
-        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#4F46E5]/15 bg-white/75 px-3 py-1 text-xs font-semibold text-[#4338CA] shadow-sm shadow-indigo-950/5 backdrop-blur dark:border-indigo-300/15 dark:bg-white/[0.04] dark:text-indigo-300">
-          <CheckCircle2 className="size-3.5" aria-hidden="true" />
-          Available for frontend roles
-        </div>
-
+        {/* Name */}
         <h1
           id="hero-heading"
-          className="w-full max-w-[calc(100vw-2rem)] text-[clamp(2.05rem,8.5vw,6.75rem)] font-bold leading-[0.95] tracking-tight text-[#181818] dark:text-white"
+          className="animate-fade-in-up w-full max-w-[calc(100vw-2rem)] text-[clamp(2.8rem,9vw,7.5rem)] font-bold leading-[0.9] tracking-[-0.03em] text-[#0f0f0f] dark:text-white"
+          style={{ animationDelay: "70ms" }}
         >
           Anahita Amiri
         </h1>
 
-        <p className="mt-5 w-full max-w-xs text-[clamp(1rem,2.5vw,1.35rem)] leading-relaxed text-[#666666] dark:text-white/62 sm:max-w-2xl">
-          Frontend engineer building fast, accessible, and polished interfaces
-          with React and TypeScript.
+        {/* Positioning statement */}
+        <p
+          className="animate-fade-in-up mt-6 w-full max-w-lg text-[clamp(1rem,2.2vw,1.15rem)] leading-relaxed text-foreground/55 dark:text-white/50"
+          style={{ animationDelay: "140ms" }}
+        >
+          Frontend engineer who obsesses over{" "}
+          <strong className="font-semibold text-foreground/85 dark:text-white/80">
+            performance
+          </strong>
+          ,{" "}
+          <strong className="font-semibold text-foreground/85 dark:text-white/80">
+            accessibility
+          </strong>
+          , and the gap between design and code.
         </p>
 
-        <ul
-          className="mt-6 flex flex-wrap justify-center gap-2"
-          aria-label="Core skills"
+        {/* CTAs */}
+        <div
+          className="animate-fade-in-up mt-7 flex flex-col gap-3 sm:flex-row"
+          style={{ animationDelay: "210ms" }}
         >
-          {skillBadges.map((badge) => (
-            <li
-              key={badge}
-              className="rounded-full border border-black/8 bg-white/80 px-3 py-1.5 text-xs font-semibold text-foreground/70 shadow-sm shadow-black/5 dark:border-white/10 dark:bg-white/[0.04] dark:text-white/72"
-            >
-              {badge}
-            </li>
-          ))}
-        </ul>
-
-        <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row">
           <a
             href="#projects"
-            className="inline-flex h-11 items-center justify-center rounded-md bg-[#4F46E5] px-6 text-sm font-semibold text-white shadow-sm shadow-indigo-900/20 transition-colors hover:bg-[#4338CA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-2 dark:bg-indigo-400 dark:text-[#0d0d17] dark:hover:bg-indigo-300 dark:focus-visible:ring-indigo-300"
+            className="inline-flex h-11 items-center justify-center rounded-md bg-[#4F46E5] px-7 text-sm font-semibold text-white shadow-sm shadow-indigo-900/20 transition-colors hover:bg-[#4338CA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-2 dark:bg-indigo-400 dark:text-[#0d0d17] dark:hover:bg-indigo-300 dark:focus-visible:ring-indigo-300"
           >
             View Work
           </a>
@@ -64,12 +63,35 @@ export default function Home() {
             href="/resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-11 items-center justify-center rounded-md border border-black/15 bg-white/70 px-6 text-sm font-semibold text-foreground transition-colors hover:border-[#4F46E5]/35 hover:text-[#4338CA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-2 dark:border-white/15 dark:bg-white/[0.03] dark:hover:border-indigo-300/35 dark:hover:text-indigo-300"
+            className="inline-flex h-11 items-center justify-center rounded-md border border-black/15 bg-white/70 px-7 text-sm font-semibold text-foreground transition-colors hover:border-[#4F46E5]/35 hover:text-[#4338CA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-2 dark:border-white/15 dark:bg-white/[0.03] dark:hover:border-indigo-300/35 dark:hover:text-indigo-300"
           >
             Download Résumé
           </a>
         </div>
 
+        {/* Scroll nudge */}
+        <div
+          className="animate-fade-in-up absolute bottom-8 left-1/2 -translate-x-1/2"
+          style={{ animationDelay: "500ms" }}
+          aria-hidden="true"
+        >
+          <div className="flex flex-col items-center gap-1.5">
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-foreground/25">
+              Scroll
+            </span>
+            <svg
+              className="h-3.5 w-3.5 animate-bounce text-foreground/25"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M12 5v14M5 12l7 7 7-7" />
+            </svg>
+          </div>
+        </div>
       </section>
 
       {/* ── About ─────────────────────────────────────────── */}
