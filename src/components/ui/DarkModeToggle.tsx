@@ -48,7 +48,7 @@ export function DarkModeToggle() {
     <button
       onClick={toggle}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      className="size-9 flex items-center justify-center rounded-md transition-colors hover:bg-teal-600/10 hover:text-teal-700 dark:hover:bg-teal-300/10 dark:hover:text-teal-300"
+      className="size-9 flex items-center justify-center rounded-md transition-colors hover:bg-[#4F46E5]/10 hover:text-[#4338CA] dark:hover:bg-indigo-300/10 dark:hover:text-indigo-300"
     >
       {isDark ? (
         <Sun className="size-5" aria-hidden="true" />

@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { CheckCircle2, Gauge, ShieldCheck, Sparkles } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { PageWrapper } from "@/components/layout/PageWrapper";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ProjectsSection } from "@/components/sections/ProjectsSection";
@@ -9,23 +9,9 @@ import { ContactSection } from "@/components/sections/ContactSection";
 
 const skillBadges = ["React", "TypeScript", "Accessibility"] as const;
 
-const metrics = [
-  { label: "Perf", value: "98", icon: Gauge },
-  { label: "A11y", value: "100", icon: ShieldCheck },
-  { label: "Polish", value: "High", icon: Sparkles },
-] as const;
-
-const codeLines = [
-  "const interface = compose({",
-  "  speed: measured,",
-  "  accessibility: builtIn,",
-  "  details: polished,",
-  "});",
-] as const;
-
 export default function Home() {
   return (
-    <PageWrapper className="bg-[linear-gradient(180deg,#ffffff_0%,#f8fbfa_42%,#ffffff_100%)] dark:bg-[linear-gradient(180deg,#090909_0%,#0b1110_45%,#090909_100%)]">
+    <PageWrapper className="bg-[linear-gradient(180deg,#ffffff_0%,#f8f8ff_42%,#ffffff_100%)] dark:bg-[linear-gradient(180deg,#090909_0%,#0d0d17_45%,#090909_100%)]">
       <section
         id="hero"
         className="relative flex min-h-[calc(100dvh-3.5rem)] w-full min-w-0 flex-col items-center justify-center overflow-hidden py-16 text-center sm:py-20"
@@ -33,10 +19,10 @@ export default function Home() {
       >
         <div
           aria-hidden="true"
-          className="absolute inset-x-0 top-0 -z-10 h-72 bg-[linear-gradient(90deg,transparent,rgba(20,184,166,0.12),transparent)] blur-3xl dark:bg-[linear-gradient(90deg,transparent,rgba(45,212,191,0.1),transparent)]"
+          className="absolute inset-x-0 top-0 -z-10 h-72 bg-[linear-gradient(90deg,transparent,rgba(79,70,229,0.13),transparent)] blur-3xl dark:bg-[linear-gradient(90deg,transparent,rgba(129,140,248,0.11),transparent)]"
         />
 
-        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-teal-600/15 bg-white/75 px-3 py-1 text-xs font-semibold text-teal-700 shadow-sm shadow-teal-950/5 backdrop-blur dark:border-teal-300/15 dark:bg-white/[0.04] dark:text-teal-300">
+        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#4F46E5]/15 bg-white/75 px-3 py-1 text-xs font-semibold text-[#4338CA] shadow-sm shadow-indigo-950/5 backdrop-blur dark:border-indigo-300/15 dark:bg-white/[0.04] dark:text-indigo-300">
           <CheckCircle2 className="size-3.5" aria-hidden="true" />
           Available for frontend roles
         </div>
@@ -70,7 +56,7 @@ export default function Home() {
         <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row">
           <a
             href="#projects"
-            className="inline-flex h-11 items-center justify-center rounded-md bg-teal-600 px-6 text-sm font-semibold text-white shadow-sm shadow-teal-900/20 transition-colors hover:bg-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 dark:bg-teal-400 dark:text-[#071312] dark:hover:bg-teal-300 dark:focus-visible:ring-teal-300"
+            className="inline-flex h-11 items-center justify-center rounded-md bg-[#4F46E5] px-6 text-sm font-semibold text-white shadow-sm shadow-indigo-900/20 transition-colors hover:bg-[#4338CA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-2 dark:bg-indigo-400 dark:text-[#0d0d17] dark:hover:bg-indigo-300 dark:focus-visible:ring-indigo-300"
           >
             View Work
           </a>
@@ -78,53 +64,12 @@ export default function Home() {
             href="/resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-11 items-center justify-center rounded-md border border-black/15 bg-white/70 px-6 text-sm font-semibold text-foreground transition-colors hover:border-teal-600/35 hover:text-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 dark:border-white/15 dark:bg-white/[0.03] dark:hover:border-teal-300/35 dark:hover:text-teal-300"
+            className="inline-flex h-11 items-center justify-center rounded-md border border-black/15 bg-white/70 px-6 text-sm font-semibold text-foreground transition-colors hover:border-[#4F46E5]/35 hover:text-[#4338CA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-2 dark:border-white/15 dark:bg-white/[0.03] dark:hover:border-indigo-300/35 dark:hover:text-indigo-300"
           >
             Download Résumé
           </a>
         </div>
 
-        <div className="mt-6 grid w-full max-w-xs min-w-0 gap-3 overflow-hidden rounded-lg border border-black/8 bg-white/88 p-3 text-left shadow-[0_24px_80px_rgba(15,23,42,0.08)] backdrop-blur dark:border-white/10 dark:bg-white/[0.04] dark:shadow-none sm:mt-8 sm:max-w-3xl sm:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
-          <div className="min-w-0 overflow-hidden rounded-md border border-black/8 bg-[#101615] p-4 font-mono text-[11px] leading-5 text-white shadow-inner dark:border-white/10 sm:text-[13px] sm:leading-6">
-            <div className="mb-4 flex items-center gap-1.5">
-              <span className="size-2.5 rounded-full bg-[#ff5f57]" />
-              <span className="size-2.5 rounded-full bg-[#ffbd2e]" />
-              <span className="size-2.5 rounded-full bg-[#28c840]" />
-            </div>
-            {codeLines.map((line, index) => (
-              <p
-                key={line}
-                className={[
-                  "whitespace-pre-wrap",
-                  index === 0 ? "text-teal-200" : "text-white/72",
-                ].join(" ")}
-              >
-                {line}
-              </p>
-            ))}
-          </div>
-
-          <div className="grid gap-2 sm:grid-rows-3">
-            {metrics.map(({ label, value, icon: Icon }) => (
-              <div
-                key={label}
-                className="flex min-w-0 items-center justify-between rounded-md border border-black/8 bg-[#f7fbfa] px-4 py-2.5 dark:border-white/10 dark:bg-white/[0.04] sm:py-3"
-              >
-                <div className="flex min-w-0 items-center gap-2.5">
-                  <span className="flex size-8 items-center justify-center rounded-md bg-teal-600/10 text-teal-700 dark:bg-teal-300/10 dark:text-teal-300">
-                    <Icon className="size-4" aria-hidden="true" />
-                  </span>
-                  <span className="text-sm font-semibold text-foreground/72">
-                    {label}
-                  </span>
-                </div>
-                <span className="text-sm font-bold text-teal-700 dark:text-teal-300">
-                  {value}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
       </section>
 
       {/* ── About ─────────────────────────────────────────── */}

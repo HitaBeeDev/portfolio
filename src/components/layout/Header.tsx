@@ -13,7 +13,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
-      className="text-sm font-medium text-foreground/60 transition-colors hover:text-teal-700 dark:hover:text-teal-300"
+      className="text-sm font-medium text-foreground/60 transition-colors hover:text-[#4338CA] dark:hover:text-indigo-300"
     >
       {label}
     </Link>
@@ -27,7 +27,7 @@ export function Header() {
         {/* Logo / initials */}
         <Link
           href="/"
-          className="inline-flex size-9 items-center justify-center rounded-md border border-teal-600/20 bg-teal-600/10 text-sm font-bold tracking-tight text-teal-700 transition-colors hover:border-teal-600/35 hover:bg-teal-600/15 dark:border-teal-300/20 dark:bg-teal-300/10 dark:text-teal-300 dark:hover:bg-teal-300/15"
+          className="inline-flex size-9 items-center justify-center rounded-md border border-[#4F46E5]/20 bg-[#4F46E5]/10 text-sm font-bold tracking-tight text-[#4338CA] transition-colors hover:border-[#4F46E5]/35 hover:bg-[#4F46E5]/15 dark:border-indigo-300/20 dark:bg-indigo-300/10 dark:text-indigo-300 dark:hover:bg-indigo-300/15"
           aria-label="Anahita Amiri home"
         >
           AA
