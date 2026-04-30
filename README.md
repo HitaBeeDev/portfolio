@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Anahita Amiri Portfolio
+
+Personal portfolio for Anahita Amiri, a frontend engineer based in Aachen, Germany. The site presents selected projects, case studies, skills from the current CV, and contact links.
+
+## Tech Stack
+
+- Next.js 16 App Router
+- React 19
+- TypeScript
+- Tailwind CSS v4
+- MDX for project case studies
+- Framer Motion for small UI transitions
+- Vercel Analytics and Speed Insights, gated by an environment flag
+- Sentry for optional error monitoring
+
+## Features
+
+- Responsive single-page portfolio layout
+- Filterable selected work section
+- MDX-powered project detail pages at `/projects/[slug]`
+- Dark mode support with pre-paint theme initialization
+- Downloadable CV at `/cv.pdf`
+- SEO metadata and Open Graph configuration
+- Optional Vercel Web Analytics, Speed Insights, and Sentry instrumentation
+
+## Project Structure
+
+```text
+src/app/                      App Router pages and metadata
+src/components/layout/         Header, page wrapper, navigation shell
+src/components/sections/       Home page sections
+src/components/ui/             Shared UI pieces
+src/content/projects/          MDX case studies
+src/lib/projects.ts            Project card data and ordering
+public/cv.pdf                  Public CV download
+```
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev      # Start local development server
+npm run lint     # Run ESLint
+npm run build    # Build production app with webpack
+npm run start    # Start production server after build
+```
 
-## Learn More
+## Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+Create `.env.local` from `.env.example` when needed.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+cp .env.example .env.local
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Common variables:
 
-## Deploy on Vercel
+```text
+NEXT_PUBLIC_SITE_URL=
+NEXT_PUBLIC_SENTRY_DSN=
+NEXT_PUBLIC_ENABLE_VERCEL_INSIGHTS=true
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`NEXT_PUBLIC_ENABLE_VERCEL_INSIGHTS` must be set to `true` before Vercel Analytics and Speed Insights are rendered.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Updating Content
+
+- Projects: edit `src/lib/projects.ts`
+- Case studies: add or update MDX files in `src/content/projects/`
+- Skills: edit `src/components/sections/SkillsSection.tsx`
+- Contact links and copy: edit `src/components/sections/ContactSection.tsx`
+- CV download: replace `public/cv.pdf`
+
+Each project with `hasCaseStudy: true` should have a matching MDX file named after its slug, for example `src/content/projects/adminix.mdx`.
+
+## Deployment
+
+The app is designed for Vercel. Set the production environment variables in the Vercel project settings, then deploy from the main branch.
