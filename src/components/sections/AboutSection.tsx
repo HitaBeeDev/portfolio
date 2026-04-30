@@ -87,12 +87,12 @@ export function AboutSection() {
                 <div>
                   <ExperienceEntry
                     company="Jurcom GRC Services"
-                    role="Frontend Developer"
+                    role="Frontend Engineer"
                     period="Sep 2023 – Dec 2025"
                     location="Istanbul, Turkey · Remote"
                     description={
                       <ul className="flex list-disc flex-col gap-1.5 pl-4">
-                        <li>Built and maintained a GDPR compliance platform used by Data Protection Officers, as the only frontend developer on the team. Clients included large companies in Turkey.</li>
+                        <li>Built and maintained a GDPR compliance platform used by Data Protection Officers, as the only frontend engineer on the team. Clients included large companies in Turkey.</li>
                         <li>Refactored a large React codebase by restructuring components, simplifying state management, and removing duplicated logic.</li>
                         <li>Built form-heavy interfaces across the platform, including multi-step GDPR workflows with React Hook Form, conditional branching, and cross-field validation.</li>
                         <li>Implemented data visualizations with Chart.js for compliance reporting and audit views.</li>
