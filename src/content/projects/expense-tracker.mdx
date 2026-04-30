@@ -1,0 +1,47 @@
+export const meta = {
+  title: "Expense Tracker — Angular",
+  description:
+    "Minimal expense tracker built with Angular and Tailwind CSS. Add, view, and delete daily expenses. A deliberate step outside the React stack.",
+  stack: ["Angular", "TypeScript", "Tailwind CSS", "Karma"],
+  liveUrl: "https://simple-expensetracker-app.vercel.app",
+  githubUrl: "https://github.com/HitaBeeDev/simple-expense-tracker-app",
+  date: "2025-01-01",
+  tags: ["frontend", "angular", "typescript"],
+}
+
+A minimal expense tracker — add an expense with a name and amount, view the running list, delete entries. Small on purpose. The point was to get hands-on with Angular after building exclusively in React, and a focused, low-complexity project is the right scope for that.
+
+## How It Was Built
+
+Angular's component model is more prescriptive than React's. Components are classes, templates are separate from logic, and the framework handles change detection rather than leaving it to the developer. Getting comfortable with that mental model — decorators, `NgModule`, template syntax, the CLI's code generation — was the goal.
+
+Data stays in component state for simplicity. The expense list lives in the root component and gets passed down via `@Input()` bindings. Adding or deleting an expense emits an event upward via `@Output()`, and the parent updates the list. This is the Angular equivalent of lifting state up.
+
+Tailwind CSS works with Angular out of the box via the CLI's `ng add` flow. The styling approach is the same as any other Tailwind project — utility classes in the template, no component-scoped CSS files.
+
+Unit tests run with Karma and Jasmine, which is Angular's default test setup. The test suite covers the add and delete flows.
+
+## Architecture
+
+```
+AppComponent (root)
+  └─ holds expense list in component state
+       ├─ ExpenseFormComponent
+       │    └─ emits (addExpense) on submit
+       └─ ExpenseListComponent
+            └─ renders list, emits (deleteExpense) per item
+
+Data flow:
+  Form submit → @Output addExpense → AppComponent.add()
+  Delete click → @Output deleteExpense → AppComponent.remove()
+```
+
+## Stack
+
+| Tool | Version | Role |
+|---|---|---|
+| Angular | 20 | Framework |
+| TypeScript | 5 | Strict mode |
+| Tailwind CSS | v3 | Styling |
+| Karma + Jasmine | latest | Unit tests |
+| Angular CLI | 20.3.7 | Scaffolding + build |

@@ -75,6 +75,40 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/HitaBeeDev/lattice",
     hasCaseStudy: true,
   },
+  {
+    slug: "skin-and-silk",
+    name: "Skin & Silk",
+    description:
+      "Luxury beauty storefront with product browsing, cart, order flows, and an editorial blog — all client-side, cart persisted to localStorage.",
+    problem:
+      "Cart state needs to survive page refreshes and navigations without a backend. A custom Redux middleware syncs the cart slice to localStorage on every dispatch so it rehydrates on load.",
+    stack: [
+      "React 18",
+      "TypeScript",
+      "Vite",
+      "Tailwind CSS",
+      "Redux Toolkit",
+      "React Router v6",
+      "Storybook",
+    ],
+    category: "frontend",
+    liveUrl: "https://skin-and-silk.vercel.app",
+    githubUrl: "https://github.com/HitaBeeDev/skin-and-silk-beauty-shop",
+    hasCaseStudy: true,
+  },
+  {
+    slug: "expense-tracker",
+    name: "Expense Tracker",
+    description:
+      "Minimal expense tracker built with Angular — add, view, and delete daily expenses. A deliberate step outside the React stack.",
+    problem:
+      "Angular's component model, dependency injection, and CLI workflow are different enough from React that building something small first was the right way to get comfortable with it.",
+    stack: ["Angular", "TypeScript", "Tailwind CSS", "Karma"],
+    category: "frontend",
+    liveUrl: "https://simple-expensetracker-app.vercel.app",
+    githubUrl: "https://github.com/HitaBeeDev/simple-expense-tracker-app",
+    hasCaseStudy: true,
+  },
   /* TODO: add design system project
   {
     slug: "helios-ui",

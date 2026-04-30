@@ -1,0 +1,62 @@
+export const meta = {
+  title: "Skin & Silk — Luxury Beauty Storefront",
+  description:
+    "Luxury beauty storefront with product browsing, cart, order flows, and an editorial blog. Product data from mock JSON, cart persisted to localStorage via Redux middleware.",
+  stack: [
+    "React 18",
+    "TypeScript",
+    "Vite",
+    "Tailwind CSS",
+    "Redux Toolkit",
+    "React Router v6",
+    "Storybook",
+  ],
+  liveUrl: "https://skin-and-silk.vercel.app",
+  githubUrl: "https://github.com/HitaBeeDev/skin-and-silk-beauty-shop",
+  date: "2025-02-01",
+  tags: ["frontend", "react", "ecommerce", "redux", "storybook"],
+}
+
+A luxury beauty storefront with a curated home page, filterable product list, product detail pages with gallery and related products, cart and order flows, and a full editorial blog. Product data comes from local mock JSON hydrated into typed product models. There's no backend — the whole thing runs locally without any setup beyond `npm install`.
+
+## How It Was Built
+
+Cart state lives in a Redux Toolkit slice. A custom localStorage middleware listens to every dispatched action and writes the cart slice to `localStorage` after each update. On app load, the store initialiser reads from `localStorage` and preloads the cart slice — so items survive a page refresh or tab close without any server involvement.
+
+Product detail pages and order pages use React Router's `loader` API for route-level data fetching. The loader runs before the component renders, so the page never mounts in a loading state — data is always available by the time the component appears. `productsService.ts` resolves product images dynamically so adding a product to the mock data doesn't require manually wiring up an import.
+
+Category filtering, sort controls, and search are all computed from the product list in the component — no separate API call, no debounce needed at this data size. Related products on the detail page are pulled from the same list filtered by category, excluding the current item.
+
+Storybook is set up for isolated UI work. Shared components in `src/components/ui/` each have a story, which makes visual regression easy to catch without running the full app.
+
+## Architecture
+
+```
+Mock data (products.json)
+  └─ productsService.ts (resolves images, maps to Product type)
+       └─ React Router loaders (product detail, order pages)
+            └─ components receive data ready on mount
+
+Cart:
+  Redux Toolkit cartSlice
+    └─ localStorage middleware (writes on every dispatch)
+         └─ store initialiser reads localStorage on load
+              └─ cart rehydrated without any server call
+
+Blog:
+  src/content/blogArticles.ts (static content)
+    └─ blog landing page lists articles
+         └─ article pages render full content
+```
+
+## Stack
+
+| Tool | Version | Role |
+|---|---|---|
+| React | 18 | UI layer |
+| TypeScript | 5 | Strict mode |
+| Vite | latest | Dev server + build |
+| Tailwind CSS | v3 | Styling |
+| Redux Toolkit | 2 | Cart state + localStorage persistence |
+| React Router | v6 | Routing + route loaders and actions |
+| Storybook | 8 | Isolated component development |
