@@ -1,0 +1,68 @@
+export const meta = {
+  title: "Lattice — Productivity Dashboard",
+  description:
+    "Productivity dashboard with task management, habit tracking, and a Pomodoro timer. All data lives in IndexedDB via Dexie — no backend, no account, persists across sessions.",
+  stack: [
+    "React 18",
+    "TypeScript",
+    "Vite",
+    "Tailwind CSS",
+    "Dexie / IndexedDB",
+    "React Hook Form",
+    "Zod",
+    "React Router",
+    "Vitest",
+  ],
+  liveUrl: "https://lattice-project.vercel.app",
+  githubUrl: "https://github.com/HitaBeeDev/lattice",
+  date: "2025-02-01",
+  tags: ["frontend", "react", "productivity", "indexeddb", "local-first"],
+}
+
+A productivity dashboard that combines task management, habit tracking, and a Pomodoro timer in one place. All data is stored locally in IndexedDB — no account, no backend, no data leaving the browser. The dashboard aggregates tasks, habits, and focus sessions into streaks, weekly progress, and completion rates.
+
+## How It Was Built
+
+`localStorage` has a 5–10MB limit and is synchronous. For anything beyond a handful of records, IndexedDB is the right storage primitive — asynchronous, no practical size limit, not evicted under storage pressure. Dexie wraps it with a clean promise-based API and typed tables. The schema lives in `src/db/` with three tables: `tasks`, `habits`, and `sessions`. On first load, a seed function checks whether the database is empty and inserts demo data if it is, so new users land on a populated dashboard instead of a blank screen.
+
+`useLiveQuery` — Dexie's React hook — subscribes to table changes and re-renders the component when the underlying data changes. The dashboard calls it once per data type. When you complete a task on the tasks page, the dashboard count updates without any manual event wiring.
+
+The Pomodoro timer needs to survive page navigation. Timer state (running, paused, remaining seconds, session type) lives in a React context that wraps the entire app — navigating between routes doesn't unmount the provider. When a session completes, the context writes a record to the `sessions` table, and the dashboard's `useLiveQuery` picks it up automatically.
+
+## Architecture
+
+```
+IndexedDB (via Dexie)
+  ├── tasks
+  ├── habits
+  └── sessions
+
+useLiveQuery
+  └─ subscribes to table changes
+       └─ re-renders on any write (cross-page, automatic)
+
+PomodoroContext (wraps entire app)
+  └─ timer state survives navigation
+       └─ on session complete → writes to sessions table
+            └─ dashboard useLiveQuery updates focus time
+
+Pages:
+  /            → aggregates all three tables
+  /tasks       → reads + writes tasks
+  /habit-tracker → reads + writes habits
+  /pomodoro    → reads context, writes sessions on complete
+```
+
+## Stack
+
+| Tool | Version | Role |
+|---|---|---|
+| React | 18 | UI layer |
+| TypeScript | 5 | Strict mode, typed Dexie tables |
+| Vite | latest | Dev server + build |
+| Tailwind CSS | v3 | Styling |
+| Dexie | 3 | IndexedDB wrapper |
+| React Hook Form | 7 | Form state |
+| Zod | 3 | Schema validation |
+| React Router | v6 | Client-side routing |
+| Vitest | latest | Unit tests |

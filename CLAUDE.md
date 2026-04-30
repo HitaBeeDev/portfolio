@@ -172,18 +172,6 @@ Key requirements:
 - Chromatic visual regression CI
 - Full WCAG 2.1 AA compliance documented in README
 
-### Project 2: Real-Time Dashboard — Meridian
-**Stack:** Next.js, TanStack Query, Recharts + Visx, Zustand, WebSockets, PostgreSQL + Prisma
-
-Key requirements:
-- Virtual scrolling for 100k+ rows with `@tanstack/react-virtual` — benchmark before/after (e.g. "2,800ms → 16ms per frame")
-- Optimistic UI with `useMutation` + rollback on error (test with 50% failure rate)
-- WebSocket: reconnection + exponential backoff (1s→2s→4s→8s, cap 30s) + connection state UI
-- On reconnect: fetch missed events via REST to fill the gap (not WebSocket replay)
-- Canvas chart + SVG chart — tradeoff documented; Canvas chart has aria-label + visually-hidden data table fallback
-- URL-as-state: filter/sort/pagination in search params — verify refresh restores view and back/forward navigates filter history
-- Memoization decisions documented: where `useMemo` was used and where deliberately NOT used
-
 ### Project 3: Open Source Contribution
 **Target:** radix-ui/primitives, tanstack/query, vercel/next.js, shadcn/ui, or ≥ 500 star repo
 

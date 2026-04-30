@@ -52,6 +52,29 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/HitaBeeDev/flyvio",
     hasCaseStudy: true,
   },
+  {
+    slug: "lattice",
+    name: "Lattice",
+    description:
+      "Productivity dashboard combining task management, habit tracking, and a Pomodoro timer — all persisted locally with IndexedDB, no account required.",
+    problem:
+      "Keeping tasks, habits, and focus sessions in sync across pages without a backend. Dexie wraps IndexedDB so everything survives a refresh, and the dashboard aggregates it all into streaks and weekly progress.",
+    stack: [
+      "React 18",
+      "TypeScript",
+      "Vite",
+      "Tailwind CSS",
+      "Dexie / IndexedDB",
+      "React Hook Form",
+      "Zod",
+      "React Router",
+      "Vitest",
+    ],
+    category: "frontend",
+    liveUrl: "https://lattice-project.vercel.app",
+    githubUrl: "https://github.com/HitaBeeDev/lattice",
+    hasCaseStudy: true,
+  },
   /* TODO: add design system project
   {
     slug: "helios-ui",
@@ -66,18 +89,6 @@ export const projects: Project[] = [
     hasCaseStudy: true,
   },
   */
-  {
-    slug: "meridian",
-    name: "Meridian",
-    description: "Real-time analytics dashboard with virtual scrolling for 100k+ rows.",
-    problem:
-      "Rendering large compliance datasets caused frame drops and browser freezes. The existing table had no virtualization and no reconnection logic on WebSocket drops.",
-    stack: ["Next.js", "TanStack Query", "Recharts", "Zustand", "WebSockets", "PostgreSQL", "Prisma"],
-    category: "full-stack",
-    liveUrl: "https://meridian.example.com",
-    githubUrl: "https://github.com/HitaBeeDev/meridian",
-    hasCaseStudy: true,
-  },
   /* TODO: add open source project
   {
     slug: "radix-a11y-fix",

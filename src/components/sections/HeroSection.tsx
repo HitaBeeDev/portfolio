@@ -2,7 +2,7 @@ import Link from "next/link";
 import { projects } from "@/lib/projects";
 import type { ProjectCategory } from "@/types/project";
 
-const PREVIEW_PROJECT_SLUGS = ["helios-ui", "meridian", "saas-starter"] as const;
+const PREVIEW_PROJECT_SLUGS = ["adminix", "flyvio", "lattice"] as const;
 
 const PREVIEW_PROJECTS = PREVIEW_PROJECT_SLUGS.map((slug) =>
   projects.find((project) => project.slug === slug),
