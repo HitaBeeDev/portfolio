@@ -1,4 +1,4 @@
-# Anahita Amiri Portfolio
+# Portfolio
 
 Personal portfolio for Anahita Amiri, a frontend engineer based in Aachen, Germany. The site presents selected projects, case studies, skills from the current CV, and contact links.
 
