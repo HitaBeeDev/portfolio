@@ -1,11 +1,13 @@
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { ProjectCard } from "@/components/ui/ProjectCard";
 import { projects } from "@/lib/projects";
 import type { ProjectCategory } from "@/types/project";
+
+const INITIAL_COUNT = 2;
 
 type FilterValue = ProjectCategory | "all";
 
@@ -21,6 +23,7 @@ export function ProjectsSection() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [showAll, setShowAll] = useState(false);
 
   const rawFilter = searchParams.get("filter") ?? "all";
   const activeFilter: FilterValue = FILTERS.some((f) => f.value === rawFilter)
@@ -37,6 +40,7 @@ export function ProjectsSection() {
       }
       const query = params.toString();
       router.push(`${pathname}${query ? `?${query}` : ""}`, { scroll: false });
+      setShowAll(false);
     },
     [router, pathname, searchParams],
   );
@@ -45,6 +49,9 @@ export function ProjectsSection() {
     activeFilter === "all"
       ? projects
       : projects.filter((p) => p.category === activeFilter);
+
+  const visible = showAll ? filtered : filtered.slice(0, INITIAL_COUNT);
+  const hasMore = filtered.length > INITIAL_COUNT;
 
   return (
     <section
@@ -97,15 +104,30 @@ export function ProjectsSection() {
 
             {/* Grid or empty state */}
             {filtered.length > 0 ? (
-              <ul className="grid gap-5 sm:grid-cols-2">
-                {filtered.map((project, i) => (
-                  <FadeIn key={project.slug} delay={i * 0.06} className="h-full">
-                    <li className="h-full">
-                      <ProjectCard project={project} />
-                    </li>
+              <div className="flex flex-col gap-8">
+                <ul className="grid gap-5 sm:grid-cols-2">
+                  {visible.map((project, i) => (
+                    <FadeIn key={project.slug} delay={i * 0.06} className="h-full">
+                      <li className="h-full">
+                        <ProjectCard project={project} />
+                      </li>
+                    </FadeIn>
+                  ))}
+                </ul>
+                {hasMore && !showAll && (
+                  <FadeIn>
+                    <button
+                      onClick={() => setShowAll(true)}
+                      className="inline-flex h-9 items-center gap-2 rounded-md border border-black/[0.1] px-4 text-xs font-semibold transition-colors hover:bg-black/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 dark:border-white/[0.1] dark:hover:bg-white/[0.05]"
+                    >
+                      Load more
+                      <span className="tabular-nums text-muted">
+                        +{filtered.length - INITIAL_COUNT}
+                      </span>
+                    </button>
                   </FadeIn>
-                ))}
-              </ul>
+                )}
+              </div>
             ) : (
               <div className="flex flex-col items-start gap-3 py-16">
                 <p className="text-sm text-muted">No projects in this category yet.</p>
