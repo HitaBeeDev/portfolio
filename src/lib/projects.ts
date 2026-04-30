@@ -27,6 +27,31 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/HitaBeeDev/adminix",
     hasCaseStudy: true,
   },
+  {
+    slug: "flyvio",
+    name: "Flyvio",
+    description:
+      "Flight search and booking app — real airport and airline data from OpenFlights, flights generated on demand for any route, no backend.",
+    problem:
+      "Without a flight API, search results have to be generated. Flyvio pulls from 5,518 real airports and 80 carriers and builds plausible flights for any route at query time — no hardcoded list, no server.",
+    stack: [
+      "React 19",
+      "TypeScript",
+      "Vite",
+      "Tailwind CSS v4",
+      "shadcn/ui",
+      "TanStack Query",
+      "Zustand",
+      "React Hook Form",
+      "Zod",
+      "Framer Motion",
+      "React Router v6",
+    ],
+    category: "frontend",
+    liveUrl: "https://flyvio.vercel.app",
+    githubUrl: "https://github.com/HitaBeeDev/flyvio",
+    hasCaseStudy: true,
+  },
   /* TODO: add design system project
   {
     slug: "helios-ui",
@@ -80,15 +105,4 @@ export const projects: Project[] = [
     hasCaseStudy: true,
   },
   */
-  {
-    slug: "lighthouse-lab",
-    name: "Lighthouse Lab",
-    description: "Systematic Core Web Vitals investigation documenting a 38% LCP improvement.",
-    problem:
-      "A client-side rendered app had an LCP of 4.2s on mobile. Needed a documented, reproducible process for identifying and measuring each intervention.",
-    stack: ["Next.js", "Lighthouse CI", "WebPageTest", "Chrome DevTools"],
-    category: "frontend",
-    githubUrl: "https://github.com/HitaBeeDev/lighthouse-lab",
-    hasCaseStudy: true,
-  },
 ];

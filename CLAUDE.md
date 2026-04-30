@@ -203,9 +203,6 @@ Key requirements:
 - Error boundaries with user-friendly fallback + Sentry auto-reporting
 - Preview environments on every PR
 
-### Project 5 (Optional): Performance Case Study — Lighthouse Lab
-Document a systematic Core Web Vitals investigation: before state → root cause analysis → each intervention with its delta → after state. At least 30% improvement in a key metric.
-
 ---
 
 ## `package.json` Required Scripts

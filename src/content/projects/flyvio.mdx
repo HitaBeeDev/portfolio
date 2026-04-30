@@ -1,0 +1,141 @@
+export const meta = {
+  title: "Flyvio — Flight Search & Booking App",
+  description:
+    "Flight search and booking app built on real OpenFlights data. 5,518 airports, 80 carriers, flights generated on demand for any route — no backend, no API.",
+  stack: [
+    "React 19",
+    "TypeScript 6",
+    "Vite 8",
+    "Tailwind CSS v4",
+    "shadcn/ui",
+    "TanStack Query v5",
+    "Zustand v5",
+    "React Hook Form",
+    "Zod v4",
+    "Framer Motion",
+    "React Router v6",
+    "Lucide React",
+  ],
+  liveUrl: "https://flyvio.vercel.app",
+  githubUrl: "https://github.com/HitaBeeDev/flyvio",
+  date: "2025-03-01",
+  tags: ["frontend", "react", "flight", "tanstack-query", "zustand"],
+}
+
+## Problem
+
+Building a flight search app without a flight API means you either hardcode routes (fragile, fake-looking) or you generate them. Hardcoded routes break the moment someone searches for an airport you didn't anticipate. A real API costs money and adds a backend dependency for what is fundamentally a frontend project.
+
+The requirement I set for myself: search for any two airports in the world and get back a plausible list of flights — real carriers, real aircraft types, realistic pricing and timing. The data had to come from somewhere real, and the generation had to be deterministic enough that the same search always produces consistent results.
+
+On top of that, a 3-step booking flow that holds passenger details, seat selections, and extras across steps without losing state on a back-navigation.
+
+## Approach
+
+### Dynamic flight generation
+
+The [OpenFlights public dataset](https://openflights.org/data.html) ships `airports.dat` (7,697 airports) and `airlines.dat` (6,048 carriers). I pruned these down to the 5,518 airports with IATA codes and 80 major carriers that are still operating, and bundled them as JSON.
+
+`generateFlightsForRoute(origin, destination, date)` takes those two datasets and builds a list of flights:
+
+1. Seeds a pseudo-random number generator from the route string + date so the same search always returns the same flights.
+2. Picks 3–6 carriers that plausibly fly the route based on the origin country and carrier region data.
+3. Generates departure times spread across the day, realistic flight durations based on great-circle distance, and pricing that scales with duration and adds variance per carrier.
+4. Assigns aircraft type based on route distance — short-haul gets narrowbodies, long-haul gets widebodies.
+
+The result looks real because the underlying data is real. A search from LHR to JFK returns British Airways, American, and Virgin Atlantic with 7–8 hour flight times, not random strings and 45-minute transatlantic hops.
+
+### State across a multi-step booking flow
+
+The booking flow is 3 steps: passenger details → seat and extras → review and confirm. Each step is its own route (`/booking/:flightId/passengers`, etc.). The challenge is keeping form state alive across navigations without re-fetching or losing data.
+
+`bookingStore` (Zustand) holds the in-progress booking object. Each step writes to the store on submit. If the user hits the back button, the store still has their data and the form pre-fills. On confirmation, the store is cleared and the confirmation ID is written to a separate key so the confirmation page can display it without keeping the full booking in memory.
+
+Zustand's `persist` middleware backs the store to `sessionStorage`, so a page refresh during the booking flow doesn't drop the user back to step 1.
+
+### Search state in the URL
+
+The search form (origin, destination, date, passengers, cabin class) maps directly to URL search params. Submitting the form pushes to `/search?from=LHR&to=JFK&date=2025-06-15&pax=1&cabin=economy`. TanStack Query reads those params as the query key, so the same search always hits the same cache entry, the back button restores the exact results, and a shared link opens the right search state for anyone.
+
+### Skeleton loading on results
+
+TanStack Query's `isLoading` state drives a skeleton grid on the results page. The skeleton matches the exact layout of the result cards — same height, same column count — so the layout doesn't shift when real data arrives. This is the same `placeholderData` pattern as Adminix but applied to the initial load rather than pagination.
+
+### Page transitions
+
+`PageTransition` wraps each route in a `motion.div` with a simple fade + upward slide. Framer Motion's `AnimatePresence` handles the enter/exit sequencing. The animation runs once per navigation — there's no looping or auto-playing anything.
+
+## Measurable Outcome
+
+| Metric | Score |
+|---|---|
+| Lighthouse Performance | 99 |
+| Lighthouse Accessibility | 96 |
+| Lighthouse Best Practices | 100 |
+| Lighthouse SEO | 100 |
+
+Flight generation for any airport pair completes in under 5ms — fast enough that it never becomes the bottleneck in the search flow.
+
+## Tradeoffs
+
+**Deterministic generation means no real-time pricing.** The same search on two different days returns the same flights. For a demo this is a feature — it makes results predictable for testing. For a real app you'd want live pricing, which means a backend.
+
+**Bundling airport and airline JSON adds ~200KB to the initial load.** Both files are imported at the module level. A lazy-loaded approach (fetch on first search) would reduce the initial bundle but would add latency to the first search. Given that this is a search app and the user is likely to search immediately, I took the upfront cost.
+
+**Booking state in sessionStorage disappears on tab close.** If a user starts a booking, closes the tab, and reopens it, they start over. localStorage would persist longer but feels wrong for a booking flow — partial bookings shouldn't survive indefinitely.
+
+**No real payment step.** The booking flow ends at a confirmation screen with a generated booking reference. There's no Stripe integration or actual payment processing — that would require a backend.
+
+## Architecture
+
+```
+Search flow:
+  SearchForm (Zustand searchStore)
+    └─ pushes to /search?from=...&to=...
+         └─ useFlights(params) — TanStack Query
+              └─ api/flights.ts calls generateFlightsForRoute()
+                   └─ reads airports.json + airlines.json
+                        └─ returns Flight[]
+                             └─ results page renders cards
+
+Booking flow:
+  /booking/:flightId/passengers
+    └─ form submits → bookingStore.setPassengers()
+         └─ navigate to /booking/:flightId/extras
+              └─ form submits → bookingStore.setExtras()
+                   └─ navigate to /booking/:flightId/review
+                        └─ confirm → bookingStore.confirm()
+                             └─ navigate to /booking/confirmation/:bookingId
+                                  └─ store cleared, confirmationId persisted
+
+State layers:
+  URL search params  → search query (source of truth for results)
+  Zustand searchStore → search form UI state
+  Zustand bookingStore → in-progress booking (persisted to sessionStorage)
+  TanStack Query      → flight data cache
+```
+
+## Tech Stack with Versions
+
+| Tool | Version | Role |
+|---|---|---|
+| React | 19 | UI layer |
+| TypeScript | 6 | Strict mode, `noUncheckedIndexedAccess` |
+| Vite | 8 | Dev server + build |
+| Tailwind CSS | v4 | Styling, CSS-first config |
+| shadcn/ui | New York / zinc | Accessible UI primitives |
+| TanStack Query | v5 | Server state, caching |
+| Zustand | v5 | Search state, booking state, UI state |
+| React Hook Form | 7 | Multi-step form state |
+| Zod | v4 | Schema validation + TypeScript types |
+| React Router | v6 | Client-side routing, URL-as-state |
+| Framer Motion | latest | Page transitions |
+| Lucide React | latest | Icons |
+
+## What I'd Do Differently
+
+**Lazy-load the airport data.** Bundling `airports.json` at startup trades 200KB of initial load for fast first search. A better approach: ship a lightweight IATA code index upfront, and fetch the full record on demand when an airport is selected in the autocomplete. The user never needs all 5,518 airports at once.
+
+**Add a real confirmation email.** The confirmation screen generates a booking reference but sends nothing. Wiring up Resend or a simple email API route would make the flow feel complete — and it's a small addition that would significantly raise the demo's credibility.
+
+**Test the booking flow more thoroughly.** I have unit tests for `generateFlightsForRoute()` and the Zod schemas, but the multi-step booking flow has no E2E test coverage. A Playwright test that walks from search to confirmation and verifies the booking reference appears would catch regressions that are currently invisible.
