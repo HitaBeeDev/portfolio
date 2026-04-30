@@ -1,0 +1,50 @@
+export const meta = {
+  title: "Review App — Angular",
+  description:
+    "Angular product review app with a three-step write flow, decimal star ratings, and localStorage persistence. Built with Angular Signals, standalone components, and Zod.",
+  stack: ["Angular 20", "TypeScript", "Tailwind CSS v4", "Zod"],
+  liveUrl: "https://simple-review-app.vercel.app",
+  githubUrl: "https://github.com/HitaBeeDev/simple-review-app",
+  date: "2025-03-01",
+  tags: ["frontend", "angular", "signals", "typescript"],
+}
+
+A product review app where you can browse reviews in a grid and write a new one through a three-step flow — fill in the details, preview the review, confirm and submit. Ratings support decimals (4.5/5). Reviews are persisted to `localStorage`. Built to go deeper with modern Angular after the [expense tracker](/projects/expense-tracker) — specifically Signals, standalone components, and Zod.
+
+## How It Was Built
+
+Angular 20 ships Signals as the preferred reactive primitive. A `signal()` holds a value and notifies dependents when it changes — the same idea as React's `useState` but built into the framework's change detection. The review list is a `signal<Review[]>` initialised from `localStorage`. Adding a review calls `.update()` on the signal and writes the new array back to `localStorage` in the same step.
+
+Standalone components remove the need for `NgModule`. Each component declares its own imports directly in the `@Component` decorator, which makes the dependency graph explicit and eliminates the module boilerplate that makes classic Angular feel heavy.
+
+The three-step write flow (fill → preview → confirm) is a small state machine driven by a `currentStep` signal. Each step is a separate component. The parent reads `currentStep` and renders the matching child. Moving forward writes the form data to a shared `draftReview` signal that the preview step reads to display the review before it's committed.
+
+Zod handles validation. A schema defines the shape and constraints for a review — required fields, minimum/maximum lengths, rating range. Angular's reactive forms validate on submit against the Zod schema rather than using Angular's built-in validators. This is the same single-source-of-truth approach as the React projects: one schema for the TypeScript type, the runtime check, and the error messages.
+
+## Architecture
+
+```
+Signals:
+  reviewList: signal<Review[]>  ← initialised from localStorage
+  draftReview: signal<Draft>    ← shared across form steps
+  currentStep: signal<1|2|3>    ← controls which step renders
+
+Write flow:
+  Step 1 (fill)    → user fills form, writes to draftReview
+  Step 2 (preview) → reads draftReview, displays review card
+  Step 3 (confirm) → commits draft to reviewList + localStorage
+
+Validation:
+  Zod schema → validates on submit
+    └─ maps errors back to form field messages
+```
+
+## Stack
+
+| Tool | Version | Role |
+|---|---|---|
+| Angular | 20 | Framework (standalone components, Signals) |
+| TypeScript | 5 | Strict mode |
+| Tailwind CSS | v4 | Styling |
+| Zod | 3 | Schema validation |
+| Angular CLI | latest | Scaffolding + build |

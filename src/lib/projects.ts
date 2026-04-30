@@ -165,6 +165,19 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/HitaBeeDev/simple-global-clock-app",
     hasCaseStudy: true,
   },
+  {
+    slug: "review-app",
+    name: "Review App",
+    description:
+      "Angular product review app with a three-step write flow and localStorage persistence — built with Angular Signals, standalone components, and Zod validation.",
+    problem:
+      "A chance to go deeper with Angular after the expense tracker — specifically Signals for reactive state, standalone components without NgModule, and wiring Zod into Angular's reactive forms.",
+    stack: ["Angular 20", "TypeScript", "Tailwind CSS v4", "Zod"],
+    category: "frontend",
+    liveUrl: "https://simple-review-app.vercel.app",
+    githubUrl: "https://github.com/HitaBeeDev/simple-review-app",
+    hasCaseStudy: true,
+  },
   /* TODO: add design system project
   {
     slug: "helios-ui",
