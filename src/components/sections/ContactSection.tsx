@@ -57,9 +57,8 @@ export function ContactSection() {
             <FadeIn>
               <div className="flex flex-col gap-5">
                 <p className="max-w-sm text-[0.9375rem] leading-[1.7] text-foreground/70">
-                  Open to senior frontend roles and interesting consulting work.
-                  Currently based in Aachen, Germany — available remotely or in
-                  the EU.
+                  Open to frontend engineering roles. Based in Aachen, Germany,
+                  and open to relocation or remote opportunities across the EU.
                 </p>
 
                 {/* Click-to-copy email */}
