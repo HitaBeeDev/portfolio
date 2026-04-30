@@ -17,7 +17,7 @@ const LINKS = [
     description: "linkedin.com/in/anahita-amiri",
   },
   {
-    href: "/resume.pdf",
+    href: "/cv.pdf",
     label: "Résumé",
     description: "Download PDF",
     download: true,

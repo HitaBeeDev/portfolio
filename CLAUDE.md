@@ -42,7 +42,7 @@ src/
   lib/              # Utilities (cn(), fonts, MDX parser)
   styles/           # tokens.css (CSS custom properties)
   types/            # Shared TypeScript types
-public/             # Static assets, resume.pdf, favicon, OG images
+public/             # Static assets, cv.pdf, favicon, OG images
 ```
 
 ---
