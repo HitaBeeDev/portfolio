@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans, Fraunces } from "next/font/google";
 import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import { Observability } from "@/components/observability/Observability";
 import { SkipToContent } from "@/components/ui/SkipToContent";
 import "./globals.css";
@@ -69,7 +68,6 @@ export default function RootLayout({
         />
         <Header />
         {children}
-        <Footer />
         <Observability />
       </body>
     </html>

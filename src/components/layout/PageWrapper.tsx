@@ -9,7 +9,7 @@ interface PageWrapperProps {
 
 /**
  * Constrains page content to max-w-5xl with consistent horizontal padding.
- * Matches the same width/padding used in <Header> and <Footer>.
+ * Matches the same width/padding used in <Header>.
  */
 export function PageWrapper({
   children,
