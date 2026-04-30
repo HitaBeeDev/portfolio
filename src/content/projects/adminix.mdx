@@ -1,0 +1,138 @@
+export const meta = {
+  title: "Adminix — Internal Admin Dashboard",
+  description:
+    "Client-side admin dashboard for managing 100,000 users across 10 mock customer accounts — MSW for API simulation, React Virtual for the user list, and URL-as-state for persistent filters.",
+  stack: [
+    "React 19",
+    "TypeScript 5",
+    "Vite 5",
+    "Tailwind CSS v4",
+    "shadcn/ui",
+    "TanStack Query 5",
+    "Zustand 4",
+    "MSW 2",
+    "React Virtual 3",
+    "React Hook Form 7",
+    "Zod 3",
+    "React Router v6",
+    "Playwright",
+    "Vitest",
+  ],
+  liveUrl: "https://adminix-dashboard.vercel.app",
+  githubUrl: "https://github.com/HitaBeeDev/adminix",
+  date: "2025-01-01",
+  tags: ["frontend", "react", "dashboard", "msw", "tanstack-query"],
+}
+
+## Problem
+
+I wanted to build a realistic admin dashboard without spinning up a backend. The constraint sounds simple but it creates a real problem: how do you make search, pagination, bulk mutations, and optimistic updates feel right when there's no server on the other end?
+
+The user list has 100,000 records. A naive implementation — render all of them, filter in JS on keypress — locks the main thread for hundreds of milliseconds. The invite flow involves a multi-step form that touches users, roles, and accounts simultaneously. Bulk suspend/delete needs to feel instant and recoverable. None of this is hard with a real API, but without one you have to be deliberate about where state lives and how mutations propagate.
+
+The target: an internal tool an ops or support team could actually use, where the fake-backend seams are invisible.
+
+## Approach
+
+### Simulating the backend with MSW
+
+MSW intercepts at the Service Worker level, which means the network tab shows real requests — `POST /api/users/invite`, `PATCH /api/users/bulk-suspend`, all of it. Handlers live in `src/mocks/handlers/` and are excluded from the production bundle entirely.
+
+The seed data is generated once at startup: 10 customer accounts, 100,000 users distributed across them, 5 roles, 200 activity events. Mutations update the in-memory seed directly, so a suspended user stays suspended if you navigate away and come back — within the same session.
+
+### Virtual scrolling for the user list
+
+Rendering 100,000 rows kills any browser. `@tanstack/react-virtual` solves this by only mounting the rows that are actually visible. The virtual list calculates item height and scroll position, and the DOM never holds more than ~20 row nodes at a time regardless of how many users exist.
+
+The bigger challenge was making server-side pagination work on top of it. The list is paginated (MSW handles the offset + limit), but React Virtual needs to know the total row count upfront to size the scroll container correctly. I pass the total from the API response and use it to render empty placeholder rows for pages that haven't loaded yet — same pattern as GitHub's commit list.
+
+### Keeping the previous page visible during pagination
+
+The default TanStack Query behaviour tears down the current data and shows a loading state while the next page fetches. With `placeholderData: keepPreviousData`, the current page stays visible and the new data swaps in when it arrives. The layout never jumps.
+
+### URL-as-state for the users page
+
+Filters (search query, role, account, status) and pagination live in `useSearchParams`. The URL is the source of truth — not component state, not Zustand. This means the back button navigates filter history, a refresh restores the exact view, and sharing a link sends someone to the right filtered state.
+
+### Auth with adaptive storage
+
+The login form posts to `POST /api/auth/login`. MSW validates the password (`"password"`) and returns `{ user, token }`. On success, `authStore.login()` writes to `localStorage` or `sessionStorage` depending on whether "remember me" was checked.
+
+The decision happens at write time via a custom `adaptiveStorage` object — it checks a separate `adminix-remember-me` flag before routing the write. Zustand's persist middleware handles rehydration on load. `ProtectedRoute` reads `isAuthenticated` and redirects to `/login` if it's false.
+
+The token would attach to requests via `Authorization: Bearer` in a real app. In this demo, MSW ignores it — the auth check is client-side only.
+
+### Single Zod schema per form
+
+`React Hook Form` and `Zod` share the same schema object. The TypeScript type, the runtime validation, and the error messages all come from one place. Adding a field means updating the schema — the form type, the validation rule, and the error message all follow automatically.
+
+## Measurable Outcome
+
+| Metric | Score |
+|---|---|
+| Lighthouse Performance | 98 |
+| Lighthouse Accessibility | 92 |
+| Lighthouse Best Practices | 100 |
+| Lighthouse SEO | 90 |
+
+The virtual list renders 100,000 users without any perceptible lag on first scroll. Pagination transitions are invisible — no loading flash, no layout shift.
+
+## Tradeoffs
+
+**MSW mutations don't persist across hard reloads.** Seed data is regenerated on every page load. A suspended user un-suspends if you close and reopen the tab. For a demo this is fine; for a real offline-capable app you'd need IndexedDB or a service worker cache for mutations.
+
+**Auth is client-side only.** The token isn't validated by MSW — any password that equals `"password"` gets through. This is intentional for a demo but means there's no actual authorization happening.
+
+**`placeholderData` shows stale data briefly.** While the next page is loading, the previous page's rows are still visible. For a dashboard where data freshness matters, this could be misleading. I accepted the tradeoff because the visual continuity is worth more than the accuracy signal in this context.
+
+**Recharts over D3.** Recharts covers the dashboard charts with minimal setup. If the charts needed custom interaction — brush selection, zoom, linked cursors across charts — I'd reach for Visx or raw D3. At this scale, Recharts is the right call.
+
+## Architecture
+
+```
+MSW (Service Worker)
+  └─ intercepts fetch()
+       └─ returns mock JSON from in-memory seed
+            └─ API layer (src/api/)
+                 └─ plain fetch functions, one file per resource
+                      └─ React Query hooks (src/hooks/)
+                           └─ data lands in components via useQuery / useMutation
+                                ├─ server state: cached + invalidated by React Query
+                                └─ UI state: sidebar, modals, theme in Zustand
+
+Mutation path (example: suspend user):
+  Component calls mutateAsync(userId)
+    → hook calls api/users.suspend(userId)
+      → MSW intercepts PATCH /api/users/:id
+        → updates in-memory seed
+          → React Query invalidates ['users'] cache key
+            → useUsers re-fetches, UI updates
+```
+
+## Tech Stack with Versions
+
+| Tool | Version | Role |
+|---|---|---|
+| React | 19 | UI layer, concurrent features |
+| TypeScript | 5 | Strict mode, zero `any` |
+| Vite | 5 | Dev server + build tool |
+| Tailwind CSS | v4 | Styling, dark mode via class strategy |
+| shadcn/ui | latest | Accessible component primitives |
+| TanStack Query | 5 | Server state, caching, pagination |
+| Zustand | 4 | Auth state + UI state |
+| MSW | 2 | API simulation at Service Worker level |
+| @tanstack/react-virtual | 3 | Virtual scrolling for 100k row list |
+| React Hook Form | 7 | Form state management |
+| Zod | 3 | Schema validation + TypeScript types |
+| React Router | v6 | Nested routes + URL-as-state |
+| Recharts | 2 | Dashboard charts |
+| Playwright | latest | E2E tests (login, search, invite, dark mode) |
+| Vitest | latest | Unit + integration tests |
+
+## What I'd Do Differently
+
+**Persist mutations to IndexedDB.** The biggest gap between this and a real tool is that mutations vanish on reload. IndexedDB would let you layer a client-side write cache on top of the MSW seed — you'd merge the persisted mutations back in on startup. It's more complex but would make the demo feel genuinely stateful.
+
+**Push accessibility further.** Lighthouse scores 92 on accessibility, which means something is failing. The main culprit is the data table — complex tables with merged headers are hard to make fully screen-reader-friendly without careful `scope` and `headers` attributes. I'd audit with VoiceOver and fix the remaining violations before calling it done.
+
+**Type the MSW handlers more strictly.** Right now the handlers return plain objects. Sharing the same Zod schema between the MSW response shape and the API layer type would catch shape mismatches at the type level instead of at runtime during a test.

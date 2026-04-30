@@ -21,7 +21,7 @@ const CATEGORY_LABEL: Record<ProjectCategory, string> = {
 
 export function ProjectCard({ project }: Props) {
   return (
-    <article className="group relative flex flex-col gap-5 overflow-hidden rounded-xl border border-black/[0.08] bg-background p-6 transition-shadow hover:shadow-[0_4px_24px_rgba(0,0,0,0.08)] dark:border-white/[0.08] dark:hover:shadow-[0_4px_24px_rgba(0,0,0,0.35)]">
+    <article className="group relative flex h-full flex-col gap-5 overflow-hidden rounded-xl border border-black/[0.08] bg-background p-6 transition-shadow hover:shadow-[0_4px_24px_rgba(0,0,0,0.08)] dark:border-white/[0.08] dark:hover:shadow-[0_4px_24px_rgba(0,0,0,0.35)]">
       {/* Category colour strip */}
       <div
         className="absolute inset-x-0 top-0 h-[3px]"

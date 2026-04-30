@@ -13,7 +13,7 @@ const FILTERS: { value: FilterValue; label: string }[] = [
   { value: "all", label: "All" },
   { value: "frontend", label: "Frontend" },
   // { value: "full-stack", label: "Full-Stack" },
-  { value: "open-source", label: "Open Source" },
+  // { value: "open-source", label: "Open Source" },
   // { value: "design-systems", label: "Design Systems" },
 ];
 
@@ -99,7 +99,7 @@ export function ProjectsSection() {
             {filtered.length > 0 ? (
               <ul className="grid gap-5 sm:grid-cols-2">
                 {filtered.map((project, i) => (
-                  <FadeIn key={project.slug} delay={i * 0.06}>
+                  <FadeIn key={project.slug} delay={i * 0.06} className="h-full">
                     <li className="h-full">
                       <ProjectCard project={project} />
                     </li>

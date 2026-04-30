@@ -1,6 +1,32 @@
 import type { Project } from "@/types/project";
 
 export const projects: Project[] = [
+  {
+    slug: "adminix",
+    name: "Adminix",
+    description:
+      "Admin dashboard for managing users, roles, and activity across 10 mock customer accounts — 100k users, fully client-side.",
+    problem:
+      "The whole app runs without a real backend. MSW intercepts every fetch from a seed file. Designed mutations, pagination, and search to behave like a real API, despite operating entirely client-side without any server interaction.",
+    stack: [
+      "React 19",
+      "TypeScript",
+      "Vite",
+      "Tailwind CSS v4",
+      "shadcn/ui",
+      "TanStack Query",
+      "Zustand",
+      "MSW",
+      "React Virtual",
+      "Zod",
+      "Playwright",
+      "Vitest",
+    ],
+    category: "frontend",
+    liveUrl: "https://adminix-dashboard.vercel.app",
+    githubUrl: "https://github.com/HitaBeeDev/adminix",
+    hasCaseStudy: true,
+  },
   /* TODO: add design system project
   {
     slug: "helios-ui",
@@ -27,6 +53,7 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/HitaBeeDev/meridian",
     hasCaseStudy: true,
   },
+  /* TODO: add open source project
   {
     slug: "radix-a11y-fix",
     name: "Radix UI — A11y Fix",
@@ -38,6 +65,7 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/radix-ui/primitives/pull/0000",
     hasCaseStudy: true,
   },
+  */
   /* TODO: add fullstack project
   {
     slug: "saas-starter",
