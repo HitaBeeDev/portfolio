@@ -57,7 +57,7 @@ export function HeroSection() {
       </div>
 
       {/* Content — constrained to page grid */}
-      <div className="mx-auto flex min-h-[calc(100dvh-3.5rem)] max-w-5xl flex-col justify-between px-4 py-20 sm:px-6 sm:py-28">
+      <div className="mx-auto flex min-h-[calc(100dvh-3.5rem)] max-w-5xl flex-col justify-between px-4 py-20 sm:px-6 sm:py-28 2xl:justify-center 2xl:py-0">
 
         {/* Main row: left copy + right evidence column */}
         <div className="flex flex-col items-start gap-10 lg:flex-row lg:items-center lg:gap-12">
