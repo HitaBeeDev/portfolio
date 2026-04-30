@@ -1,3 +1,4 @@
+import React from "react";
 import { FadeIn } from "@/components/ui/FadeIn";
 
 interface ExperienceEntryProps {
@@ -5,7 +6,7 @@ interface ExperienceEntryProps {
   role: string;
   period: string;
   location: string;
-  description: string;
+  description: React.ReactNode;
 }
 
 function ExperienceEntry({
@@ -24,9 +25,9 @@ function ExperienceEntry({
       <p className="text-sm font-medium text-muted">
         {role}&nbsp;&nbsp;·&nbsp;&nbsp;{location}
       </p>
-      <p className="text-[0.9375rem] leading-[1.7] text-foreground/70">
+      <div className="text-[0.9375rem] leading-[1.7] text-foreground/70">
         {description}
-      </p>
+      </div>
     </div>
   );
 }
@@ -54,31 +55,28 @@ export function AboutSection() {
           <div className="flex flex-col gap-16">
             {/* Narrative */}
             <FadeIn>
-              <div className="flex flex-col gap-5 text-[0.9375rem] leading-[1.75] text-foreground/75 sm:text-base">
+              <div className="flex flex-col gap-8 text-[0.9375rem] leading-[1.75] text-foreground/75 sm:text-base">
                 <p>
-                  Architecture school gave me a way of thinking about systems
-                  before I wrote my first line of JavaScript. Five years studying
-                  how structures organize space, circulation, and experience across
-                  scales maps directly to how components organize state, data
-                  flow, and user paths through an interface. The pivot
-                  wasn&apos;t accidental — it was a recognition that the same
-                  questions I was asking about buildings were more precisely
-                  answerable in code.
+                  One of the most useful skills I learned in architecture school
+                  is thinking in systems, which I use every time I write the
+                  first lines of code. The way buildings organize space, flow,
+                  and experience directly translates into how I approach state,
+                  data flow, and user paths in front-end systems.
                 </p>
                 <p>
-                  From 2023 to 2025 I was the sole frontend developer at{" "}
-                  <strong className="font-semibold text-foreground">
-                    Jurcom GRC Services
-                  </strong>
-                  , a Dutch legal-tech company building GDPR compliance platforms
-                  for Data Protection Officers. I owned the entire client-side:
-                  migrated a legacy Angular codebase to React, built multi-step
-                  form flows for GDPR Article workflows, and added
-                  data-visualization layers for compliance reporting — all
-                  shipped independently from design through production.
+                  I enjoy solving complex problems, such as refactoring messy
+                  code, improving performance, and transforming large codebases
+                  into more organized and easier-to-maintain structures.
+                </p>
+                <p>
+                  Currently, I am delving deeper into front-end architecture and
+                  performance while developing back-end skills to better
+                  understand and design full systems.
                 </p>
               </div>
             </FadeIn>
+
+            <hr className="border-t border-foreground/10" />
 
             {/* Experience */}
             <FadeIn delay={0.08}>
@@ -91,15 +89,28 @@ export function AboutSection() {
                     company="Jurcom GRC Services"
                     role="Frontend Developer"
                     period="Sep 2023 – Dec 2025"
-                    location="Netherlands · Remote"
-                    description="Sole frontend developer on a privacy compliance platform used by Data Protection Officers across the Netherlands. Migrated a legacy Angular codebase to a maintainable React + TypeScript architecture. Built multi-step GDPR form flows with React Hook Form and complex validation logic, added a Chart.js data-visualization layer for compliance reporting, and shipped all features independently from design through production."
+                    location="Istanbul, Turkey · Remote"
+                    description={
+                      <ul className="flex list-disc flex-col gap-1.5 pl-4">
+                        <li>Built and maintained a GDPR compliance platform used by Data Protection Officers, as the only frontend developer on the team. Clients included large companies in Turkey.</li>
+                        <li>Refactored a large React codebase by restructuring components, simplifying state management, and removing duplicated logic.</li>
+                        <li>Built form-heavy interfaces across the platform, including multi-step GDPR workflows with React Hook Form, conditional branching, and cross-field validation.</li>
+                        <li>Implemented data visualizations with Chart.js for compliance reporting and audit views.</li>
+                        <li>Worked directly with product, design, and backend to translate requirements into shipped features end-to-end.</li>
+                      </ul>
+                    }
                   />
                   <ExperienceEntry
-                    company="Anibal Bilişim"
-                    role="Frontend Intern"
-                    period="2023"
+                    company="Anibal Bilişim · Internship"
+                    role="Frontend Engineer Intern"
+                    period="Jun 2023 – Aug 2023"
                     location="Istanbul, Turkey"
-                    description="Built features across client projects in Angular and Next.js. First production experience with TypeScript and component-driven architecture."
+                    description={
+                      <ul className="flex list-disc flex-col gap-1.5 pl-4">
+                        <li>Built responsive UI components for client projects using Angular and Next.js.</li>
+                        <li>Contributed to production codebases alongside senior engineers, learning how real teams structure, review, and ship frontend code.</li>
+                      </ul>
+                    }
                   />
                 </div>
               </div>

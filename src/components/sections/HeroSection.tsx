@@ -91,13 +91,13 @@ export function HeroSection() {
             />
 
             {/* Positioning statement */}
-            <p
+            {/* <p
               className="animate-fade-in-up mt-7 max-w-sm text-base leading-[1.65] text-muted sm:text-[1.05rem]"
               style={{ animationDelay: "240ms" }}
             >
-              I build privacy-first compliance tools and refactor legacy React
-              codebases into systems that are pleasant to work in.
-            </p>
+              I work on complex frontend systems and make them faster, cleaner,
+              and easier to maintain.
+            </p> */}
 
             {/* CTAs */}
             <div

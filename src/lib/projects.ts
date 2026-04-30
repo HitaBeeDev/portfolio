@@ -1,6 +1,7 @@
 import type { Project } from "@/types/project";
 
 export const projects: Project[] = [
+  /* TODO: add design system project
   {
     slug: "helios-ui",
     name: "Helios UI",
@@ -13,6 +14,7 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/HitaBeeDev/helios-ui",
     hasCaseStudy: true,
   },
+  */
   {
     slug: "meridian",
     name: "Meridian",
@@ -36,6 +38,7 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/radix-ui/primitives/pull/0000",
     hasCaseStudy: true,
   },
+  /* TODO: add fullstack project
   {
     slug: "saas-starter",
     name: "SaaS Starter",
@@ -48,6 +51,7 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/HitaBeeDev/saas-starter",
     hasCaseStudy: true,
   },
+  */
   {
     slug: "lighthouse-lab",
     name: "Lighthouse Lab",
