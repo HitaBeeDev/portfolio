@@ -1,0 +1,59 @@
+export const meta = {
+  title: "WellNest — Wellness Platform",
+  description:
+    "Wellness platform landing page with animated service cards, a draggable testimonial carousel, and an accessible auth modal. Built with React, Framer Motion, and Swiper.",
+  stack: [
+    "React 18",
+    "Vite",
+    "Tailwind CSS",
+    "Framer Motion",
+    "Swiper",
+    "Material-UI",
+  ],
+  liveUrl: "https://well-nest.vercel.app",
+  githubUrl: "https://github.com/HitaBeeDev/wellNest",
+  date: "2024-12-01",
+  tags: ["frontend", "react", "animation", "landing-page"],
+}
+
+A wellness platform landing page covering yoga sessions, fitness plans, mental wellness therapy, and diet advice. The focus was on interaction quality — animations that feel intentional, a carousel that responds naturally to touch and drag, and an auth modal that works correctly with a keyboard. No backend; it's a fully static frontend.
+
+## How It Was Built
+
+Service cards collapse and expand on click. The expand/collapse animation uses Framer Motion's `AnimatePresence` and `layout` prop — the card measures its own height and animates between states without any hardcoded pixel values. This matters because card content varies in length, and a fixed-height animation would clip or leave gaps.
+
+Scroll-triggered entrance animations use Framer Motion's `whileInView` combined with `viewport: { once: true }` so sections animate in as they enter the viewport and stay visible rather than re-animating on scroll back up. The same `FadeIn` wrapper pattern keeps the implementation consistent across sections.
+
+The testimonial carousel is Swiper with touch and drag enabled. Swiper handles the gesture physics — velocity, momentum, snap — so the drag feels native on both mobile and desktop without any custom event handling. The pagination dots are custom-styled to match the brand palette.
+
+The auth modal traps focus when open (so Tab doesn't escape to the page behind it), returns focus to the trigger button on close, and closes on Escape. These are the three things an accessible modal needs to get right.
+
+Material-UI is used narrowly — just the `Avatar` component for the testimonial author images. Tailwind handles everything else. Mixing the two works fine as long as you're not fighting over CSS specificity; using MUI only for components that have no Tailwind equivalent keeps the surface area small.
+
+## Architecture
+
+```
+Landing page (single route)
+  ├── Hero
+  ├── Services — collapsible cards (Framer Motion layout animation)
+  ├── Testimonials — Swiper carousel
+  ├── About / Stats
+  ├── Contact — accessible form
+  └── AuthModal — focus-trapped overlay, Escape to close
+
+Animation layers:
+  whileInView (Framer Motion) → section entrance
+  AnimatePresence + layout    → card expand/collapse
+  Swiper gestures             → carousel drag and snap
+```
+
+## Stack
+
+| Tool | Version | Role |
+|---|---|---|
+| React | 18 | UI layer |
+| Vite | latest | Dev server + build |
+| Tailwind CSS | v3 | Styling |
+| Framer Motion | latest | Scroll animations + card transitions |
+| Swiper | latest | Touch-friendly testimonial carousel |
+| Material-UI | latest | Avatar component |

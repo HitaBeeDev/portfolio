@@ -109,6 +109,62 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/HitaBeeDev/simple-expense-tracker-app",
     hasCaseStudy: true,
   },
+  {
+    slug: "wellnest",
+    name: "WellNest",
+    description:
+      "Wellness platform landing page with animated service cards, a draggable testimonial carousel, and an accessible auth modal.",
+    problem:
+      "Getting scroll-triggered animations, interactive collapsible cards, and a touch-friendly carousel to all feel cohesive without overloading the page with motion.",
+    stack: [
+      "React 18",
+      "TypeScript",
+      "Vite",
+      "Tailwind CSS",
+      "Framer Motion",
+      "Swiper",
+      "Material-UI",
+    ],
+    category: "frontend",
+    liveUrl: "https://well-nest.vercel.app",
+    githubUrl: "https://github.com/HitaBeeDev/wellNest",
+    hasCaseStudy: true,
+  },
+  {
+    slug: "iqonnect",
+    name: "IQonnect",
+    description:
+      "Intelligence quiz — 15 scenario-based questions with a countdown timer. Tracks scores across Logical, Emotional, and Intrapersonal categories and reveals your dominant type.",
+    problem:
+      "Quiz state has a clear lifecycle: idle → in-progress → complete. Keeping the timer, the current question index, and the running category scores in sync without them drifting apart.",
+    stack: ["React 18", "TypeScript", "Vite", "Tailwind CSS"],
+    category: "frontend",
+    liveUrl: "https://i-qonnect.vercel.app",
+    githubUrl: "https://github.com/HitaBeeDev/IQonnect",
+    hasCaseStudy: true,
+  },
+  {
+    slug: "globalclock",
+    name: "GlobalClock",
+    description:
+      "World clock dashboard — live analog and digital clocks for timezones worldwide, drag-to-reorder, ambient ticking via Web Audio, and a midnight confetti effect per timezone.",
+    problem:
+      "Every clock ticks independently on its own timezone. Getting live time, analog hand angles, drag-and-drop order persistence, and per-timezone midnight detection to all work together without state getting out of sync.",
+    stack: [
+      "React",
+      "TypeScript",
+      "Vite",
+      "Tailwind CSS",
+      "dnd-kit",
+      "Framer Motion",
+      "Web Audio API",
+      "Canvas Confetti",
+    ],
+    category: "frontend",
+    liveUrl: "https://simple-global-clock-app.vercel.app",
+    githubUrl: "https://github.com/HitaBeeDev/simple-global-clock-app",
+    hasCaseStudy: true,
+  },
   /* TODO: add design system project
   {
     slug: "helios-ui",

@@ -1,0 +1,53 @@
+export const meta = {
+  title: "IQonnect — Intelligence Quiz",
+  description:
+    "15 scenario-based questions with a countdown timer. Tracks scores across Logical, Emotional, and Intrapersonal categories and reveals your dominant intelligence type.",
+  stack: ["React 18", "TypeScript", "Vite", "Tailwind CSS"],
+  liveUrl: "https://i-qonnect.vercel.app",
+  githubUrl: "https://github.com/HitaBeeDev/IQonnect",
+  date: "2024-11-01",
+  tags: ["frontend", "react", "quiz"],
+}
+
+Answer 15 scenario-based questions under a countdown timer and find out whether you lead with Logical, Emotional, or Intrapersonal intelligence. Each answer contributes points to one of the three categories, and the dominant category at the end determines your result.
+
+## How It Was Built
+
+Quiz state has a clear lifecycle — idle, in-progress, complete — and keeping the timer, the current question index, and the running category scores in sync is the main thing to get right. All of it lives in a single `useReducer`. Each action type handles one transition: `START` initialises the scores and starts the timer, `ANSWER` records the selected option's category contribution and advances the question index, `TIMEOUT` moves to the next question without scoring, and `COMPLETE` fires when the last question is answered. Because every piece of state updates in the same dispatch, there's no risk of the timer showing one question while the scores reflect a different one.
+
+The countdown timer runs via `useEffect` with a one-second interval. The interval is cleared and reset on every question change so each question gets a fresh countdown. When the interval fires and reaches zero, it dispatches `TIMEOUT` — the reducer handles the rest.
+
+The result screen compares the three accumulated scores and picks the highest. Ties go to the first category in the priority order. Each intelligence type has a description and a set of traits that map to the final score breakdown shown on the results screen.
+
+The quiz is fully keyboard accessible — answers are focusable, Space and Enter select them, and focus advances automatically with each question so the user never has to reach for the mouse.
+
+## Architecture
+
+```
+useReducer (quizReducer)
+  state: { phase, questionIndex, scores, timeLeft }
+
+  START    → phase: in-progress, reset scores + timer
+  ANSWER   → scores[category]++, questionIndex++
+             if last question → phase: complete
+  TIMEOUT  → questionIndex++ (no score change)
+             if last question → phase: complete
+  RESTART  → reset to initial state
+
+useEffect (timer)
+  └─ 1s interval, clears on question change
+       └─ dispatches TIMEOUT when timeLeft reaches 0
+
+Result:
+  max(scores.logical, scores.emotional, scores.intrapersonal)
+    └─ maps to result description + trait breakdown
+```
+
+## Stack
+
+| Tool | Version | Role |
+|---|---|---|
+| React | 18 | UI layer |
+| TypeScript | 5 | Strict mode |
+| Vite | latest | Dev server + build |
+| Tailwind CSS | v3 | Styling |

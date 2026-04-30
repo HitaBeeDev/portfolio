@@ -1,0 +1,67 @@
+export const meta = {
+  title: "GlobalClock — World Clock Dashboard",
+  description:
+    "Live analog and digital clocks for timezones worldwide. Drag-to-reorder with localStorage persistence, ambient ticking via Web Audio, and a midnight confetti effect per timezone.",
+  stack: [
+    "React",
+    "TypeScript",
+    "Vite",
+    "Tailwind CSS",
+    "dnd-kit",
+    "Framer Motion",
+    "Web Audio API",
+    "Canvas Confetti",
+  ],
+  liveUrl: "https://simple-global-clock-app.vercel.app",
+  githubUrl: "https://github.com/HitaBeeDev/simple-global-clock-app",
+  date: "2024-10-01",
+  tags: ["frontend", "react", "clocks", "dnd", "web-audio"],
+}
+
+A world clock dashboard showing live analog and digital clocks for countries across multiple timezones. Clocks update every second, support both display modes, can be reordered by drag and drop, and play an optional ambient ticking sound. Each clock independently watches for its local midnight and fires a confetti burst when it hits. The whole thing scores 100/100/100/100 on Lighthouse.
+
+## How It Was Built
+
+Every clock reads time using the browser's `Date` and `Intl.DateTimeFormat` APIs — no external time library. `Intl.DateTimeFormat` with a `timeZone` option returns the hour, minute, and second for any IANA timezone string. A single `setInterval` ticking every second updates a shared timestamp in state; each clock component derives its local time from that timestamp on every render. One interval, one state update, all clocks stay in sync.
+
+Analog clock hands are SVG elements. The rotation angle for each hand is calculated from the local time values: seconds map to `seconds × 6deg`, minutes to `(minutes + seconds / 60) × 6deg`, and hours to `(hours % 12 + minutes / 60) × 30deg`. The minute and hour hands interpolate the seconds so they sweep smoothly rather than jumping.
+
+Drag-and-drop reordering uses `@dnd-kit/sortable`. The clock order is an array of timezone IDs stored in `localStorage`. On every reorder, the array is written back to `localStorage` so the order survives a refresh.
+
+The ticking sound is synthesised with the Web Audio API — a short `OscillatorNode` burst fired once per second. No audio file, no network request. The oscillator creates a brief click, the gain node controls the volume, and both are disconnected immediately after the burst to avoid memory leaks. The toggle lives in `localStorage` so the preference persists.
+
+Midnight detection runs inside each clock's render cycle. Before updating the displayed time, the component checks whether the previous second was 23:59:59 and the current second is 00:00:00 for that specific timezone. If it is, `canvas-confetti` fires a burst scoped to that card's position on screen.
+
+## Architecture
+
+```
+Single setInterval (1s)
+  └─ updates shared timestamp in state
+       └─ each ClockCard derives local time via Intl.DateTimeFormat
+            ├─ analog mode: SVG hands rotated by computed degrees
+            ├─ digital mode: formatted time string
+            └─ midnight check: fires canvas-confetti if 00:00:00
+
+Drag-and-drop (@dnd-kit/sortable):
+  └─ clock order = array of timezone IDs
+       └─ written to localStorage on every reorder
+            └─ rehydrated on load
+
+Web Audio ticking:
+  └─ OscillatorNode burst per second (no audio file)
+       └─ disconnected immediately after firing
+            └─ toggle persisted to localStorage
+```
+
+## Stack
+
+| Tool | Version | Role |
+|---|---|---|
+| React | 18 | UI layer |
+| TypeScript | 5 | Strict mode |
+| Vite | latest | Dev server + build |
+| Tailwind CSS | v3 | Styling + responsive grid |
+| @dnd-kit | latest | Sortable drag-and-drop |
+| Framer Motion | latest | Card transitions |
+| Web Audio API | browser | Synthesised ticking sound |
+| Canvas Confetti | latest | Midnight burst effect |
