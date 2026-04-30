@@ -86,7 +86,10 @@ export default async function CaseStudyPage({ params }: Props) {
     idx < projects.length - 1 ? (projects[idx + 1] ?? null) : null;
 
   return (
-    <main id="main-content" className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
+    <main
+      id="main-content"
+      className="mx-auto w-full max-w-3xl min-w-0 overflow-x-hidden px-4 py-10 sm:px-6 sm:py-16"
+    >
       {/* Breadcrumb */}
       <nav aria-label="Breadcrumb" className="mb-10">
         <Link
@@ -114,12 +117,12 @@ export default async function CaseStudyPage({ params }: Props) {
       </nav>
 
       {/* Case study header */}
-      <header className="mb-12 flex flex-col gap-5">
-        <h1 className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
+      <header className="mb-10 flex min-w-0 flex-col gap-5 sm:mb-12">
+        <h1 className="break-words text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
           {meta.title}
         </h1>
 
-        <p className="text-lg leading-relaxed text-foreground/70">
+        <p className="text-base leading-relaxed text-foreground/70 sm:text-lg">
           {meta.description}
         </p>
 
@@ -136,7 +139,7 @@ export default async function CaseStudyPage({ params }: Props) {
             {meta.tags.map((tag) => (
               <li
                 key={tag}
-                className="inline-flex items-center rounded-full border border-black/10 bg-black/5 px-2.5 py-0.5 text-xs font-medium text-foreground/70 dark:border-white/10 dark:bg-white/5"
+                className="inline-flex max-w-full items-center rounded-full border border-black/10 bg-black/5 px-2.5 py-0.5 text-xs font-medium text-foreground/70 dark:border-white/10 dark:bg-white/5"
               >
                 {tag}
               </li>
@@ -172,24 +175,24 @@ export default async function CaseStudyPage({ params }: Props) {
       </header>
 
       {/* MDX prose */}
-      <article className="prose-case-study">
+      <article className="prose-case-study min-w-0 overflow-hidden">
         <Content />
       </article>
 
       {/* Next / Prev navigation */}
       <nav
         aria-label="Case study navigation"
-        className="mt-20 flex items-center justify-between gap-4 border-t border-black/5 pt-8 dark:border-white/5"
+        className="mt-16 flex flex-col gap-5 border-t border-black/5 pt-8 dark:border-white/5 sm:mt-20 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
       >
         {prevProject ? (
           <Link
             href={`/projects/${prevProject.slug}`}
-            className="group flex flex-col gap-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 rounded"
+            className="group flex min-w-0 flex-col gap-0.5 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2"
           >
             <span className="text-xs text-foreground/50 transition-colors group-hover:text-foreground/70">
               ← Previous
             </span>
-            <span className="text-sm font-medium transition-colors group-hover:text-foreground/80">
+            <span className="break-words text-sm font-medium transition-colors group-hover:text-foreground/80">
               {prevProject.name}
             </span>
           </Link>
@@ -200,12 +203,12 @@ export default async function CaseStudyPage({ params }: Props) {
         {nextProject ? (
           <Link
             href={`/projects/${nextProject.slug}`}
-            className="group flex flex-col items-end gap-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 rounded"
+            className="group flex min-w-0 flex-col gap-0.5 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 sm:items-end"
           >
             <span className="text-xs text-foreground/50 transition-colors group-hover:text-foreground/70">
               Next →
             </span>
-            <span className="text-sm font-medium transition-colors group-hover:text-foreground/80">
+            <span className="break-words text-sm font-medium transition-colors group-hover:text-foreground/80 sm:text-right">
               {nextProject.name}
             </span>
           </Link>

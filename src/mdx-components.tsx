@@ -6,7 +6,7 @@ import type { AnchorHTMLAttributes, HTMLAttributes } from "react";
 const components: MDXComponents = {
   h2: ({ children, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
     <h2
-      className="mt-14 mb-4 text-xl font-bold tracking-tight sm:text-2xl"
+      className="mt-12 mb-4 break-words text-xl font-bold tracking-tight sm:mt-14 sm:text-2xl"
       {...props}
     >
       {children}
@@ -15,7 +15,7 @@ const components: MDXComponents = {
 
   h3: ({ children, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
     <h3
-      className="mt-8 mb-3 text-lg font-semibold tracking-tight"
+      className="mt-8 mb-3 break-words text-lg font-semibold tracking-tight"
       {...props}
     >
       {children}
@@ -24,7 +24,7 @@ const components: MDXComponents = {
 
   p: ({ children, ...props }: HTMLAttributes<HTMLParagraphElement>) => (
     <p
-      className="mb-5 leading-[1.75] text-foreground/80"
+      className="mb-5 leading-[1.75] text-foreground/80 [overflow-wrap:anywhere]"
       {...props}
     >
       {children}
@@ -33,7 +33,7 @@ const components: MDXComponents = {
 
   ul: ({ children, ...props }: HTMLAttributes<HTMLUListElement>) => (
     <ul
-      className="mb-5 list-disc pl-6 leading-[1.75] text-foreground/80 [&>li]:mb-1.5"
+      className="mb-5 list-disc pl-5 leading-[1.75] text-foreground/80 sm:pl-6 [&>li]:mb-1.5"
       {...props}
     >
       {children}
@@ -42,7 +42,7 @@ const components: MDXComponents = {
 
   ol: ({ children, ...props }: HTMLAttributes<HTMLOListElement>) => (
     <ol
-      className="mb-5 list-decimal pl-6 leading-[1.75] text-foreground/80 [&>li]:mb-1.5"
+      className="mb-5 list-decimal pl-5 leading-[1.75] text-foreground/80 sm:pl-6 [&>li]:mb-1.5"
       {...props}
     >
       {children}
@@ -58,7 +58,7 @@ const components: MDXComponents = {
   // Code block (triple backtick)
   pre: ({ children, ...props }: HTMLAttributes<HTMLPreElement>) => (
     <pre
-      className="mb-6 overflow-x-auto rounded-lg border border-black/8 bg-black/[0.03] p-4 text-sm leading-relaxed dark:border-white/8 dark:bg-white/[0.04]"
+      className="mb-6 max-w-full overflow-x-auto rounded-lg border border-black/8 bg-black/[0.03] p-3 text-xs leading-relaxed dark:border-white/8 dark:bg-white/[0.04] sm:p-4 sm:text-sm"
       {...props}
     >
       {children}
@@ -68,7 +68,7 @@ const components: MDXComponents = {
   // Inline code (single backtick)
   code: ({ children, ...props }: HTMLAttributes<HTMLElement>) => (
     <code
-      className="rounded bg-black/6 px-1.5 py-0.5 font-mono text-[0.875em] text-foreground dark:bg-white/10"
+      className="rounded bg-black/6 px-1.5 py-0.5 font-mono text-[0.875em] text-foreground [overflow-wrap:anywhere] dark:bg-white/10"
       {...props}
     >
       {children}
@@ -119,8 +119,8 @@ const components: MDXComponents = {
 
   // Tables (GFM)
   table: ({ children, ...props }: HTMLAttributes<HTMLTableElement>) => (
-    <div className="mb-6 overflow-x-auto rounded-lg border border-black/8 dark:border-white/8">
-      <table className="w-full text-sm" {...props}>
+    <div className="mb-6 max-w-full overflow-x-auto rounded-lg border border-black/8 dark:border-white/8">
+      <table className="w-max min-w-full text-sm" {...props}>
         {children}
       </table>
     </div>
@@ -134,7 +134,7 @@ const components: MDXComponents = {
 
   th: ({ children, ...props }: HTMLAttributes<HTMLTableCellElement>) => (
     <th
-      className="px-4 py-2.5 text-left font-semibold text-foreground"
+      className="px-3 py-2.5 text-left font-semibold text-foreground sm:px-4"
       {...props}
     >
       {children}
@@ -143,7 +143,7 @@ const components: MDXComponents = {
 
   td: ({ children, ...props }: HTMLAttributes<HTMLTableCellElement>) => (
     <td
-      className="border-t border-black/5 px-4 py-2.5 text-foreground/75 dark:border-white/5"
+      className="border-t border-black/5 px-3 py-2.5 text-foreground/75 dark:border-white/5 sm:px-4"
       {...props}
     >
       {children}
