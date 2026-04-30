@@ -1,0 +1,60 @@
+export const meta = {
+  title: "Packlist — Travel Packing Checklist",
+  description:
+    "Travel packing checklist with quantity controls, packed/unpacked tracking, three sort modes, and a progress summary. State persists to localStorage via Zustand.",
+  stack: [
+    "React 18",
+    "TypeScript",
+    "Vite",
+    "Tailwind CSS",
+    "Zustand",
+    "Framer Motion",
+  ],
+  liveUrl: "https://simple-travel-checklist-app.vercel.app",
+  githubUrl: "https://github.com/HitaBeeDev/simple-travel-checklist-app",
+  date: "2024-10-01",
+  tags: ["frontend", "react", "zustand", "checklist"],
+}
+
+A minimal travel packing checklist. Add items with quantities, check them off as you pack, sort the list three ways, and see a live progress summary. The list survives a page refresh — Zustand's `persist` middleware writes the full state to `localStorage` under a single key.
+
+## How It Was Built
+
+The items array is the source of truth. Each item has an `id`, `name`, `quantity`, and `packed` boolean. Sorting is a derived view — the active sort option is stored separately and applied at render time rather than mutating the array order. This keeps the three sort modes (recent, A-Z, packed status) fully independent: switching from "packed" back to "recent" restores the original insertion order because the underlying array was never reordered.
+
+Zustand's `persist` middleware serialises the store to `localStorage` on every state change. On load, the middleware rehydrates the store before the first render, so the list is available immediately with no loading state or flash of empty content.
+
+The progress bar and packed count are computed from the items array — `items.filter(i => i.packed).length` divided by `items.length`. They update automatically whenever any item is toggled because Zustand re-renders subscribers on each state change.
+
+Framer Motion's `AnimatePresence` wraps the item list. Adding an item fades and slides it in; removing one fades it out before the DOM node is unmounted. The layout prop on each item smoothly closes the gap when an item is deleted rather than snapping the remaining items up instantly.
+
+## Architecture
+
+```
+Zustand store (persisted to localStorage)
+  items: PackItem[]       ← source of truth
+  sortMode: SortMode      ← 'recent' | 'alpha' | 'packed'
+
+Derived at render:
+  sortedItems = sort(items, sortMode)   ← never mutates items[]
+  packedCount = items.filter(packed).length
+  progress    = packedCount / items.length
+
+Actions:
+  addItem(name, quantity)
+  togglePacked(id)
+  removeItem(id)
+  clearAll()
+  setSortMode(mode)
+```
+
+## Stack
+
+| Tool | Version | Role |
+|---|---|---|
+| React | 18 | UI layer |
+| TypeScript | 5 | Strict mode |
+| Vite | latest | Dev server + build |
+| Tailwind CSS | v3 | Styling |
+| Zustand | 4 | State + localStorage persistence |
+| Framer Motion | latest | List item enter/exit animations |

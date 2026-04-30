@@ -191,6 +191,26 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/HitaBeeDev/simple-tip-Calculator-app",
     hasCaseStudy: true,
   },
+  {
+    slug: "packlist",
+    name: "Packlist",
+    description:
+      "Travel packing checklist — add items with quantities, mark them packed, sort by recent / A-Z / packed status, and track progress. List persists across sessions via Zustand + localStorage.",
+    problem:
+      "Sorting a list that also tracks checked state means the sort order and the packed state need to stay independent — sorting by packed shouldn't permanently reorder the list for other sort modes.",
+    stack: [
+      "React 18",
+      "TypeScript",
+      "Vite",
+      "Tailwind CSS",
+      "Zustand",
+      "Framer Motion",
+    ],
+    category: "frontend",
+    liveUrl: "https://simple-travel-checklist-app.vercel.app",
+    githubUrl: "https://github.com/HitaBeeDev/simple-travel-checklist-app",
+    hasCaseStudy: true,
+  },
   /* TODO: add design system project
   {
     slug: "helios-ui",
