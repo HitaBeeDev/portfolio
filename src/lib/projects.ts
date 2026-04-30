@@ -178,6 +178,19 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/HitaBeeDev/simple-review-app",
     hasCaseStudy: true,
   },
+  {
+    slug: "tip-calculator",
+    name: "Tip Calculator",
+    description:
+      "Tip calculator — enter a bill, pick a preset or custom tip percentage, split by any number of people, and see the per-person breakdown instantly.",
+    problem:
+      "Preset and custom tip inputs need to stay in sync — selecting a preset clears the custom field, typing a custom value deselects the preset. All outputs recalculate on every keystroke.",
+    stack: ["React 18", "TypeScript", "Vite", "Tailwind CSS"],
+    category: "frontend",
+    liveUrl: "https://simple-tipcalculator-app.vercel.app",
+    githubUrl: "https://github.com/HitaBeeDev/simple-tip-Calculator-app",
+    hasCaseStudy: true,
+  },
   /* TODO: add design system project
   {
     slug: "helios-ui",

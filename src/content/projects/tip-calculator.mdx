@@ -1,0 +1,47 @@
+export const meta = {
+  title: "Tip Calculator",
+  description:
+    "Enter a bill amount, choose a preset or custom tip percentage, split by any number of people, and see the tip and total per person update instantly.",
+  stack: ["React 18", "TypeScript", "Vite", "Tailwind CSS"],
+  liveUrl: "https://simple-tipcalculator-app.vercel.app",
+  githubUrl: "https://github.com/HitaBeeDev/simple-tip-Calculator-app",
+  date: "2024-09-01",
+  tags: ["frontend", "react", "typescript"],
+}
+
+A tip calculator with preset tip percentages (5%, 10%, 15%, 25%, 50%), a custom percentage input, bill amount, and number of people. The tip per person, total per person, and total tip update on every keystroke. Built small and focused — the goal was clean controlled-input handling and a UI that's hard to break with edge-case input.
+
+## How It Was Built
+
+The preset buttons and the custom input share a single `tipPercent` state. Clicking a preset writes that value and clears the custom input field. Typing in the custom field writes the parsed value and sets the active preset to `null` so nothing appears selected. Both paths converge on the same number, so the calculation logic doesn't need to know which path set it.
+
+All outputs are derived — no separate state for tip amount or total. They're computed inline from `billAmount`, `tipPercent`, and `peopleCount` on every render. If any input is empty or zero, the outputs show `$0.00` rather than `NaN` or `Infinity`. The reset button sets all three inputs back to empty strings and clears the active preset.
+
+Validation is inline: a bill of zero or negative, a people count of zero, and a tip above 100% each show a small error message beneath the relevant field without blocking the rest of the form from being used.
+
+## Architecture
+
+```
+State:
+  billAmount: string
+  tipPercent: number | null   ← null when no preset or custom value set
+  customTip: string           ← controlled input value for the custom field
+  peopleCount: string
+
+Derived (computed on render):
+  tipPerPerson  = (billAmount × tipPercent / 100) / peopleCount
+  totalPerPerson = billAmount / peopleCount + tipPerPerson
+
+Preset click → set tipPercent, clear customTip
+Custom input → parse value, set tipPercent, deselect preset
+Reset        → clear all state
+```
+
+## Stack
+
+| Tool | Version | Role |
+|---|---|---|
+| React | 18 | UI layer |
+| TypeScript | 5 | Strict mode |
+| Vite | latest | Dev server + build |
+| Tailwind CSS | v3 | Styling |
