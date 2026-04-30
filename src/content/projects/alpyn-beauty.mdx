@@ -1,0 +1,35 @@
+export const meta = {
+  title: "Alpyn Beauty — E-Commerce Storefront",
+  description:
+    "Responsive beauty e-commerce storefront with a light/dark mode toggle. My first project when I learned JavaScript.",
+  stack: ["HTML", "CSS", "JavaScript"],
+  liveUrl: "https://alpyn-beauty.vercel.app",
+  githubUrl: "https://github.com/HitaBeeDev/Alpyn-Beauty",
+  date: "2023-04-01",
+  tags: ["frontend", "html", "css", "javascript"],
+}
+
+My first project after learning JavaScript. A beauty e-commerce storefront — product grid, hero section, navigation, and a light/dark mode toggle. No framework, no tooling beyond Prettier. I'm including it for the same reason as [MealWise](/projects/mealwise): to show where this started.
+
+## How It Was Built
+
+The dark mode toggle was the first time I wrote JavaScript that actually changed something on the page in a meaningful way. Clicking the button adds or removes a `dark` class on the `<html>` element, and the CSS swaps colour variables based on that class. The preference is saved to `localStorage` so revisiting the page picks up where you left off.
+
+The rest is hand-written HTML and CSS — a responsive grid with media queries, a nav that collapses on mobile, and product cards with hover states. No build step, no npm, no dependencies. Just three files and a browser.
+
+## Architecture
+
+```
+index.html   ← single page, all sections inline
+style.css    ← CSS variables for light/dark tokens, media queries
+script.js    ← dark mode toggle, localStorage preference, mobile nav
+```
+
+## Stack
+
+| Tool | Role |
+|---|---|
+| HTML | Structure |
+| CSS | Styling, dark/light CSS variables, responsive layout |
+| JavaScript | Dark mode toggle + localStorage, mobile nav |
+| Prettier | Code formatting |

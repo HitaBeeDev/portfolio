@@ -211,6 +211,32 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/HitaBeeDev/simple-travel-checklist-app",
     hasCaseStudy: true,
   },
+  {
+    slug: "mealwise",
+    name: "MealWise",
+    description:
+      "Responsive meal delivery landing page built with HTML, CSS, and JavaScript. My second project while learning to code.",
+    problem:
+      "Getting a multi-section layout to hold together across screen sizes using only CSS — no framework, no utility classes, just media queries and flexbox.",
+    stack: ["HTML", "CSS", "JavaScript"],
+    category: "frontend",
+    liveUrl: "https://meal-wise-app.vercel.app",
+    githubUrl: "https://github.com/HitaBeeDev/MealWise",
+    hasCaseStudy: true,
+  },
+  {
+    slug: "alpyn-beauty",
+    name: "Alpyn Beauty",
+    description:
+      "Responsive e-commerce storefront with a light/dark mode toggle. My first project when I learned JavaScript.",
+    problem:
+      "My first JavaScript project. Everything was new — DOM manipulation, event listeners, localStorage, making CSS respond to JS. The dark mode toggle was the first interactive thing I ever built.",
+    stack: ["HTML", "CSS", "JavaScript"],
+    category: "frontend",
+    liveUrl: "https://alpyn-beauty.vercel.app",
+    githubUrl: "https://github.com/HitaBeeDev/Alpyn-Beauty",
+    hasCaseStudy: true,
+  },
   /* TODO: add design system project
   {
     slug: "helios-ui",

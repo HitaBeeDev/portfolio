@@ -1,0 +1,34 @@
+export const meta = {
+  title: "MealWise — Meal Delivery Landing Page",
+  description:
+    "Responsive meal delivery landing page built with HTML, CSS, and JavaScript. My second project while learning to code.",
+  stack: ["HTML", "CSS", "JavaScript"],
+  liveUrl: "https://meal-wise-app.vercel.app",
+  githubUrl: "https://github.com/HitaBeeDev/MealWise",
+  date: "2023-06-01",
+  tags: ["frontend", "html", "css", "javascript"],
+}
+
+This was my second project while learning to program. A meal delivery landing page — hero section, features, how it works, testimonials, and a footer. No framework, no build tool, no npm. Just HTML, CSS, and a JavaScript file. I'm including it because it's where I started, and the contrast with everything else in this list is the point.
+
+## How It Was Built
+
+The layout is built with CSS flexbox and grid, with media queries handling the responsive breakpoints. No utility classes — every style is hand-written. Getting a multi-section page to reflow cleanly from mobile to desktop using only CSS was the main challenge at the time, and working through it without a framework meant actually understanding why things broke.
+
+JavaScript handles the interactive bits: the mobile nav toggle, a sticky header on scroll, and smooth scrolling to sections. Nothing complex, but writing it from scratch rather than reaching for a library meant understanding what `querySelector`, `classList`, and `addEventListener` actually do before moving on to React.
+
+## Architecture
+
+```
+index.html       ← single page, all sections inline
+style.css        ← hand-written CSS, media queries for responsive layout
+script.js        ← nav toggle, sticky header, smooth scroll
+```
+
+## Stack
+
+| Tool | Role |
+|---|---|
+| HTML | Structure |
+| CSS | Styling + responsive layout |
+| JavaScript | Nav toggle, sticky header, smooth scroll |
