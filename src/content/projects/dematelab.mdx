@@ -1,0 +1,116 @@
+export const meta = {
+  title: "DEMATELab — Cause-and-Effect Analysis Toolkit",
+  description:
+    "Desktop application for DEMATEL cause-and-effect analysis and its fuzzy, grey, and Z-number extensions — interactive multi-expert input, four solver types, result visualizations, and AI-generated interpretations.",
+  stack: [
+    "Python 3.10+",
+    "PySide6",
+    "NumPy",
+    "scikit-learn",
+    "Matplotlib",
+    "openpyxl",
+    "LLM APIs",
+  ],
+  githubUrl: "https://github.com/atorkayesh/DEMATELab",
+  date: "2026-05-01",
+  tags: ["desktop", "python", "pyside6", "data-analysis", "llm"],
+}
+
+DEMATEL (Decision-Making Trial and Evaluation Laboratory) is a structural modelling method for untangling cause-and-effect relationships between factors. In practice it usually lives in fragile, hand-built spreadsheets that break down the moment you add a second expert or switch from crisp numbers to fuzzy or grey ones. DEMATELab turns the whole pipeline — linguistic input, expert weighting, threshold selection, the total-relation matrix, and clustering — into one desktop GUI, with four solver families behind a single interface.
+
+## Problem
+
+A real DEMATEL study rarely uses one expert and one number scheme. Researchers need to:
+
+- Collect judgments from several experts and weight them differently.
+- Choose a number representation — crisp, fuzzy, grey, or Z-number — to model uncertainty in those judgments.
+- Pick a threshold method to decide which relationships in the total-relation matrix are significant enough to keep.
+
+Doing this by hand means re-deriving the matrix algebra for each variant and re-doing it every time an expert's input changes. The math is identical in shape but different enough per variant (fuzzy arithmetic, grey bounds, Z-number reliability) that spreadsheets become error-prone and unauditable.
+
+## Approach
+
+The app is organised as a linear workflow — **Setup → Input Forms → Matrix Editor → Run Analysis → Results** — so the method's steps map directly onto the UI.
+
+**Four solver types** share one interface, each handling its own arithmetic:
+
+- **Classical DEMATEL** — crisp 0–4 influence scale.
+- **Fuzzy DEMATEL** — triangular fuzzy numbers `(l, m, u)`.
+- **Grey DEMATEL** — grey number intervals `[l, u]`.
+- **Fuzzy Z-DEMATEL** — combined influence–reliability judgments (e.g. "High influence with M reliability"), where reliability runs VL, L, M, H, VH.
+
+**Five threshold methods** decide which influences survive into the causal diagram: Average, First Quartile, Median, Third Quartile, and **Maximum Mean De-Entropy (MMDE)** — the last computing the cut-off from the information content of the matrix rather than a fixed percentile.
+
+**Multi-expert support** lets each expert have a name and weight; the matrix editor presents linguistic dropdowns per expert so judgments are entered in words, not raw numbers.
+
+**Results** are split across tabs — Summary, Matrices, R/C scores (prominence and relation), Causal Diagram, and Heatmap — plus **K-Means clustering** over the total-relation matrix to group factors. Everything exports to XLSX, and visualizations export to PNG.
+
+**AI explanation** is optional: the AI tab sends the computed results to an LLM (Gemini, OpenAI, OpenRouter, or Groq) and returns an academic-style narrative interpretation. API keys are held in memory for the session only and never written to disk.
+
+## Linguistic Scales
+
+The same linguistic label maps to a different numeric representation depending on the chosen solver:
+
+| Label | Crisp | Fuzzy (l, m, u) | Grey [l, u] |
+|---|---|---|---|
+| No influence | 0 | (0.00, 0.00, 0.25) | [0.00, 0.00] |
+| Low influence | 1 | (0.00, 0.25, 0.50) | [0.00, 0.25] |
+| Medium influence | 2 | (0.25, 0.50, 0.75) | [0.25, 0.50] |
+| High influence | 3 | (0.50, 0.75, 1.00) | [0.50, 0.75] |
+| Extreme influence | 4 | (0.75, 1.00, 1.00) | [0.75, 1.00] |
+
+Fuzzy Z-DEMATEL layers a reliability term on top of these influence judgments.
+
+## What It Delivers
+
+- **4 solver families** (Classical, Fuzzy, Grey, Fuzzy Z) behind one consistent workflow.
+- **5 threshold methods**, including MMDE.
+- **Multi-expert aggregation** with per-expert weights.
+- **5 result views** plus K-Means cluster analysis.
+- **XLSX + PNG export** and optional **LLM interpretation** across 4 engines.
+- Cross-platform: Windows, macOS, Linux; installable via `pip install git+…`.
+
+## Tradeoffs
+
+- **Desktop, not web.** PySide6 gives a responsive native matrix editor and rich plotting without shipping a backend — at the cost of a `pip` install instead of a URL. For a research tool used locally with private expert data, that was the right call.
+- **In-memory API keys.** Keys are never persisted, which is safer but means re-entering them each session. Acceptable for an analysis tool that isn't run continuously.
+
+## What I'd Do Differently
+
+- Add a saved-project format so an in-progress study (experts, matrices, settings) survives closing the app, not just an export.
+- Factor the per-solver arithmetic behind a single solver interface earlier — the variants share enough structure that a stricter abstraction would cut duplication.
+
+## Known Limitations
+
+- No automated test suite ships with the project yet; correctness rests on the matrix algebra and manual validation against known DEMATEL results.
+- AI interpretation requires the user's own API key and network access.
+- Grey and Z-number variants assume the fixed linguistic scales above rather than user-defined ones.
+
+## Architecture
+
+```
+Setup panel  (solver type + threshold method + #experts + #factors)
+   └─ Input Forms  (factor names, expert names + weights)
+        └─ Matrix Editor  (linguistic dropdowns, one matrix per expert)
+             └─ Solver  (Classical | Fuzzy | Grey | Fuzzy-Z)
+                  ├─ aggregate experts by weight  → direct relation matrix
+                  ├─ normalize → total relation matrix (T)
+                  ├─ R / C vectors  (row + column sums of T)
+                  ├─ threshold (Average | Q1 | Median | Q3 | MMDE)
+                  └─ K-Means clustering over T
+                       └─ Results tabs  (Summary, Matrices, R/C, Causal, Heatmap)
+                            ├─ export → XLSX / PNG
+                            └─ AI tab → LLM → narrative interpretation
+```
+
+## Stack
+
+| Tool | Version | Role |
+|---|---|---|
+| Python | 3.10+ | Language / runtime |
+| PySide6 | latest | Native desktop GUI, matrix editor, tabs |
+| NumPy | latest | Matrix algebra for all four solvers |
+| scikit-learn | latest | K-Means clustering of the total-relation matrix |
+| Matplotlib | latest | Causal diagram + heatmap rendering / PNG export |
+| openpyxl | latest | XLSX export of results |
+| LLM APIs | — | Gemini / OpenAI / OpenRouter / Groq interpretation |

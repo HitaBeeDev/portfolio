@@ -1,0 +1,123 @@
+export const meta = {
+  title: "Policy Coherence Kit — Multi-Stakeholder Coherence Analysis",
+  description:
+    "Desktop application for assessing, aggregating, and analysing policy coherence across multiple decision-makers — n×n interaction matrices on a 7-point scale, three aggregation methods, and a suite of analytical views.",
+  stack: [
+    "Python 3.9+",
+    "Tkinter",
+    "NumPy",
+    "openpyxl",
+    "ReportLab",
+    "Pillow",
+    "LLM APIs",
+  ],
+  githubUrl: "https://github.com/atorkayesh/PolicyCoherenceKit",
+  date: "2026-05-01",
+  tags: ["desktop", "python", "policy-analysis", "data-analysis", "llm"],
+}
+
+Policy coherence analysis asks a deceptively hard question: across a set of policies, which ones reinforce each other, which work against each other, and which are most influential overall? Answering it across *several* decision-makers — each with their own view of every policy pair — is a matrix-bookkeeping problem that doesn't fit a spreadsheet. Policy Coherence Kit captures each decision-maker's judgments, aggregates them, and runs a suite of analytical tools over the result.
+
+## Problem
+
+For *n* policies, every decision-maker fills an *n × n* matrix rating how each policy influences every other on a 7-point coherence scale. With multiple experts that's a stack of matrices that has to be:
+
+- entered or imported consistently,
+- aggregated into a single view under a defensible rule,
+- and then analysed for structure — which policies dominate, which conflict, how concentrated each one's influence is.
+
+Done by hand this is tedious and easy to get wrong, especially reconciling disagreements between decision-makers.
+
+## Coherence Rating Scale
+
+Cells are rated on a structured 7-point scale that maps words to a signed score:
+
+| Rating | Score | Meaning |
+|---|---|---|
+| Indivisible | +3 | Policies are fully intertwined and inseparable |
+| Reinforcing | +2 | Policies mutually strengthen each other |
+| Enabling | +1 | One policy helps the other work better |
+| Neutral | 0 | No meaningful interaction |
+| Constraining | −1 | One policy limits the other's effectiveness |
+| Counteracting | −2 | Policies work against each other |
+| Cancelling | −3 | One policy completely negates the other |
+
+Diagonal cells are permanently locked to Neutral — a policy doesn't influence itself.
+
+## Approach
+
+**Input** works two ways: type policy names one per line and rate each cell with colour-coded dropdowns, or import a multi-sheet Excel workbook where each sheet becomes one decision-maker. The importer validates that row and column headers match exactly and accepts the 7 rating labels case-insensitively.
+
+**Aggregation** across decision-makers offers three rules:
+
+- **Average** — equal weighting; auto-selected for fewer than 3 decision-makers.
+- **Majority Rule** — the most common rating wins; ties are flagged for manual resolution rather than silently broken.
+- **Weighted** — assign each decision-maker an importance weight in 0–1 that must sum to 1.0.
+
+**Analysis** runs per aggregation as a set of tabs:
+
+| Tab | What it shows |
+|---|---|
+| Aggregated Matrix | Numeric score matrix (−3…+3), colour-coded |
+| Coherence Scores | OI, II, WOI, WII — outgoing/incoming influence counts and sums |
+| Range of Influence | Shannon entropy per policy — concentrated vs distributed influence |
+| PCA | 2D scatter of policy influence profiles (PC1 + PC2), optional entropy colouring |
+| Network Analysis | Directed weighted network + betweenness / closeness centrality |
+| LLM Interpretation | Structured AI narrative across 7 sections |
+
+The **network view** offers four layouts — Circular (baseline), Force-Directed Fruchterman-Reingold (default), Spectral (eigenvector clustering of similar policies), and Shell (high-betweenness policies in the centre ring) — so the same graph can be read for different structure.
+
+**Project management** keeps multiple independent studies — each with its own decision-makers, matrices, and results — alive in a single session.
+
+## What It Delivers
+
+- **7-point signed coherence scale** with locked diagonals.
+- **3 aggregation rules** with explicit tie-handling and weight validation.
+- **6 analysis tabs**: aggregated matrix, coherence scores, entropy-based range of influence, PCA, centrality-ranked network with 4 layouts, and LLM interpretation.
+- **Multi-project sessions** and **multi-sheet Excel import**.
+- **Export**: one Excel workbook per project (all DM matrices, aggregated matrix, coherence scores, range of influence, network centrality), LLM interpretation as `.txt` or `.pdf`, and plots as PNG or PostScript.
+
+## Tradeoffs
+
+- **Tkinter canvas instead of a plotting library.** PCA scatter and the network graph are drawn directly on a Tkinter canvas and computed with NumPy, which keeps the dependency footprint tiny (`openpyxl`, `numpy`, `reportlab`, optional `Pillow`) and makes PostScript export free — at the cost of writing layout and rendering by hand rather than leaning on Matplotlib/NetworkX.
+- **PNG export is optional.** It needs Pillow; without it, plots still export as PostScript. Keeps the base install lean.
+- **In-memory API keys.** Used for a single request and cleared immediately — safer, but re-entered per session.
+
+## What I'd Do Differently
+
+- Persist projects to disk between sessions, not just export — the multi-project model is in memory only today.
+- Add a guided conflict-resolution view for Majority Rule ties rather than flagging them for manual handling.
+
+## Known Limitations
+
+- No automated test suite ships yet; correctness rests on the aggregation logic and manual checks.
+- LLM interpretation requires the user's own API key (Groq has a free tier; OpenAI needs a paid key) and network access.
+- Excel import requires exact header matching between rows and columns.
+
+## Architecture
+
+```
+Project  (independent study, multiple in one session)
+  ├─ Matrix input  (manual dropdowns  |  multi-sheet Excel import)
+  │     └─ one n×n matrix per decision-maker, diagonals locked to Neutral
+  └─ Aggregation  (Average | Majority Rule | Weighted)
+        └─ Aggregated matrix (−3…+3)
+             ├─ Coherence scores (OI / II / WOI / WII)
+             ├─ Range of influence (Shannon entropy per policy)
+             ├─ PCA  (NumPy → 2D scatter on Tkinter canvas)
+             ├─ Network  (centrality + 4 layouts on Tkinter canvas)
+             └─ LLM tab → 7-section interpretation
+                  └─ Export: Excel workbook · .txt/.pdf · PNG/PostScript
+```
+
+## Stack
+
+| Tool | Version | Role |
+|---|---|---|
+| Python | 3.9+ | Language / runtime |
+| Tkinter | stdlib | Desktop GUI, matrix widgets, canvas plotting + PostScript |
+| NumPy | latest | Aggregation, entropy, PCA, network computations |
+| openpyxl | latest | Multi-sheet Excel import + workbook export |
+| ReportLab | latest | PDF export of LLM interpretations |
+| Pillow | optional | PNG export of PCA / network plots |
+| LLM APIs | — | Groq / OpenAI interpretation |
