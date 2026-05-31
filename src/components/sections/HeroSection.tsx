@@ -106,10 +106,16 @@ export function HeroSection() {
               style={{ animationDelay: "320ms" }}
             >
               <a
-                href="#projects"
-                className="inline-flex h-11 items-center justify-center rounded-md bg-[var(--accent)] px-7 text-sm font-medium text-[var(--accent-fg)] transition-opacity hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
+                href="/CV.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                download
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-[var(--accent)] px-7 text-sm font-medium text-[var(--accent-fg)] transition-opacity hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
               >
-                View Work
+                <svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <path d="M8 1.5v8m0 0L5 6.5m3 3l3-3M2.5 11v2.5h11V11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                Download CV
               </a>
               <a
                 href="#contact"
