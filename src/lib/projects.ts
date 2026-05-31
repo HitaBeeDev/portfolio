@@ -39,6 +39,7 @@ export const projects: Project[] = [
       "LLM APIs",
     ],
     category: "desktop",
+    githubUrl: "https://github.com/atorkayesh/PolicyCoherenceKit",
     hasCaseStudy: false,
   },
   {
