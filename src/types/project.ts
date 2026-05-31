@@ -1,6 +1,7 @@
 export type ProjectCategory =
   | "frontend"
   | "full-stack"
+  | "desktop"
   | "open-source"
   | "design-systems";
 

@@ -11,6 +11,7 @@ const PREVIEW_PROJECTS = PREVIEW_PROJECT_SLUGS.map((slug) =>
 const CATEGORY_LABEL: Record<ProjectCategory, string> = {
   "design-systems": "Design System",
   "full-stack": "Full-Stack",
+  desktop: "Desktop App",
   "open-source": "Open Source",
   frontend: "Frontend",
 };

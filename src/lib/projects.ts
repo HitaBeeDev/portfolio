@@ -2,6 +2,46 @@ import type { Project } from "@/types/project";
 
 export const projects: Project[] = [
   {
+    slug: "dematelab",
+    name: "DEMATELab",
+    description:
+      "Desktop app for cause-and-effect analysis using DEMATEL and its extensions — interactive matrix entry, four solver types, result visualizations, and AI-generated interpretations.",
+    problem:
+      "DEMATEL studies usually live in hand-built spreadsheets that break with multiple experts and fuzzy/grey number schemes. DEMATELab turns the whole pipeline — linguistic input, weighting, threshold selection, total-relation matrix, clustering — into one GUI, with classical, Fuzzy, Grey, and Fuzzy Z-DEMATEL solvers behind a single interface.",
+    stack: [
+      "Python",
+      "PySide6",
+      "NumPy",
+      "scikit-learn",
+      "Matplotlib",
+      "openpyxl",
+      "LLM APIs",
+    ],
+    category: "desktop",
+    githubUrl: "https://github.com/atorkayesh/DEMATELab",
+    hasCaseStudy: false,
+  },
+  {
+    slug: "policy-coherence-kit",
+    name: "Policy Coherence Kit",
+    description:
+      "Desktop app for assessing and aggregating policy coherence across multiple decision-makers — n×n interaction matrices, three aggregation methods, and a suite of analytical views.",
+    problem:
+      "Comparing how dozens of policies reinforce or cancel each other across many experts is hard to do by hand. The kit captures each decision-maker's matrix on a 7-point coherence scale, aggregates them by average, majority, or weighted rule, then surfaces coherence scores, Shannon-entropy influence ranges, PCA, and a centrality-ranked policy network.",
+    stack: [
+      "Python",
+      "Tkinter",
+      "NumPy",
+      "NetworkX",
+      "openpyxl",
+      "ReportLab",
+      "Matplotlib",
+      "LLM APIs",
+    ],
+    category: "desktop",
+    hasCaseStudy: false,
+  },
+  {
     slug: "adminix",
     name: "Adminix",
     description:

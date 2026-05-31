@@ -8,6 +8,7 @@ interface Props {
 const CATEGORY_ACCENT: Record<ProjectCategory, string> = {
   "design-systems": "rgba(180, 130, 40, 0.65)",
   "full-stack":     "rgba(40, 130, 120, 0.65)",
+  "desktop":        "rgba(70, 140, 90, 0.65)",
   "open-source":    "rgba(80, 110, 140, 0.65)",
   "frontend":       "rgba(100, 85, 160, 0.65)",
 };
@@ -15,6 +16,7 @@ const CATEGORY_ACCENT: Record<ProjectCategory, string> = {
 const CATEGORY_LABEL: Record<ProjectCategory, string> = {
   "design-systems": "Design System",
   "full-stack":     "Full-Stack",
+  "desktop":        "Desktop App",
   "open-source":    "Open Source",
   "frontend":       "Frontend",
 };
