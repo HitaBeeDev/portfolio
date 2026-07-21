@@ -13,9 +13,9 @@ type FilterValue = ProjectCategory | "all";
 
 const FILTERS: { value: FilterValue; label: string }[] = [
   { value: "all", label: "All" },
+  { value: "full-stack", label: "Full-Stack" },
   { value: "frontend", label: "Frontend" },
   { value: "desktop", label: "Desktop Apps" },
-  // { value: "full-stack", label: "Full-Stack" },
   // { value: "open-source", label: "Open Source" },
   // { value: "design-systems", label: "Design Systems" },
 ];

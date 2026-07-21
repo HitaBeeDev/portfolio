@@ -1,0 +1,214 @@
+export const meta = {
+  title: "CineRoll — Award-Cinema Discovery Engine",
+  description:
+    "A full-stack film-discovery app for award-winning cinema. The hard part isn't the UI — it's resolving the same film across four award bodies and a century of ceremonies into one clean catalog, then building a recommender on top that doesn't fake it.",
+  stack: [
+    "Next.js 16",
+    "React 19",
+    "Express 5",
+    "TypeScript",
+    "PostgreSQL (Neon)",
+    "Prisma",
+    "Auth.js v5 (jose JWT)",
+    "Tailwind CSS v4",
+    "Radix UI",
+    "Framer Motion",
+    "Zod",
+    "Google Gemini",
+    "Resend",
+    "Vercel",
+  ],
+  liveUrl: "https://cineroll.de",
+  githubUrl: "https://github.com/HitaBeeDev/cineRoll",
+  date: "2026-07-15",
+  tags: ["full-stack", "typescript", "recommender", "postgres", "entity-resolution", "algorithms"],
+}
+
+CineRoll is algorithm-driven where that actually earns its keep — matching, ranking, recommending — and deliberately boring everywhere else. No microservices, no Redis I didn't need, no ML bolted on to say "AI." Almost all of the real work sits in two places: getting the data clean, and building a recommender that doesn't lie to you.
+
+## Problem
+
+The app lets you browse and filter award-winning films by any dimension the award data exposes, roll a random one from whatever you've filtered down to, and — once it knows a little about you — get recommendations.
+
+None of that is the hard part. The data is.
+
+The source files are Excel, one row per nomination, stitched together by some Python scripts across the Oscars, Golden Globes, Cannes, and the Berlinale. The same film keeps showing up:
+
+- under different titles across bodies and languages (`The Lives of Others` vs *Das Leben der Anderen*; "and" vs "&"; the article shuffled to the end),
+- across different ceremony years (a 1972 film nominated at the 1973 Oscars and again at the 1973 Golden Globes),
+- with a different category vocabulary per body,
+- and about a century of inconsistent formatting underneath all of it.
+
+Load that as-is and *The Godfather* lands three times, each row holding only part of its award history. You can't answer "which films won at both Cannes and the Oscars," and a recommender trained on it would be learning from garbage.
+
+So the requirement was to collapse every appearance of a film into one row carrying its full award history — without losing films, double-counting wins, or creating duplicates. Then build something actually recommender-shaped on top of it, not four fields and an `ORDER BY`.
+
+## Approach
+
+### Entity resolution
+
+I gave up on matching titles against each other pretty early. That's a tar pit: "&" vs "and", subtitles, transliterations, re-releases. Instead, every record gets resolved against an outside authority — TMDB.
+
+The pipeline (`backend/data/scripts/build-master.ts`) is roughly:
+
+1. Group the raw rows by `(title, release year)` into candidate films.
+2. Search TMDB for each candidate and use its TMDB ID as the match key. Two rows with different titles that resolve to the same TMDB ID are the same film. That's the whole trick.
+3. Merge award fields onto the existing record — sum the per-body win/nomination counts, concatenate the category arrays — and overlay OMDB ratings.
+4. Anything without a confident TMDB match goes into a `needs-recall.xlsx` queue to resolve by hand. Nothing gets dropped silently.
+
+Three things I cared about:
+
+- It's idempotent. Re-running a batch that's already in `master.json` merges award data and makes zero API calls. That mattered — the OMDB free tier is 1,000 calls/day, so the build ran over several days and had to be safe to repeat.
+- Nothing vanishes. Unmatched films sit in the recall queue where I can see them, rather than being quietly guessed at or thrown away.
+- It's checkable. A handful of small scripts (`check-matches`, `check-merge`, `dedup-master`, `oscar-cross-check`, and a few more) audit the merge before any of it touches the database.
+
+The output is `master.json`, one row per film, and that's what gets seeded into Postgres. Everything else is built on it.
+
+### The recommender
+
+Once the signals are clean, the flow is:
+
+```
+signals → taste profile → candidates → scoring → MMR re-rank → reasons
+```
+
+**Taste profile** (`backend/src/lib/tasteProfile/`). Every action — watch, thumbs up/down, rating, watchlist add, "not interested" — becomes a weighted vote on a set of feature vectors: genre, director, decade, runtime band, award affinity, rating tier. Two decisions shaped it. Signals decay on a 90-day half-life, so a like from six months ago counts about a quarter of a fresh one and current taste wins. And each vector is normalized by its largest absolute weight, so someone with five signals and someone with five hundred end up on the same scale. The profile rebuilds lazily — a new signal just marks it stale, and the next read recomputes it.
+
+**Scoring** (`recommender/scoring.ts`):
+
+```
+score = tasteScore + 0.8 · qualityPrior + 0.15 · recencyPrior
+```
+
+`tasteScore` is a dot product of the film's features against the user's vectors, weighted per dimension (genre 1.0 down to runtime 0.3). `qualityPrior` keeps thin profiles anchored to films that are actually good. Those prior weights and the MMR λ below are env-overridable and can differ per A/B variant.
+
+**Diversity.** Ranking by score alone hands you six versions of the same film, so the list gets re-ranked with MMR:
+
+```
+mmr = λ · relevance − (1 − λ) · maxSimilarityToAlreadyPicked      (λ = 0.70)
+```
+
+Similarity there is TF-IDF cosine over feature tokens. Two films sharing "Film-Noir" or a director should count for a lot; sharing "Drama", which half the catalog has, shouldn't. IDF is smoothed the scikit-learn way (`ln((1+N)/(1+df)) + 1`) and cached across the whole catalog.
+
+The reason on each pick ("Because you liked *Chinatown* and watch a lot of Crime") comes out of the same weights that produced the score, so it can't drift away from it. And when there isn't enough signal, the API returns `NOT_ENOUGH_DATA` instead of inventing picks — a cold-start reason never claims history the user doesn't have. Collaborative filtering is written up as the next step rather than faked; it needs overlapping user histories that don't exist yet, and content-based works from day one because the *films* carry the signal.
+
+### The roll
+
+The default roll is plain random. That's the product — "one spin, one film, tonight" — and I didn't want to lose it. The opt-in "roll from my taste" reuses the recommender's scorer but samples instead of ranks: a softmax over the scores with 15% ε-greedy exploration, so it leans toward your taste without ever making a film impossible. The Safe / Gem / Wild lane mix used to be a fixed 70/20/10 split; it's now a small Thompson-sampling bandit (a Beta posterior per lane) that shifts based on which lanes you actually engage with.
+
+### Ask AI
+
+Ask AI takes free text ("a slow 70s thriller") and turns it into filters with Gemini, using a retrieve-then-rerank setup with query relaxation so a too-narrow request still comes back with something. The constraint I cared about: the model only interprets the sentence, it never picks films. Its output is checked against the values the database actually contains — near-misses get remapped ("Sci-Fi" → "Science Fiction"), anything invalid is dropped, and there's a plain regex extractor as a fallback when there's no API key. The model can't conjure a film that isn't in the catalog.
+
+### Auth across two runtimes
+
+Splitting the frontend (Next) from the backend (Express) makes auth the awkward part. I kept one identity with two consumers. Next owns sign-in — Auth.js v5, either a six-digit email OTP through Resend or Google — and writes sessions to the shared Neon database through the Prisma adapter. It issues a JWT that the Next BFF routes forward to Express, which verifies it statelessly with `jose` and a shared secret. No second user table, no session store on the Express side; the bridge is about one middleware file.
+
+## Under the hood
+
+The engineering is more the point of this project than the UI is, so a few of the choices grouped up.
+
+**Data structures worth calling out.**
+
+- TF-IDF vectors and cosine similarity for film-to-film similarity and the per-user taste centroid.
+- A Beta(α, β) posterior per lane for the roll's Thompson-sampling bandit — sampled and arg-maxed each roll, stored server-side for signed-in users, capped so it keeps adapting instead of freezing on old evidence.
+- Softmax over the candidate scores plus an inverse-CDF weighted sample for the taste roll, with ε-greedy exploration on top.
+- FNV-1a to seed the daily pick deterministically, and SHA-256 to bucket users into A/B variants — same user always lands in the same variant, with nothing stored.
+- An LRU+TTL cache behind a small `CacheStore` interface, so call sites use `getOrSet` / `deleteByPrefix` and the whole thing can become Redis later without them changing.
+
+**Layering.** The frontend renders, proxies to the backend, and holds the auth session; it never touches the catalog database. Express owns the business logic and the algorithms. Routes stay thin — parse, validate with Zod, hand off to `lib/`. The `Film` and `FilterState` types live in a shared `@cineroll/types` package, so a shape change breaks the build on both sides instead of failing in production. The roll's rules are a stack of small pure functions, which means adding one is adding a function, not another branch.
+
+**Security and reliability.** JWTs are verified statelessly, and the shared secret is the only thing the two sides have in common. Every boundary is Zod-validated, the environment included, at boot. The Express middleware runs helmet, CORS with credentials, and per-IP and per-user rate limits, and a single error handler maps everything to one shape (`ZodError → 400`, a typed `HttpError → its status/code`, anything else → `500`). `/health` actually probes the database, and Sentry is wired on both sides.
+
+**Scale, for the size it actually is.** Indexes are chosen per query shape (GIN `pg_trgm`, GIN array, B-tree) and checked with `EXPLAIN ANALYZE` rather than added on faith. Pages whose data barely changes use ISR; the unbounded lists paginate by cursor. Where I could have reached for something heavier I didn't — `pg_trgm` instead of Algolia, an in-memory cache instead of Redis, content-based instead of a faked collaborative filter — each with a note on when switching would be worth it.
+
+## Measurable outcome
+
+It's finished but not launched — I've parked the launch until the product is fully done — so the honest numbers here are engineering measurements, not signups. Where something depends on real users, I've said so rather than invented a figure.
+
+| Metric | Result |
+|---|---|
+| Award-nomination rows resolved into one canonical catalog | Several thousand films (~5.3k in the benchmarked build), award history merged across all 4 award bodies |
+| Named algorithms shipped across the roll, Daily Picks, Ask AI & recommender | FNV-1a deterministic Daily-Pick scoring, two-stage retrieve-then-rerank (Ask AI), TF-IDF/cosine similarity, MMR diversity re-rank, Thompson-sampling lane bandit, softmax + ε-greedy sampling |
+| Entity-resolution API calls on a re-run of a known batch | **0** (idempotent merge) |
+| Typo-tolerant director search (`ILIKE '%kurosawa%'`, ~5.3k rows) | **0.1 ms** via `pg_trgm` GIN index — vs a full seq-scan + per-row ILIKE |
+| Filter + sort query (`contentType` + `imdbRating` + `genres @>`, top-N) | 5.8 ms (bitmap index scan on genres GIN + top-N heapsort) |
+| Server-side query time across the three hot query families | 0.1–5.8 ms, confirmed with `EXPLAIN ANALYZE` |
+| Recommender offline eval (recall@k / precision@k / MRR) | Harness + A/B bucketing wired end-to-end; **blocked on user signal** (no accounts yet have ≥5 held-out likes) |
+| TypeScript `any` count on the wire contract | 0 — shared `@cineroll/types` compiles on both sides |
+
+One caveat I won't dress up: the load-check on my laptop can't hit the sub-200 ms end-to-end target, but that's topology, not code. The bottleneck is the ~80–130 ms round-trip to Neon in us-east-1, not the 0.1–5.8 ms the queries actually take server-side. The real measurement is a deploy-time check with the app and DB co-located; the per-query evidence is already there.
+
+## Tradeoffs
+
+**Content-based recommender now, collaborative filtering later.** CF can surprise you with "people like you also loved…" picks; content-based can't. I took content-based for v1 anyway, because CF needs overlapping user histories that don't exist at cold start, and the films carry enough signal to rank from immediately. The MMR re-rank and the roll's exploration keep it from tunneling into one director. The eval harness and event tracking are in place, so CF can be measured against this baseline once there's data.
+
+**Two servers and a JWT bridge, not Next API routes.** A separate Express API keeps the algorithm layer testable and load-checkable on its own, with its own middleware. The cost is a second server and the bridge between them — which turned out to be about one middleware file, so I'll take it.
+
+**`pg_trgm` in the database, not Algolia.** At ~5.3k rows, typo-tolerant search comes back in 0.1 ms. Algolia would mean an external service, a sync pipeline, and a bill, all to beat a search that's already instant. The thing I give up — real relevance tuning — doesn't matter until the catalog is orders of magnitude bigger.
+
+**In-memory LRU cache, not Redis.** One instance with a small hot set doesn't need a network cache; it needs the seams (`getOrSet`, `deleteByPrefix`). The interface is async and lines up with Redis, so swapping later is one class. What I lose — the cache is gone on restart and isn't shared across instances — doesn't bite until there's more than one instance.
+
+## What I'd do differently
+
+**Denormalize `totalNominations` at seed time.** The `nominationCount` filter is a sum across four award columns, which isn't indexable as it stands. A single denormalized column, filled during the seed, would make that filter indexable for free.
+
+**Decide the roll's eligibility rule up front.** I flipped it late from "has at least one external rating" to "has both IMDb and RT." It's the right call for a nightly pick, but it quietly shrank the pool and dropped a lot of shorts and documentaries — the kind of change that alters how the whole feature feels, and I should have settled it before building around it rather than after.
+
+## Known limitations
+
+- **The BM25 reranker for Ask AI is designed, not shipped.** The local reranker currently scores by flat token overlap; the BM25 version (IDF weighting, TF saturation, length normalization) is specced but not built yet.
+- **The roll's anti-repeat is capped, not unbounded.** It rides in the query string, capped at 100 IDs — a true full-pool shuffle-bag over ~5.7k films would need server-side session state, which I deferred on purpose.
+- **"Already seen" and "Not interested" share one hide flag.** Both write `doNotSuggest`, so a film you only marked as seen comes back looking hidden on a later visit. Telling them apart on reload needs a dedicated backend flag.
+
+## Architecture
+
+```
+ ┌─────────────────────────────────────────────────────────────────────┐
+ │  BUILD TIME — data pipeline (offline, run by the owner)             │
+ │  award .xlsx (Oscar · Golden Globe · Cannes · Berlinale)           │
+ │        │  build-master.ts  ── TMDB + OMDB enrich ──┐               │
+ │        ▼  entity resolution (match key = TMDB ID)  │               │
+ │   merge award bodies into ONE row · dedup          │               │
+ │   unmatched → needs-recall.xlsx  (never dropped)   │               │
+ │        ▼                                           │               │
+ │   master.json  ── seed-master.ts ──►  PostgreSQL (Neon)            │
+ └─────────────────────────────────────────────────────────────────────┘
+                                  │
+ ┌────────────────────────────────┼────────────────────────────────────┐
+ │  RUN TIME                       ▼                                     │
+ │  Browser ──► Next.js 16 (App Router)                                 │
+ │                ├─ Server Components (UI, SEO, ISR-ready)             │
+ │                ├─ BFF proxy /api/*   (inject JWT, forward)           │
+ │                └─ Auth.js v5 session store ─┐                        │
+ │                         │ Authorization: Bearer <JWT>               │
+ │                         ▼                                           │
+ │              Express 5 API                                          │
+ │                ├─ routes/     (films, random, recommendations, …)   │
+ │                ├─ lib/        ★ algorithm layer (taste, recommender) │
+ │                ├─ middleware  (auth, rate-limit, errors, validate)  │
+ │                └─ Prisma ──► PostgreSQL (Neon)  ◄── same DB ────────┘
+ │                                  ▲                                   │
+ │                    Auth.js Prisma adapter writes User/Account/      │
+ │                    Session to this same database                    │
+ └──────────────────────────────────────────────────────────────────────┘
+```
+
+It's a monorepo on npm workspaces: `frontend/` (Next.js), `backend/` (Express + Prisma + the pipeline), and `packages/types/` for the shared `@cineroll/types` contract. Every meaningful action becomes one typed `Event` row (15 event types, tagged with its A/B variant at write time), and that one table is what feeds the A/B funnels, the recommender metrics, and the taste learning — one source of truth instead of three tracking systems drifting apart.
+
+## Tech stack with versions
+
+| Layer | Choice | Why |
+|---|---|---|
+| Frontend | Next.js 16 (App Router) + React 19 | Server Components for SEO and ISR; the BFF proxy holds the JWT so the browser never talks to Express directly |
+| Styling | Tailwind CSS v4 + Radix UI + Framer Motion | No global CSS beyond variables and resets — every style lives in its component |
+| Backend | Express 5 | A real server with its own middleware and algorithm layer, testable and load-checkable in isolation |
+| Database | PostgreSQL (Neon) + Prisma | The data is relational (films ↔ ratings ↔ watchlists ↔ users ↔ events); GIN array and `pg_trgm` indexes are the two things the product leans on |
+| Auth | Auth.js v5 + `jose` | Email OTP (Resend) and Google; one identity, JWT verified statelessly on the Express side |
+| Validation | Zod | At every boundary, the environment included (`config.ts`) |
+| LLM | Google Gemini | Ask AI free-text → filters; the model interprets, the database decides |
+| Deploy | Vercel (both apps) + Neon | Frontend as the main app, Express as a second service behind a `/api/backend/*` rewrite |
+
+---
+
+*Longer write-ups live in the repo: the pipeline and algorithm layer in `ARCHITECTURE.md`, the recommender math in `RECOMMENDATIONS.md`, the algorithm catalog in `algorithms.md`, and the decision log with the `EXPLAIN ANALYZE` findings in `DECISIONS.md`.*

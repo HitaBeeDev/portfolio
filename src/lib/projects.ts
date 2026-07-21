@@ -2,6 +2,32 @@ import type { Project } from "@/types/project";
 
 export const projects: Project[] = [
   {
+    slug: "cineroll",
+    name: "CineRoll",
+    description:
+      "Full-stack film-discovery app for award-winning cinema — browse and filter by every award dimension, 'roll' a random film, and get content-based recommendations learned from your taste.",
+    problem:
+      "Award data is one row per nomination across the Oscars, Golden Globes, Cannes, and Berlinale — the same film appears many times under different titles, languages, and ceremony years. The hard part is entity resolution: collapsing thousands of messy rows into one canonical catalog by pivoting every record through its TMDB ID, then building a real content-based recommender (taste vectors, MMR diversity, a Thompson-sampling roll bandit) on top of the clean signals.",
+    stack: [
+      "Next.js 16",
+      "React 19",
+      "Express 5",
+      "TypeScript",
+      "PostgreSQL",
+      "Prisma",
+      "Auth.js v5",
+      "Tailwind CSS v4",
+      "Zod",
+      "Gemini",
+      "Neon",
+      "Vercel",
+    ],
+    category: "full-stack",
+    liveUrl: "https://cineroll.de",
+    githubUrl: "https://github.com/HitaBeeDev/cineRoll",
+    hasCaseStudy: true,
+  },
+  {
     slug: "dematelab",
     name: "DEMATELab",
     description:
